@@ -1,26 +1,590 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════
+   GirStay Premium — Luxury Design System
+   Fonts loaded via next/font/google in layout.tsx
+   ═══════════════════════════════════════════ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Code', monospace;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* GirStay custom color tokens */
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-emerald-gir: var(--emerald-gir);
+  --color-emerald-gir-light: var(--emerald-gir-light);
+  --color-ivory: var(--ivory);
+  --color-ivory-warm: var(--ivory-warm);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ═══ Light Theme ═══ */
+:root {
+  --background: oklch(0.98 0.002 90);
+  --foreground: oklch(0.15 0.01 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 60);
+  --primary: oklch(0.55 0.12 75);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.01 90);
+  --secondary-foreground: oklch(0.25 0.01 60);
+  --muted: oklch(0.95 0.005 90);
+  --muted-foreground: oklch(0.5 0.01 60);
+  --accent: oklch(0.93 0.02 90);
+  --accent-foreground: oklch(0.2 0.01 60);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.005 90);
+  --input: oklch(0.9 0.005 90);
+  --ring: oklch(0.55 0.12 75);
+  --chart-1: oklch(0.55 0.12 75);
+  --chart-2: oklch(0.48 0.15 155);
+  --chart-3: oklch(0.62 0.08 75);
+  --chart-4: oklch(0.42 0.1 155);
+  --chart-5: oklch(0.72 0.06 75);
+  --radius: 0.75rem;
+
+  /* GirStay brand colors */
+  --gold: oklch(0.75 0.12 75);
+  --gold-light: oklch(0.85 0.08 80);
+  --gold-dark: oklch(0.55 0.12 70);
+  --emerald-gir: oklch(0.48 0.15 155);
+  --emerald-gir-light: oklch(0.65 0.1 155);
+  --ivory: oklch(0.97 0.01 90);
+  --ivory-warm: oklch(0.94 0.02 80);
+
+  --sidebar: oklch(0.97 0.005 90);
+  --sidebar-foreground: oklch(0.15 0.01 60);
+  --sidebar-primary: oklch(0.55 0.12 75);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.93 0.02 90);
+  --sidebar-accent-foreground: oklch(0.2 0.01 60);
+  --sidebar-border: oklch(0.9 0.005 90);
+  --sidebar-ring: oklch(0.55 0.12 75);
+}
+
+/* ═══ Dark Theme (Luxury Default) ═══ */
+.dark {
+  --background: oklch(0.1 0.01 60);
+  --foreground: oklch(0.93 0.01 80);
+  --card: oklch(0.14 0.01 60);
+  --card-foreground: oklch(0.93 0.01 80);
+  --popover: oklch(0.14 0.01 60);
+  --popover-foreground: oklch(0.93 0.01 80);
+  --primary: oklch(0.75 0.12 75);
+  --primary-foreground: oklch(0.1 0.01 60);
+  --secondary: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.93 0.01 80);
+  --muted: oklch(0.2 0.01 60);
+  --muted-foreground: oklch(0.6 0.02 80);
+  --accent: oklch(0.22 0.015 60);
+  --accent-foreground: oklch(0.93 0.01 80);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.75 0.12 75);
+  --chart-1: oklch(0.75 0.12 75);
+  --chart-2: oklch(0.55 0.15 155);
+  --chart-3: oklch(0.65 0.08 75);
+  --chart-4: oklch(0.45 0.1 155);
+  --chart-5: oklch(0.82 0.06 75);
+
+  /* GirStay brand colors (dark mode) */
+  --gold: oklch(0.78 0.12 75);
+  --gold-light: oklch(0.88 0.08 80);
+  --gold-dark: oklch(0.58 0.12 70);
+  --emerald-gir: oklch(0.55 0.15 155);
+  --emerald-gir-light: oklch(0.7 0.1 155);
+  --ivory: oklch(0.93 0.01 80);
+  --ivory-warm: oklch(0.88 0.02 75);
+
+  --sidebar: oklch(0.14 0.01 60);
+  --sidebar-foreground: oklch(0.93 0.01 80);
+  --sidebar-primary: oklch(0.75 0.12 75);
+  --sidebar-primary-foreground: oklch(0.1 0.01 60);
+  --sidebar-accent: oklch(0.22 0.015 60);
+  --sidebar-accent-foreground: oklch(0.93 0.01 80);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.75 0.12 75);
+}
+
+/* ═══ Base Styles ═══ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    @apply tracking-tight;
+  }
+
+  /* Global focus-visible for keyboard accessibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid oklch(0.75 0.12 75);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ═══ Luxury Glassmorphism ═══ */
+@layer utilities {
+  .glass {
+    background: oklch(1 0 0 / 8%);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid oklch(1 0 0 / 12%);
+  }
+
+  .glass-strong {
+    background: oklch(1 0 0 / 15%);
+    backdrop-filter: blur(40px) saturate(2);
+    -webkit-backdrop-filter: blur(40px) saturate(2);
+    border: 1px solid oklch(1 0 0 / 18%);
+  }
+
+  .glass-dark {
+    background: oklch(0 0 0 / 40%);
+    backdrop-filter: blur(30px) saturate(1.5);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    border: 1px solid oklch(1 0 0 / 8%);
+  }
+
+  .glass-card {
+    background: oklch(1 0 0 / 5%);
+    backdrop-filter: blur(16px) saturate(1.6);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    border: 1px solid oklch(1 0 0 / 10%);
+    box-shadow:
+      0 4px 30px oklch(0 0 0 / 10%),
+      inset 0 1px 0 oklch(1 0 0 / 5%);
+  }
+
+  :root .glass-card {
+    background: oklch(1 0 0 / 60%);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid oklch(0 0 0 / 6%);
+    box-shadow:
+      0 1px 3px oklch(0 0 0 / 6%),
+      0 4px 20px oklch(0 0 0 / 4%);
+  }
+
+  /* Gold gradient accents */
+  .gradient-gold {
+    background: linear-gradient(135deg, oklch(0.75 0.12 75), oklch(0.85 0.08 80), oklch(0.75 0.12 75));
+  }
+
+  .gradient-gold-text {
+    background: linear-gradient(135deg, oklch(0.78 0.12 75), oklch(0.88 0.08 80));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-emerald {
+    background: linear-gradient(135deg, oklch(0.42 0.15 155), oklch(0.55 0.15 155));
+  }
+
+  .gradient-hero {
+    background: linear-gradient(135deg,
+        oklch(0.08 0.01 60) 0%,
+        oklch(0.12 0.02 155 / 80%) 50%,
+        oklch(0.08 0.01 60) 100%);
+  }
+
+  /* Luxury shadows */
+  .shadow-luxury {
+    box-shadow:
+      0 4px 20px oklch(0 0 0 / 15%),
+      0 1px 3px oklch(0 0 0 / 10%);
+  }
+
+  .shadow-luxury-lg {
+    box-shadow:
+      0 10px 40px oklch(0 0 0 / 20%),
+      0 2px 8px oklch(0 0 0 / 10%);
+  }
+
+  .shadow-gold {
+    box-shadow:
+      0 4px 20px oklch(0.75 0.12 75 / 15%),
+      0 1px 3px oklch(0.75 0.12 75 / 10%);
+  }
+
+  .shadow-gold-lg {
+    box-shadow:
+      0 10px 40px oklch(0.75 0.12 75 / 25%),
+      0 2px 8px oklch(0.75 0.12 75 / 15%);
+  }
+
+  /* Premium section gradients */
+  .gradient-section-warm {
+    background: linear-gradient(180deg,
+      oklch(0.97 0.01 80 / 50%) 0%,
+      oklch(0.98 0.005 75 / 30%) 100%);
+  }
+  .dark .gradient-section-warm {
+    background: linear-gradient(180deg,
+      oklch(0.12 0.015 75 / 40%) 0%,
+      oklch(0.1 0.01 60 / 20%) 100%);
+  }
+
+  .gradient-section-cool {
+    background: linear-gradient(180deg,
+      oklch(0.97 0.008 200 / 40%) 0%,
+      oklch(0.98 0.004 180 / 20%) 100%);
+  }
+  .dark .gradient-section-cool {
+    background: linear-gradient(180deg,
+      oklch(0.12 0.01 200 / 30%) 0%,
+      oklch(0.1 0.01 60 / 10%) 100%);
+  }
+
+  .gradient-card-hover {
+    box-shadow:
+      0 8px 32px oklch(0.75 0.12 75 / 12%),
+      0 2px 8px oklch(0 0 0 / 8%);
+  }
+
+  .gradient-overlay-bottom {
+    background: linear-gradient(to top,
+      oklch(0 0 0 / 70%) 0%,
+      oklch(0 0 0 / 30%) 40%,
+      transparent 100%);
+  }
+
+  /* Focus ring utility */
+  .focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: outline-color 0.15s ease;
+  }
+  .focus-ring:focus-visible {
+    outline-color: oklch(0.75 0.12 75);
+  }
+
+  /* Text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scrollbar styling */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: oklch(0.5 0 0 / 30%);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.5 0 0 / 50%);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+  }
+
+  /* Ken Burns cinematic zoom-pan */
+  .animate-ken-burns {
+    animation: ken-burns 20s ease-in-out infinite alternate;
+  }
+
+  /* Masonry grid layout — flexbox on mobile for Android compat */
+  .masonry-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-grid {
+      display: block;
+      columns: 2;
+      column-gap: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      columns: 3;
+    }
+  }
+
+  .masonry-grid>* {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  /* Image skeleton placeholder */
+  .image-placeholder {
+    background: linear-gradient(
+      90deg,
+      oklch(0.2 0.01 60) 0%,
+      oklch(0.28 0.01 60) 50%,
+      oklch(0.2 0.01 60) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  :root .image-placeholder {
+    background: linear-gradient(
+      90deg,
+      oklch(0.92 0.005 90) 0%,
+      oklch(0.86 0.005 90) 50%,
+      oklch(0.92 0.005 90) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* dvh fallback for older browsers */
+  @supports not (min-height: 100dvh) {
+    .min-h-\[100dvh\] {
+      min-height: calc(100vh - 56px);
+    }
+    .min-h-\[90dvh\] {
+      min-height: calc(90vh - 56px);
+    }
+    .sm\:min-h-\[100dvh\] {
+      min-height: calc(100vh - 56px);
+    }
+  }
+
+  /* Safe area utilities for mobile notches and bottom nav */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .pb-nav {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
+  }
+  .pb-safe-offset {
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+
+  /* Timeline connector */
+  .timeline-line {
+    background: linear-gradient(180deg,
+        oklch(0.75 0.12 75) 0%,
+        oklch(0.48 0.15 155) 50%,
+        oklch(0.75 0.12 75) 100%);
+  }
+
+  /* Video hero shimmer */
+  .animate-hero-shimmer {
+    animation: hero-shimmer 8s ease-in-out infinite;
+  }
+}
+
+/* ═══ Keyframes ═══ */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes ken-burns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  100% {
+    transform: scale(1.15) translate(-2%, -1%);
+  }
+}
+
+@keyframes hero-shimmer {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes gradient-shift {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ═══ Accessibility ═══ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-float,
+  .animate-shimmer,
+  .animate-ken-burns,
+  .animate-gradient,
+  .animate-pulse-slow {
+    animation: none !important;
+  }
+}
+
+/* ═══ Custom scrollbar for the whole page (dark) ═══ */
+.dark::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark::-webkit-scrollbar-track {
+  background: oklch(0.1 0.01 60);
+}
+
+.dark::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0.02 75);
+  border-radius: 4px;
+}
+
+.dark::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.4 0.05 75);
+}
+
+/* ═══ Image gallery lightbox overlay ═══ */
+.lightbox-overlay {
+  background: oklch(0 0 0 / 90%);
+  backdrop-filter: blur(8px);
+}
+
+/* ═══ Price number styling ═══ */
+.price-number {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* ═══ Selection color ═══ */
+::selection {
+  background: oklch(0.75 0.12 75 / 30%);
+  color: inherit;
 }

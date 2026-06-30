@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1612;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a2420;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g transform="translate(400,280)" opacity="0.15">
+    <path d="M-30,-20 L30,-20 L30,20 L-30,20 Z" fill="none" stroke="#c4a35a" stroke-width="2"/>
+    <circle cx="12" cy="-6" r="5" fill="none" stroke="#c4a35a" stroke-width="1.5"/>
+    <path d="M-26,14 L-10,-6 L0,6 L10,-2 L26,14" fill="none" stroke="#c4a35a" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="320" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#c4a35a" opacity="0.3">GirStay Premium</text>
+</svg>
