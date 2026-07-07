@@ -53,21 +53,15 @@ export function HeroSection() {
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight sm:leading-[1.1] mb-5 sm:mb-6 overflow-hidden flex flex-wrap justify-center gap-x-2 sm:gap-x-4"
+            className="font-heading text-[2rem] sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-[1.15] sm:leading-[1.1] mb-5 sm:mb-6"
           >
-            {["Discover", "the"].map((word, i) => (
-              <motion.span key={i} variants={fadeUpStagger} className="inline-block">
-                {word}
-              </motion.span>
-            ))}
-            <motion.span variants={fadeUpStagger} className="inline-block gradient-gold-text">
-              Wild Luxury
+            <motion.span variants={fadeUpStagger} className="block">
+              Discover the
             </motion.span>
-            {["of", "Gir"].map((word, i) => (
-              <motion.span key={i} variants={fadeUpStagger} className="inline-block">
-                {word}
-              </motion.span>
-            ))}
+            <motion.span variants={fadeUpStagger} className="block gradient-gold-text">
+              Wild Luxury{" "}
+              <span className="text-white">of Gir</span>
+            </motion.span>
           </motion.h1>
 
           {/* Subtitle */}

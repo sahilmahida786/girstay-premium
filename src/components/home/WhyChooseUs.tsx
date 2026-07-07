@@ -50,7 +50,7 @@ const features = [
 
 export function WhyChooseUs() {
   return (
-    <section className="py-16 sm:py-24 relative gradient-section-cool">
+    <section className="py-20 sm:py-28 relative gradient-section-cool">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -91,7 +91,7 @@ export function WhyChooseUs() {
               </div>
 
               {/* Content */}
-              <h3 className="font-heading text-lg font-semibold mb-2">
+              <h3 className="font-heading text-lg font-semibold mb-2 text-foreground">
                 {feature.title}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">

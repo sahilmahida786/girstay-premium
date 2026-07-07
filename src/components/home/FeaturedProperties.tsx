@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export function FeaturedProperties() {
   return (
-    <section className="py-16 sm:py-24 relative gradient-section-warm">
+    <section className="py-20 sm:py-28 relative gradient-section-warm">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 

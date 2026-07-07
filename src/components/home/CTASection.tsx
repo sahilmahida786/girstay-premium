@@ -8,7 +8,7 @@ import { CONTACT_INFO } from "@/lib/constants";
 
 export function CTASection() {
   return (
-    <section className="py-16 sm:py-24 relative overflow-hidden">
+    <section className="py-20 sm:py-28 relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 gradient-hero opacity-50" />
       <div className="absolute inset-0">

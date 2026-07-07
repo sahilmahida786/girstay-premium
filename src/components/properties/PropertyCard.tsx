@@ -87,7 +87,7 @@ export function PropertyCard({
               src={primaryImage?.url || ""}
               alt={primaryImage?.alt || property.name}
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
               showSkeleton={true}

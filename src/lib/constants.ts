@@ -1,7 +1,7 @@
 export const SITE_NAME = "GirStay Premium";
 export const SITE_DESCRIPTION =
   "Discover luxury resorts, farm stays, villas, and jungle lodges in Sasan Gir, Gujarat. Book your premium wildlife getaway today.";
-export const SITE_URL = "https://girstay.com";
+export const SITE_URL = "https://girstay-premium.vercel.app";
 
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -57,17 +57,12 @@ export const FOOTER_LINKS = {
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Careers", href: "/careers" },
     { label: "Contact Us", href: "/contact" },
-    { label: "List Your Property", href: "/list-property" },
   ],
   support: [
-    { label: "Help Center", href: "/help" },
-    { label: "Cancellation Policy", href: "/cancellation-policy" },
-    { label: "Refund Policy", href: "/refund-policy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Cancellation Policy", href: "/contact" },
+    { label: "Terms of Service", href: "/contact" },
+    { label: "Privacy Policy", href: "/contact" },
   ],
 } as const;
 

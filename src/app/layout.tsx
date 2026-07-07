@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://girstay.com",
+    url: "https://girstay-premium.vercel.app",
     siteName: "GirStay Premium",
     title: "GirStay Premium | Luxury Resorts & Farm Stays in Sasan Gir",
     description:
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  metadataBase: new URL("https://girstay.com"),
+  metadataBase: new URL("https://girstay-premium.vercel.app"),
 };
 
 export default function RootLayout({
@@ -100,6 +100,84 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {/* Viewport for proper mobile rendering */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Web App Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1a1a1a" />
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://girstay-premium.vercel.app/#organization",
+                  name: "GirStay Premium",
+                  url: "https://girstay-premium.vercel.app",
+                  logo: "https://girstay-premium.vercel.app/favicon.ico",
+                  description:
+                    "Premium luxury resort booking platform for Sasan Gir, Gujarat. Handpicked resorts, farm stays, villas, and jungle lodges.",
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    telephone: "+91-98765-43210",
+                    contactType: "reservations",
+                    availableLanguage: ["English", "Hindi", "Gujarati"],
+                  },
+                  sameAs: [
+                    "https://instagram.com/girstay",
+                    "https://facebook.com/girstay",
+                    "https://twitter.com/girstay",
+                    "https://youtube.com/@girstay",
+                  ],
+                },
+                {
+                  "@type": "LocalBusiness",
+                  "@id": "https://girstay-premium.vercel.app/#localbusiness",
+                  name: "GirStay Premium",
+                  image: "https://girstay-premium.vercel.app/og-image.jpg",
+                  url: "https://girstay-premium.vercel.app",
+                  telephone: "+91-98765-43210",
+                  email: "booking@girstay.com",
+                  address: {
+                    "@type": "PostalAddress",
+                    streetAddress: "Sasan Gir",
+                    addressLocality: "Junagadh",
+                    addressRegion: "Gujarat",
+                    postalCode: "362135",
+                    addressCountry: "IN",
+                  },
+                  geo: {
+                    "@type": "GeoCoordinates",
+                    latitude: 21.1243,
+                    longitude: 70.5792,
+                  },
+                  priceRange: "₹₹₹",
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: "4.8",
+                    reviewCount: "500",
+                    bestRating: "5",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://girstay-premium.vercel.app/#website",
+                  url: "https://girstay-premium.vercel.app",
+                  name: "GirStay Premium",
+                  publisher: {
+                    "@id": "https://girstay-premium.vercel.app/#organization",
+                  },
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: "https://girstay-premium.vercel.app/properties?q={search_term_string}",
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <ThemeProvider>

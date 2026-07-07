@@ -34,7 +34,7 @@ export function Testimonials() {
   const t = testimonials[current];
 
   return (
-    <section className="py-16 sm:py-24 relative overflow-hidden gradient-section-warm">
+    <section className="py-20 sm:py-28 relative overflow-hidden gradient-section-warm">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -55,10 +55,21 @@ export function Testimonials() {
 
         {/* Testimonial Card */}
         <div className="max-w-3xl mx-auto">
-          <div
-            className="relative glass-card rounded-3xl p-6 sm:p-12 min-h-[240px] sm:min-h-[300px]"
+          <motion.div
+            className="relative glass-card rounded-3xl p-6 sm:p-12 min-h-[240px] sm:min-h-[300px] touch-pan-y cursor-grab active:cursor-grabbing"
             onPointerEnter={() => setIsPaused(true)}
             onPointerLeave={() => setIsPaused(false)}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.15}
+            onDragEnd={(_e, { offset, velocity }) => {
+              const swipe = Math.abs(offset.x) * velocity.x;
+              if (swipe < -2000 || offset.x < -50) {
+                navigate(1);
+              } else if (swipe > 2000 || offset.x > 50) {
+                navigate(-1);
+              }
+            }}
           >
             {/* Quote icon */}
             <Quote className="absolute top-6 left-6 w-10 h-10 text-primary/20" />
@@ -148,7 +159,7 @@ export function Testimonials() {
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
