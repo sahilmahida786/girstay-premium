@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, AnimatePresence } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { Clock, Users, Baby } from "lucide-react";
 import { dayTimeline } from "@/data/mockActivities";
@@ -24,11 +24,9 @@ const periodLabels = {
 
 export function ExperienceTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"],
-  });
-
+  const [activeTab, setActiveTab] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
+  
+  const filteredTimeline = dayTimeline.filter(entry => entry.period === activeTab);
 
 
   return (
@@ -53,71 +51,56 @@ export function ExperienceTimeline() {
           </p>
         </motion.div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical line background */}
-          <div className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-0.5 bg-border/50 sm:-translate-x-px" />
-          {/* Animated vertical progress line */}
-          <motion.div 
-            className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/80 to-transparent sm:-translate-x-px origin-top"
-            style={{ scaleY: scrollYProgress }}
-          />
+        {/* Tabs */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
+          {(Object.keys(periodLabels) as Array<keyof typeof periodLabels>).map((period) => (
+            <button
+              key={period}
+              onClick={() => setActiveTab(period)}
+              className={cn(
+                "px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-sm border",
+                activeTab === period
+                  ? "bg-primary text-primary-foreground border-primary shadow-luxury scale-105"
+                  : "bg-card text-muted-foreground border-border/50 hover:border-primary/50"
+              )}
+            >
+              {periodLabels[period]}
+            </button>
+          ))}
+        </div>
 
-          <div className="space-y-8 sm:space-y-12">
-            {dayTimeline.map((entry, index) => {
-              const showPeriodHeader = index === 0 || dayTimeline[index - 1].period !== entry.period;
-              const isLeft = index % 2 === 0;
-
-              return (
-                <div key={entry.activity.id}>
-                  {/* Period Header */}
-                  {showPeriodHeader && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      className="flex justify-center mb-6 sm:mb-8 relative z-10"
-                    >
-                      <span
-                        className={cn(
-                          "px-5 py-2 rounded-full text-sm font-semibold bg-gradient-to-r border border-border/50 shadow-luxury",
-                          periodColors[entry.period]
-                        )}
-                      >
-                        {periodLabels[entry.period]}
-                      </span>
-                    </motion.div>
-                  )}
-
-                  {/* Timeline Entry */}
-                  <motion.div
-                    initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6, ease: luxuryEasing }}
-                    className={cn(
-                      "relative flex items-start gap-4 sm:gap-0",
-                      "pl-16 sm:pl-0"
-                    )}
+        {/* Timeline Items Grid */}
+        <div className="relative max-w-4xl mx-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+              {filteredTimeline.map((entry) => {
+                return (
+                  <div
+                    key={entry.activity.id}
+                    className="relative flex items-center gap-4 sm:gap-6 bg-card border border-border/50 p-4 sm:p-6 rounded-2xl hover:shadow-luxury hover:border-primary/20 transition-all duration-300"
                   >
-                    {/* Time Node (mobile: absolute left, desktop: center) */}
-                    <div className="absolute left-3 sm:left-1/2 sm:-translate-x-1/2 z-10 flex flex-col items-center">
-                      <div className="w-7 h-7 rounded-full gradient-gold flex items-center justify-center shadow-gold">
-                        <span className="text-xs">{entry.activity.icon}</span>
+                    {/* Time Node */}
+                    <div className="hidden sm:flex flex-col items-center shrink-0 w-16">
+                      <div className="w-12 h-12 rounded-full gradient-gold flex items-center justify-center shadow-gold mb-2">
+                        <span className="text-xl">{entry.activity.icon}</span>
                       </div>
+                      <span className="text-xs font-bold text-primary text-center">
+                        {entry.time}
+                      </span>
                     </div>
 
-                    {/* Card — Desktop alternating */}
-                    <div
-                      className={cn(
-                        "w-full sm:w-[calc(50%-2rem)]",
-                        isLeft ? "sm:mr-auto sm:pr-8" : "sm:ml-auto sm:pl-8"
-                      )}
-                    >
-                      <div className="group p-4 sm:p-5 rounded-2xl bg-card border border-border/50 hover:shadow-luxury hover:border-primary/20 transition-all duration-300">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          {/* Image */}
-                          <div className="relative w-full sm:w-28 h-32 sm:h-24 rounded-xl overflow-hidden shrink-0">
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        {/* Image */}
+                        <div className="relative w-full sm:w-32 h-40 sm:h-28 rounded-xl overflow-hidden shrink-0">
                             <Image
                               src={entry.activity.image}
                               alt={entry.activity.name}
@@ -178,14 +161,13 @@ export function ExperienceTimeline() {
                               </div>
                             )}
                           </div>
-                        </div>
                       </div>
                     </div>
-                  </motion.div>
-                </div>
+                  </div>
               );
             })}
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
@@ -53,15 +53,6 @@ export function PropertyDetailClient({ property }: Props) {
     setMounted(true);
     addProperty(property);
   }, [property, addProperty]);
-
-  // Pseudo-random urgency data
-  const { roomsLeft, viewers } = useMemo(() => {
-    const charCode = property.id.charCodeAt(0) || 1;
-    return {
-      roomsLeft: (charCode % 3) + 1, // 1 to 3
-      viewers: (charCode % 15) + 4, // 4 to 18
-    };
-  }, [property.id]);
 
   // Embla Carousel setup for mobile
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -525,6 +516,32 @@ export function PropertyDetailClient({ property }: Props) {
 
             <Separator />
 
+            {/* Location Map */}
+            <div>
+              <h2 className="font-heading text-xl font-semibold mb-4">Location</h2>
+              <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden bg-muted group">
+                <Image
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=600&fit=crop"
+                  alt="Map view of property"
+                  fill
+                  className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                      <MapPin className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                  <div className="mt-3 glass-dark px-4 py-2 rounded-full text-sm font-medium shadow-luxury">
+                    {property.address}, {property.city}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
             {/* Reviews */}
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -701,16 +718,12 @@ export function PropertyDetailClient({ property }: Props) {
                   </div>
                 )}
 
-                {/* Urgency Indicators */}
+                {/* Genuine Trust Signal */}
                 {mounted && (
                   <div className="mb-4 space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-medium text-red-500 bg-red-500/10 px-3 py-2 rounded-lg">
+                    <div className="flex items-center gap-2 text-xs font-medium text-emerald-500 bg-emerald-500/10 px-3 py-2 rounded-lg">
                       <Shield className="w-4 h-4" />
-                      Only {roomsLeft} {roomsLeft === 1 ? 'room' : 'rooms'} left for these dates!
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground px-1">
-                      <Users className="w-3.5 h-3.5" />
-                      {viewers} people are viewing this property
+                      Free cancellation & Book without credit card
                     </div>
                   </div>
                 )}
@@ -756,7 +769,7 @@ export function PropertyDetailClient({ property }: Props) {
       </div>
 
       {/* ═══ Mobile Sticky CTA ═══ */}
-      <div className="fixed bottom-[72px] left-0 right-0 z-40 lg:hidden glass-strong border-t border-x border-border/50 rounded-t-2xl px-4 py-3 pb-safe-offset">
+      <div className="fixed bottom-[76px] left-0 right-0 z-40 lg:hidden glass-strong border-t border-x border-border/50 rounded-t-2xl px-4 py-3 pb-safe-offset shadow-[0_-8px_30px_-15px_rgba(0,0,0,0.5)]">
         <div className="flex items-center justify-between gap-4">
           <div>
             <span className="price-number text-xl font-bold gradient-gold-text">

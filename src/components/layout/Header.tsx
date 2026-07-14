@@ -3,51 +3,52 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, User, Phone, ChevronRight, Sparkles } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, useSpring, useTransform } from "framer-motion";
+import { Menu, X, User, Phone, ChevronRight, Sparkles, Mail, Globe } from "lucide-react";
+
+const Instagram = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+);
+
+const Linkedin = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+);
+
+const Github = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+);
 import { Logo } from "@/components/shared/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NAV_LINKS, CONTACT_INFO } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { snappyEasing } from "@/lib/motion";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
-  // Track viewport for mobile-specific behavior
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  // Smooth scroll values for header scaling
+  const smoothY = useSpring(scrollY, { stiffness: 300, damping: 30, restDelta: 0.001 });
+  const headerPadding = useTransform(smoothY, [0, 100], ["1rem", "0.5rem"]);
+  const headerScale = useTransform(smoothY, [0, 100], [1, 0.98]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
     
-    // Background glass effect
-    if (latest > 20) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
+    if (latest > 20) setIsScrolled(true);
+    else setIsScrolled(false);
 
-    // Hide on scroll down, show on scroll up — DESKTOP ONLY
-    // Mobile users need persistent header access
-    if (!isMobile && latest > previous && latest > 100) {
-      setIsHidden(true);
-    } else {
-      setIsHidden(false);
+    // Hide on scroll down, show on scroll up (only on desktop to ensure mobile always has menu)
+    if (window.innerWidth >= 1024) {
+      if (latest > previous && latest > 150) setIsHidden(true);
+      else setIsHidden(false);
     }
   });
 
-  // Close menu on route change (covers browser back/forward)
+  // Close menu on route change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileMenuOpen(false);
@@ -55,17 +56,11 @@ export function Header() {
 
   // Lock body scroll when menu open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (isMobileMenuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
   }, [isMobileMenuOpen]);
 
-  // Escape key to close
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setIsMobileMenuOpen(false);
   }, []);
@@ -79,75 +74,99 @@ export function Header() {
 
   return (
     <>
-      {/* Top bar — desktop only */}
-      <div
-        className="hidden lg:block bg-card/60 backdrop-blur-sm border-b border-border/30 text-sm"
-        role="banner"
-      >
-        <div className="max-w-7xl mx-auto px-6 py-1.5 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <a
-              href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}
-              className="flex items-center gap-1.5 hover:text-primary transition-colors"
-              aria-label={`Call us at ${CONTACT_INFO.phone}`}
-            >
+      {/* ────────────────────────────────────────────────────────
+          TOP BAR (Desktop Only)
+          ──────────────────────────────────────────────────────── */}
+      <div className="hidden lg:block bg-card/60 backdrop-blur-md border-b border-border/30 text-xs font-medium z-50 relative">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-6 text-muted-foreground/80">
+            <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 hover:text-primary transition-colors">
               <Phone className="w-3.5 h-3.5" />
               {CONTACT_INFO.phone}
             </a>
-            <span className="text-border/50">|</span>
-            <span>{CONTACT_INFO.email}</span>
+            <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2 hover:text-primary transition-colors">
+              <Mail className="w-3.5 h-3.5" />
+              {CONTACT_INFO.email}
+            </a>
           </div>
-          <div className="flex items-center gap-3 text-muted-foreground">
-            <span className="text-xs">🌍 English</span>
-            <span className="text-border/50">|</span>
-            <span className="text-xs">₹ INR</span>
+          <div className="flex items-center gap-5 text-muted-foreground/80">
+            <div className="flex items-center gap-3">
+              <a href="https://www.instagram.com/nexvora.dev" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="https://www.linkedin.com/in/sahil-mahida-115835317" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a href="https://github.com/sahilmahida786/PYTHON_ALL_PROGRAM" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                <Github className="w-4 h-4" />
+              </a>
+            </div>
+            <span className="w-px h-3 bg-border/50" />
+            <div className="flex items-center gap-1.5 cursor-pointer hover:text-primary transition-colors">
+              <Globe className="w-3.5 h-3.5" />
+              <span>EN</span>
+            </div>
+            <span className="w-px h-3 bg-border/50" />
+            <div className="flex items-center gap-1.5 cursor-pointer hover:text-primary transition-colors">
+              <span>₹ INR</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main header — glassmorphism navbar */}
+      {/* ────────────────────────────────────────────────────────
+          MAIN NAVIGATION
+          ──────────────────────────────────────────────────────── */}
       <motion.header
         variants={{
-          visible: { y: 0 },
-          hidden: { y: "-100%" },
+          visible: { y: 0, opacity: 1 },
+          hidden: { y: "-100%", opacity: 0 },
         }}
         animate={isHidden ? "hidden" : "visible"}
-        transition={{ duration: 0.35, ease: snappyEasing }}
-        className={cn(
-          "sticky top-0 z-50 w-full transition-all duration-300",
-          isScrolled
-            ? "glass-strong shadow-luxury-lg border-b border-border/30"
-            : "bg-background/5 backdrop-blur-md border-b border-transparent"
-        )}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="sticky top-0 z-40 w-full flex justify-center px-4 sm:px-6 pt-2 pb-2 pointer-events-none"
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 lg:h-[4.5rem]">
+        <motion.div 
+          style={{ paddingTop: headerPadding, paddingBottom: headerPadding, scale: headerScale }}
+          className={cn(
+            "w-full max-w-7xl mx-auto rounded-2xl transition-all duration-500 ease-out border pointer-events-auto",
+            isScrolled
+              ? "glass-strong shadow-luxury-lg border-border/30 px-4 sm:px-6"
+              : "bg-background/20 backdrop-blur-md border-border/10 px-4 sm:px-6 shadow-sm"
+          )}
+        >
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
-            <Logo size="md" />
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Logo size="md" />
+            </motion.div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-0.5" aria-label="Primary">
+            <nav className="hidden lg:flex items-center gap-1 bg-card/30 backdrop-blur-md px-2 py-1.5 rounded-full border border-border/30" aria-label="Primary">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium transition-colors duration-300 group",
-                    isActive(link.href)
-                      ? "text-primary"
-                      : "text-foreground/70 hover:text-primary"
+                    "relative px-5 py-2 text-sm font-semibold rounded-full transition-all duration-300 group overflow-hidden",
+                    isActive(link.href) ? "text-primary" : "text-foreground/80 hover:text-foreground"
                   )}
                   aria-current={isActive(link.href) ? "page" : undefined}
                 >
-                  {link.label}
+                  <span className="relative z-10">{link.label}</span>
+                  {isActive(link.href) && (
+                    <motion.div
+                      layoutId="desktop-nav-indicator"
+                      className="absolute inset-0 bg-primary/10 rounded-full"
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
                   <span
                     className={cn(
-                      "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-primary rounded-full transition-all duration-300",
-                      isActive(link.href)
-                        ? "w-2/3"
-                        : "w-0 group-hover:w-2/3"
+                      "absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full transition-all duration-300",
+                      isActive(link.href) ? "w-1/2" : "w-0 group-hover:w-1/3 opacity-0 group-hover:opacity-50"
                     )}
                   />
                 </Link>
@@ -155,154 +174,171 @@ export function Header() {
             </nav>
 
             {/* Right side actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3 sm:gap-4">
               <ThemeToggle />
 
-              {/* Login — desktop */}
-              <Link href="/login" className="hidden sm:block">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 text-sm hover:bg-primary/10"
-                >
-                  <User className="w-4 h-4" />
-                  <span className="hidden md:inline">Sign In</span>
-                </Button>
-              </Link>
-
               {/* Book Now CTA — desktop */}
-              <Link href="/properties" className="hidden md:block">
-                <Button className="gradient-gold text-black font-semibold px-6 shadow-gold hover:shadow-gold-lg transition-all duration-300 hover:scale-[1.03] gap-2">
+              <Link href="/properties" className="hidden lg:block relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500 to-orange-400 rounded-xl blur opacity-30 group-hover:opacity-70 transition duration-500 animate-pulse-slow"></div>
+                <Button className="relative gradient-gold text-black font-bold px-6 h-10 rounded-xl shadow-gold hover:shadow-gold-lg transition-all duration-300 hover:scale-[1.02] gap-2">
                   <Sparkles className="w-4 h-4" />
                   Book Now
                 </Button>
               </Link>
 
-              {/* Mobile menu toggle — accessible */}
+              {/* Mobile menu toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden w-10 h-10 rounded-xl glass flex items-center justify-center hover:shadow-gold transition-all active:scale-95"
+                className="lg:hidden w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:shadow-gold transition-all active:scale-90 relative overflow-hidden group"
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-nav"
               >
+                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <AnimatePresence mode="wait">
                   {isMobileMenuOpen ? (
-                    <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <X className="w-5 h-5" />
+                    <motion.div key="x" initial={{ rotate: -90, scale: 0 }} animate={{ rotate: 0, scale: 1 }} exit={{ rotate: 90, scale: 0 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                      <X className="w-5 h-5 text-primary" />
                     </motion.div>
                   ) : (
-                    <motion.div key="m" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <Menu className="w-5 h-5" />
+                    <motion.div key="m" initial={{ rotate: 90, scale: 0 }} animate={{ rotate: 0, scale: 1 }} exit={{ rotate: -90, scale: 0 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                      <Menu className="w-5 h-5 text-foreground" />
                     </motion.div>
                   )}
                 </AnimatePresence>
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.header>
 
-      {/* Full-Screen Mobile Menu Drawer */}
+      {/* ────────────────────────────────────────────────────────
+          FULL-SCREEN MOBILE MENU (Apple Style)
+          ──────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            id="mobile-nav"
+            className="fixed inset-0 z-[60] lg:hidden overflow-hidden touch-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[45] lg:hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Mobile navigation"
           >
-            {/* Full background */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-background/98 backdrop-blur-2xl"
-              onClick={() => setIsMobileMenuOpen(false)}
+            {/* Background Blur & Noise */}
+            <motion.div 
+              className="absolute inset-0 bg-background/60 backdrop-blur-2xl"
+              initial={{ backdropFilter: "blur(0px)" }}
+              animate={{ backdropFilter: "blur(30px)" }}
+              exit={{ backdropFilter: "blur(0px)" }}
             />
+            <div className="absolute inset-0 gradient-aurora opacity-50" />
+            <div className="absolute inset-0 bg-noise opacity-30" />
 
-            {/* Menu Content — safe area for notch devices */}
-            <motion.nav
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-0 top-0 bottom-0 w-full sm:w-[400px] bg-background/95 backdrop-blur-3xl shadow-2xl border-l border-border/50 flex flex-col pt-20 px-6 pb-safe overflow-y-auto"
+            {/* Menu Panel — Swipe to close */}
+            <motion.div
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => { if (info.offset.y > 100) setIsMobileMenuOpen(false); }}
+              initial={{ y: "100%", scale: 0.95 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: "100%", scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute inset-x-0 bottom-0 top-0 bg-card/40 border-t border-white/10 rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)] flex flex-col px-6 pt-8 pb-nav overflow-y-auto"
             >
-              <div className="flex flex-col gap-1">
-                {NAV_LINKS.map((link, index) => (
+              {/* Drag Handle */}
+              <div className="w-12 h-1.5 bg-foreground/20 rounded-full mx-auto mb-8 shrink-0" />
+
+              {/* Close Button & Logo */}
+              <div className="flex items-center justify-between mb-8">
+                <Logo size="md" />
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center active:scale-90 transition-transform"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="flex flex-col gap-2 mb-10">
+                {NAV_LINKS.map((link, i) => (
                   <motion.div
                     key={link.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.08 + index * 0.04 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.05, type: "spring", stiffness: 300, damping: 30 }}
                   >
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
-                        "flex items-center justify-between py-4 px-5 text-xl font-heading font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98]",
+                        "flex items-center justify-between p-4 rounded-2xl transition-colors active:scale-[0.98]",
                         isActive(link.href)
-                          ? "text-primary bg-primary/8"
-                          : "text-foreground hover:text-primary hover:bg-primary/5"
+                          ? "bg-primary/10 border border-primary/20"
+                          : "bg-foreground/5 hover:bg-foreground/10"
                       )}
-                      aria-current={isActive(link.href) ? "page" : undefined}
                     >
-                      <span>{link.label}</span>
-                      <ChevronRight
-                        className={cn(
-                          "w-5 h-5 transition-colors",
-                          isActive(link.href)
-                            ? "text-primary"
-                            : "text-muted-foreground/40"
-                        )}
-                      />
+                      <span className={cn("text-xl font-heading font-semibold", isActive(link.href) ? "text-primary gradient-gold-text" : "text-foreground")}>
+                        {link.label}
+                      </span>
+                      <ChevronRight className={cn("w-5 h-5", isActive(link.href) ? "text-primary" : "text-muted-foreground")} />
                     </Link>
                   </motion.div>
                 ))}
               </div>
 
-              {/* Bottom actions — pushed to bottom */}
-              <div className="mt-auto pt-8 space-y-3 pb-8">
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full h-13 text-base gap-2 rounded-2xl"
-                  >
-                    <User className="w-5 h-5" />
-                    Sign In
-                  </Button>
-                </Link>
-                <Link
-                  href="/properties"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Button className="w-full h-14 text-lg font-semibold gradient-gold text-black shadow-gold-lg rounded-2xl mt-2 gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    Book Your Stay
-                  </Button>
-                </Link>
-
-                <div className="flex items-center justify-center gap-6 pt-4 text-sm text-muted-foreground">
-                  <a
-                    href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}
-                    className="flex items-center gap-1.5 hover:text-primary transition-colors"
-                    aria-label="Call us"
-                  >
-                    <Phone className="w-4 h-4" />
-                    Call Us
+              {/* Contact Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-foreground/5 rounded-3xl p-5 mb-8 border border-white/5"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full gradient-gold flex items-center justify-center shadow-gold">
+                    <User className="w-5 h-5 text-black" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm">Need help?</h4>
+                    <p className="text-xs text-muted-foreground">Talk to our concierge</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`} className="flex-1 flex items-center justify-center gap-2 bg-background/50 py-3 rounded-xl text-sm font-medium active:scale-95 transition-transform">
+                    <Phone className="w-4 h-4" /> Call
+                  </a>
+                  <a href={`mailto:${CONTACT_INFO.email}`} className="flex-1 flex items-center justify-center gap-2 bg-background/50 py-3 rounded-xl text-sm font-medium active:scale-95 transition-transform">
+                    <Mail className="w-4 h-4" /> Email
                   </a>
                 </div>
-              </div>
-            </motion.nav>
+              </motion.div>
+
+              {/* Social & Settings */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-auto flex items-center justify-between pt-6 border-t border-border/50 pb-8"
+              >
+                <div className="flex gap-4">
+                  <a href="https://www.instagram.com/nexvora.dev" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-foreground/80 hover:text-primary active:scale-90 transition-all">
+                    <Instagram className="w-5 h-5" />
+                  </a>
+                  <a href="https://www.linkedin.com/in/sahil-mahida-115835317" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-foreground/80 hover:text-primary active:scale-90 transition-all">
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                  <a href="https://github.com/sahilmahida786/PYTHON_ALL_PROGRAM" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-foreground/80 hover:text-primary active:scale-90 transition-all">
+                    <Github className="w-5 h-5" />
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 bg-foreground/5 px-3 py-1.5 rounded-full">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs font-medium">EN</span>
+                </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

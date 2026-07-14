@@ -38,17 +38,9 @@ export function PropertyCard({
   variant = "default",
 }: PropertyCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   const primaryImage =
     property.images.find((img) => img.isPrimary) || property.images[0];
-
-  const originalPrice = property.basePrice * 1.35; // rack rate display
 
   return (
     <motion.div

@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map, List } from "lucide-react";
 import { PropertyCard } from "@/components/properties/PropertyCard";
+import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { RecentlyViewed } from "@/components/properties/RecentlyViewed";
 import { mockProperties } from "@/data/mockProperties";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,7 @@ export default function PropertiesClient() {
   const [selectedSort, setSelectedSort] = useState("popularity");
   const [selectedPrice, setSelectedPrice] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [isMapView, setIsMapView] = useState(false);
 
   const filteredProperties = useMemo(() => {
     let results = [...mockProperties];
@@ -150,23 +152,27 @@ export default function PropertiesClient() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
         {/* Filter Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          {/* H1 Fix: horizontal scrolling filter pills instead of flex-wrap */}
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 sm:mx-0 sm:px-0 sm:pb-0 sm:flex-wrap w-full sm:w-auto">
-            {propertyTypes.map((type) => (
-              <button
-                key={type.value}
-                onClick={() => setSelectedType(type.value)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap shrink-0 active:scale-95",
-                  selectedType === type.value
-                    ? "gradient-gold text-black shadow-gold"
-                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-accent"
-                )}
-                aria-label={`Filter by ${type.label}`}
-              >
-                {type.label}
-              </button>
-            ))}
+          {/* H1 Fix: horizontal scrolling filter pills with fade mask for visual cue */}
+          <div className="relative w-full sm:w-auto">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 sm:mx-0 sm:px-0 sm:pb-0 sm:flex-wrap">
+              {propertyTypes.map((type) => (
+                <button
+                  key={type.value}
+                  onClick={() => setSelectedType(type.value)}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap shrink-0 active:scale-95",
+                    selectedType === type.value
+                      ? "gradient-gold text-black shadow-gold"
+                      : "bg-muted text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                  aria-label={`Filter by ${type.label}`}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+            {/* Visual cue for scrollable area on mobile */}
+            <div className="absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none sm:hidden" />
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
@@ -204,6 +210,30 @@ export default function PropertiesClient() {
                 </Badge>
               )}
             </Button>
+
+            {/* Map / List Toggle */}
+            <div className="flex items-center bg-muted rounded-full p-1 ml-2">
+              <button
+                onClick={() => setIsMapView(false)}
+                className={cn(
+                  "p-1.5 rounded-full transition-colors flex items-center justify-center",
+                  !isMapView ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+                aria-label="List View"
+              >
+                <List className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsMapView(true)}
+                className={cn(
+                  "p-1.5 rounded-full transition-colors flex items-center justify-center",
+                  isMapView ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+                aria-label="Map View"
+              >
+                <Map className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -280,17 +310,47 @@ export default function PropertiesClient() {
           </p>
         </div>
 
-        {/* Properties Grid */}
+        {/* Properties View */}
         {filteredProperties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {filteredProperties.map((property, index) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                index={index}
+          isMapView ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full h-[600px] rounded-3xl overflow-hidden relative glass border border-border/50 group"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&h=900&fit=crop"
+                alt="Gir Forest Area Map"
+                fill
+                className="object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-700"
               />
-            ))}
-          </div>
+              <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+              
+              {/* Coming soon overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <div className="glass-card p-6 rounded-2xl text-center max-w-md border border-white/10 shadow-luxury">
+                  <Map className="w-10 h-10 text-gold mx-auto mb-4 opacity-80" />
+                  <h3 className="font-heading text-2xl font-bold mb-2">Interactive Map</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Premium map view is currently being integrated with live safari gate proximity data.
+                  </p>
+                  <Button variant="outline" className="mt-6 border-white/20 hover:bg-white/5 pointer-events-auto" onClick={() => setIsMapView(false)}>
+                    Return to List View
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {filteredProperties.map((property, index) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  index={index}
+                />
+              ))}
+            </div>
+          )
         ) : (
           <div className="text-center py-20">
             <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">

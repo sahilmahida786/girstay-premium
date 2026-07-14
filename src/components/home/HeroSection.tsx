@@ -13,6 +13,7 @@ export function HeroSection() {
   useEffect(() => {
     // Generate a stable number on mount, then gently fluctuate
     const base = 8 + Math.floor(Math.random() * 7); // 8-14
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBrowsing(base);
     const interval = setInterval(() => {
       setBrowsing((prev) => {
