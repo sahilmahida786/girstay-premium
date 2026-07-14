@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Users, Search, Sparkles } from "lucide-react";
+import { CalendarDays, Users, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { SearchModal } from "./SearchModal";
 
@@ -39,66 +39,75 @@ export function SearchWidget() {
     <>
       <div className="w-full">
         {/* Luxury Glass Search Card */}
-        <div className="glass-dark border border-yellow-700/30 rounded-[28px] p-5 shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          {/* Subtle hover gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="glass-dark border border-white/10 sm:border-yellow-700/30 rounded-[32px] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden group transition-all duration-500">
+          {/* Subtle hover gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
-          <div className="relative z-10 flex items-center gap-2.5 mb-5 text-white">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
-            <span className="font-semibold text-base tracking-wide">Find your perfect stay</span>
-          </div>
-          
-          <div className="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-center border border-white/10 rounded-[20px] bg-black/20 overflow-visible sm:overflow-hidden">
-            <div className="flex flex-1 divide-x divide-white/10 overflow-x-auto scrollbar-hide">
+          <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:bg-black/20 sm:border sm:border-white/10 sm:rounded-[24px] sm:p-2">
+            
+            {/* Mobile: Grid Layout | Desktop: Flex Row */}
+            <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-1 sm:divide-x sm:divide-white/10 sm:gap-0">
+              
               {/* Check-in */}
-              <div className="flex-1 p-3 sm:py-4 sm:px-5 min-w-[100px] cursor-pointer" onClick={() => setIsModalOpen(true)}>
-                <div className="flex items-center gap-1.5 text-white/50 text-[10px] sm:text-xs uppercase tracking-wider mb-1">
-                  <CalendarDays className="w-3 h-3 text-yellow-500" />
-                  <span className="font-medium">Check In</span>
+              <div 
+                className="col-span-1 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
+                onClick={() => setIsModalOpen(true)}
+              >
+                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
+                  <CalendarDays className="w-3.5 h-3.5 text-yellow-500" />
+                  <span>Check In</span>
                 </div>
-                <div className="text-white text-xs sm:text-sm font-medium whitespace-nowrap">
+                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
                   {checkIn ? new Date(checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Select date"}
                 </div>
               </div>
 
               {/* Check-out */}
-              <div className="flex-1 p-3 sm:py-4 sm:px-5 min-w-[100px] cursor-pointer" onClick={() => setIsModalOpen(true)}>
-                <div className="flex items-center gap-1.5 text-white/50 text-[10px] sm:text-xs uppercase tracking-wider mb-1">
-                  <CalendarDays className="w-3 h-3 text-yellow-500" />
-                  <span className="font-medium">Check Out</span>
+              <div 
+                className="col-span-1 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
+                onClick={() => setIsModalOpen(true)}
+              >
+                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
+                  <CalendarDays className="w-3.5 h-3.5 text-yellow-500" />
+                  <span>Check Out</span>
                 </div>
-                <div className="text-white text-xs sm:text-sm font-medium whitespace-nowrap">
+                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
                   {checkOut ? new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Select date"}
                 </div>
               </div>
 
               {/* Guests */}
-              <div className="flex-1 p-3 sm:py-4 sm:px-5 pr-14 min-w-[100px] cursor-pointer" onClick={() => setIsModalOpen(true)}>
-                <div className="flex items-center gap-1.5 text-white/50 text-[10px] sm:text-xs uppercase tracking-wider mb-1">
-                  <Users className="w-3 h-3 text-yellow-500" />
-                  <span className="font-medium">Guests</span>
+              <div 
+                className="col-span-2 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
+                onClick={() => setIsModalOpen(true)}
+              >
+                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
+                  <Users className="w-3.5 h-3.5 text-yellow-500" />
+                  <span>Guests</span>
                 </div>
-                <div className="text-white text-xs sm:text-sm font-medium whitespace-nowrap">
-                  {guests} Guests
+                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
+                  {guests} {guests === "1" ? "Guest" : "Guests"}
                 </div>
               </div>
             </div>
 
-            {/* Search Button (Floating overlapping button on mobile, embedded on desktop) */}
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 sm:static sm:translate-y-0 sm:right-auto sm:p-2 pointer-events-auto">
+            {/* Search Button (Full width on mobile, circular on desktop) */}
+            <div className="mt-2 sm:mt-0 sm:shrink-0 sm:pr-2">
               <motion.button
-                whileTap={{ scale: 0.9 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleSearch}
-                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full gradient-gold flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] transition-shadow"
+                className="w-full sm:w-14 h-14 rounded-2xl sm:rounded-full gradient-gold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(234,179,8,0.2)] hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] transition-all duration-300"
               >
-                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-black" strokeWidth={2.5} />
+                <Search className="w-5 h-5 text-black" strokeWidth={2.5} />
+                <span className="sm:hidden text-black font-bold text-base">Search Stays</span>
               </motion.button>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* Mobile Modal (reused to handle the complex inputs elegantly) */}
+      {/* Mobile Modal */}
       <SearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
