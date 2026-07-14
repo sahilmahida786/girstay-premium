@@ -3,12 +3,12 @@
 import { SafeImage } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star, MapPin, Heart, Wifi, Car, Waves, UtensilsCrossed, Snowflake } from "lucide-react";
+import { Star, MapPin, Heart, Wifi, Car, Waves, UtensilsCrossed, Snowflake, ShieldCheck } from "lucide-react";
 import { cardHover, tapScale, viewportReveal } from "@/lib/motion";
 import { Badge } from "@/components/ui/badge";
 import { Property } from "@/types/property";
 import { formatPrice, cn } from "@/lib/utils";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const amenityIcons: Record<string, React.ReactNode> = {
   wifi: <Wifi className="w-3.5 h-3.5" />,
@@ -48,13 +48,7 @@ export function PropertyCard({
   const primaryImage =
     property.images.find((img) => img.isPrimary) || property.images[0];
 
-  // Client-side pseudo-random social proof
-  const lastBooked = useMemo(() => {
-    const charCode = property.id.charCodeAt(0) || 1;
-    return (charCode % 12) + 1; // 1 to 12 hours ago
-  }, [property.id]);
-
-  const originalPrice = property.basePrice * 1.35; // 35% higher rack rate
+  const originalPrice = property.basePrice * 1.35; // rack rate display
 
   return (
     <motion.div
@@ -130,22 +124,12 @@ export function PropertyCard({
             </div>
 
             {/* Price tag - bottom of image */}
-            <div className="absolute bottom-4 left-4 z-10 flex flex-col gap-1">
-              {mounted && property.rating >= 4.8 && (
-                <Badge className="bg-red-500/90 text-white hover:bg-red-500 text-[10px] w-fit font-bold uppercase tracking-wider border-none">
-                  🔥 Popular choice
-                </Badge>
-              )}
+            <div className="absolute bottom-4 left-4 z-10">
               <div className="glass-dark rounded-lg px-3 py-1.5 inline-flex items-end gap-1">
                 <span className="text-xs text-white/60 mb-0.5">from</span>
-                <div className="flex flex-col leading-none">
-                  <span className="text-[10px] text-white/40 line-through decoration-red-500/50">
-                    {formatPrice(originalPrice)}
-                  </span>
-                  <span className="price-number text-lg font-bold text-white">
-                    {formatPrice(property.basePrice)}
-                  </span>
-                </div>
+                <span className="price-number text-lg font-bold text-white">
+                  {formatPrice(property.basePrice)}
+                </span>
                 <span className="text-xs text-white/60 mb-0.5">/night</span>
               </div>
             </div>
@@ -187,16 +171,11 @@ export function PropertyCard({
               </p>
             )}
 
-            {/* Social Proof */}
-            {mounted && (
-              <div className="text-xs text-red-500 font-medium mb-3 flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                </span>
-                Last booked {lastBooked} {lastBooked === 1 ? 'hour' : 'hours'} ago
-              </div>
-            )}
+            {/* Genuine trust signal */}
+            <div className="text-xs text-emerald-500 font-medium mb-3 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Free cancellation available
+            </div>
 
             {/* Amenities */}
             <div className="flex items-center gap-3 flex-wrap">
