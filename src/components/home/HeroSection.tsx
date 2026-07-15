@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { Star, Trophy, ArrowRight, Flame } from "lucide-react";
 import { SearchWidget } from "./SearchWidget";
@@ -9,12 +9,6 @@ import { luxuryEasing, staggerContainer, fadeUpStagger } from "@/lib/motion";
 
 export function HeroSection() {
   const [browsing, setBrowsing] = useState(0);
-  const { scrollY } = useScroll();
-  
-  // High-performance Parallax transforms
-  const backgroundY = useTransform(scrollY, [0, 500], ["0%", "15%"]);
-  const textY = useTransform(scrollY, [0, 500], ["0%", "25%"]);
-  const opacityFade = useTransform(scrollY, [0, 300], [1, 0]);
 
   useEffect(() => {
     const base = 28 + Math.floor(Math.random() * 8); // e.g. 34 Guests
@@ -29,10 +23,12 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[100dvh] flex flex-col justify-end overflow-hidden pb-safe pt-28 bg-[#050505]">
       {/* ────────────────────────────────────────────────────────
-          CINEMATIC BACKGROUND & PARALLAX
+          CINEMATIC BACKGROUND
           ──────────────────────────────────────────────────────── */}
       <motion.div
-        style={{ y: backgroundY }}
+        initial={{ scale: 1.05 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1.5, ease: luxuryEasing }}
         className="absolute inset-0 z-0 origin-top"
       >
         <Image
@@ -58,7 +54,6 @@ export function HeroSection() {
         
         {/* 1. Headlines & Typography */}
         <motion.div
-          style={{ y: textY, opacity: opacityFade }}
           variants={staggerContainer}
           initial="hidden"
           animate="visible"

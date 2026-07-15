@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Phone, ChevronRight, Sparkles, Mail, Globe } from "lucide-react";
 
 const Instagram = ({ className }: { className?: string }) => (
@@ -28,25 +28,47 @@ export function Header() {
   const [isHidden, setIsHidden] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { scrollY } = useScroll();
 
-  // Smooth scroll values for header scaling
-  const smoothY = useSpring(scrollY, { stiffness: 300, damping: 30, restDelta: 0.001 });
-  const headerPadding = useTransform(smoothY, [0, 100], ["1rem", "0.5rem"]);
-  const headerScale = useTransform(smoothY, [0, 100], [1, 0.98]);
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    
-    if (latest > 20) setIsScrolled(true);
-    else setIsScrolled(false);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Update scrolled state
+      if (currentScrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
 
-    // Hide on scroll down, show on scroll up (only on desktop to ensure mobile always has menu)
-    if (window.innerWidth >= 1024) {
-      if (latest > previous && latest > 150) setIsHidden(true);
-      else setIsHidden(false);
-    }
-  });
+      // Hide on scroll down, show on scroll up (desktop only)
+      if (window.innerWidth >= 1024) {
+        if (currentScrollY > lastScrollY && currentScrollY > 150) {
+          setIsHidden(true);
+        } else {
+          setIsHidden(false);
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    // Throttle the scroll event listener slightly for performance
+    let ticking = false;
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", scrollListener, { passive: true });
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, []);
 
   // Close menu on route change
   useEffect(() => {
@@ -128,13 +150,12 @@ export function Header() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <motion.div 
-          style={{ paddingTop: headerPadding, paddingBottom: headerPadding, scale: headerScale }}
+        <div 
           className={cn(
             "w-full max-w-7xl mx-auto rounded-2xl transition-all duration-500 ease-out border pointer-events-auto",
             isScrolled
-              ? "glass-strong shadow-luxury-lg border-border/30 px-4 sm:px-6"
-              : "bg-background/20 backdrop-blur-md border-border/10 px-4 sm:px-6 shadow-sm"
+              ? "glass-strong shadow-luxury-lg border-border/30 px-4 sm:px-6 py-2 scale-[0.98]"
+              : "bg-background/20 backdrop-blur-md border-border/10 px-4 sm:px-6 py-4 shadow-sm scale-100"
           )}
         >
           <div className="flex items-center justify-between h-14">
@@ -208,7 +229,7 @@ export function Header() {
               </button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </motion.header>
 
       {/* ────────────────────────────────────────────────────────
