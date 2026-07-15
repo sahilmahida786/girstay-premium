@@ -10,12 +10,34 @@ const CTASection = dynamic(() => import("@/components/home/CTASection").then(m =
 
 export default function HomePage() {
   return (
-    <>
+    <main className="bg-[#060606] text-white min-h-screen">
+      {/* 
+        The HeroSection already ends with a heavy black cinematic gradient 
+        so it blends perfectly into this dark #060606 background. 
+      */}
       <HeroSection />
+      
+      {/* 
+        TrustBar now acts as a floating luxury metric bar directly below the Hero, 
+        maintaining the cinematic dark aesthetic. 
+      */}
       <TrustBar />
+      
+      {/* 
+        PopularStays provides the core booking functionality.
+        We ensure it has no harsh borders and blends cleanly. 
+      */}
       <PopularStays />
+      
+      {/* 
+        Testimonials is a massive cinematic section with dark overlays.
+      */}
       <Testimonials />
+      
+      {/* 
+        CTASection provides the final luxury consultation push.
+      */}
       <CTASection />
-    </>
+    </main>
   );
 }

@@ -1,170 +1,106 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import { Phone, ArrowRight, Building2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { Phone, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { CONTACT_INFO } from "@/lib/constants";
 
-// Animated counter hook — counts up when element enters viewport
-function useCountUp(target: number, duration: number = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  useEffect(() => {
-    if (!isInView) return;
-    const start = performance.now();
-    const step = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic for satisfying deceleration
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [isInView, target, duration]);
-
-  return { count, ref };
-}
-
-const stats = [
-  { value: 50, suffix: "+", label: "Premium Properties" },
-  { value: 10000, suffix: "+", label: "Happy Guests" },
-  { value: 4.8, suffix: "★", label: "Average Rating", isDecimal: true },
-  { value: 24, suffix: "/7", label: "Support Available" },
-];
-
 export function CTASection() {
   return (
-    <section className="py-20 sm:py-28 relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 gradient-hero opacity-50" />
-      <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-gold/10 blur-3xl" />
+    <section className="relative py-32 sm:py-48 overflow-hidden bg-[#060606] flex flex-col items-center justify-center min-h-[80vh]">
+      
+      {/* ── AMBIENT BACKGROUND ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Massive breathing gold glow */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.15, 0.25, 0.15]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[1000px] sm:h-[1000px] bg-gradient-to-tr from-[#D4AF37]/20 to-[#FFD27A]/20 rounded-full blur-[120px]"
+        />
+        {/* Noise overlay for texture */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* For Travelers */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass-card rounded-3xl p-8 sm:p-10"
-          >
-            <div className="w-14 h-14 rounded-2xl gradient-gold flex items-center justify-center mb-6">
-              <Phone className="w-7 h-7 text-black" />
-            </div>
-            <h3 className="font-heading text-2xl sm:text-3xl font-bold mb-3">
-              Planning Your{" "}
-              <span className="gradient-gold-text">Gir Trip?</span>
-            </h3>
-            <p className="text-muted-foreground mb-6 leading-relaxed">
-              Our travel experts will help you find the perfect resort, arrange
-              safari permits, and plan your entire Gir itinerary — for free.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}>
-                <Button className="gradient-gold text-black font-semibold gap-2 h-12 px-6 w-full sm:w-auto">
-                  <Phone className="w-4 h-4" />
-                  Call Now
-                </Button>
-              </a>
-              <Link href="/properties">
-                <Button
-                  variant="outline"
-                  className="gap-2 h-12 px-6 w-full sm:w-auto group"
-                >
-                  Browse Properties
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center">
+        
+        {/* Subheading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-8"
+        >
+          <Sparkles className="w-4 h-4 text-[#FFD27A]" />
+          <span className="text-[12px] font-bold tracking-[0.2em] text-white/80 uppercase">
+            Bespoke Consultation
+          </span>
+        </motion.div>
 
-          {/* For Property Owners */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass-card rounded-3xl p-8 sm:p-10"
-          >
-            <div className="w-14 h-14 rounded-2xl gradient-emerald flex items-center justify-center mb-6">
-              <Building2 className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="font-heading text-2xl sm:text-3xl font-bold mb-3">
-              Own a Property in{" "}
-              <span className="gradient-gold-text">Gir?</span>
-            </h3>
-            <p className="text-muted-foreground mb-6 leading-relaxed">
-              Join GirStay and reach thousands of travelers looking for premium
-              stays. Get a professional dashboard, booking management, and more.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/contact">
-                <Button className="gradient-emerald text-white font-semibold gap-2 h-12 px-6 w-full sm:w-auto">
-                  <Building2 className="w-4 h-4" />
-                  List Your Property
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button
-                  variant="outline"
-                  className="gap-2 h-12 px-6 w-full sm:w-auto group"
-                >
-                  Learn More
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
+        {/* Heading */}
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.32, 0.72, 0, 1] }}
+          className="font-heading text-5xl sm:text-6xl lg:text-8xl font-bold text-white tracking-tight leading-[1.1] mb-6 drop-shadow-lg"
+        >
+          Curate Your <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFD27A] to-[#D4AF37] italic pr-2">
+            Perfect Escape
+          </span>
+        </motion.h2>
 
-        {/* Stats bar with animated counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
-          {stats.map((stat) => (
-            <AnimatedStat key={stat.label} stat={stat} />
-          ))}
-        </div>
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
+          className="text-lg sm:text-xl text-white/60 font-light max-w-2xl leading-relaxed mb-12 sm:mb-16"
+        >
+          Speak directly with our local Gir experts. We’ll secure the finest villas, arrange private safari permits, and handle every detail of your journey.
+        </motion.p>
+
+        {/* Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.32, 0.72, 0, 1] }}
+          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto"
+        >
+          {/* Primary CTA - The Floating Magnetic Button */}
+          <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`} className="w-full sm:w-auto">
+            <div className="relative group w-full sm:w-auto">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] to-[#F8E7B5] rounded-full blur-[20px] opacity-40 group-hover:opacity-70 transition-opacity duration-700" />
+              <button className="relative w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#FFD27A] to-[#D4AF37] text-black font-bold text-base sm:text-lg tracking-wide uppercase active:scale-95 transition-transform duration-300 shadow-[0_0_40px_rgba(212,175,55,0.4)]">
+                <Phone className="w-5 h-5" />
+                Speak to an Expert
+              </button>
+            </div>
+          </a>
+
+          {/* Secondary CTA - Elegant Ghost Button */}
+          <Link href="/properties" className="w-full sm:w-auto">
+            <button className="group w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-5 rounded-full border border-white/20 bg-white/[0.02] backdrop-blur-md text-white font-bold text-base sm:text-lg tracking-wide hover:bg-white/[0.08] hover:border-white/40 active:scale-95 transition-all duration-300">
+              Browse Collection
+              <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
+            </button>
+          </Link>
+        </motion.div>
+
       </div>
+      
+      {/* ── BOTTOM CINEMATIC FADE INTO FOOTER ── */}
+      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-[#020202] to-transparent pointer-events-none z-10" />
     </section>
-  );
-}
-
-function AnimatedStat({
-  stat,
-}: {
-  stat: { value: number; suffix: string; label: string; isDecimal?: boolean };
-}) {
-  const { count, ref } = useCountUp(
-    stat.isDecimal ? Math.floor(stat.value * 10) : stat.value,
-    stat.value > 1000 ? 2500 : 1800
-  );
-
-  const displayValue = stat.isDecimal
-    ? (count / 10).toFixed(1)
-    : count.toLocaleString("en-IN");
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: 0.3 }}
-      className="text-center p-4 rounded-xl glass"
-    >
-      <div className="font-heading text-2xl sm:text-3xl font-bold gradient-gold-text mb-1">
-        {displayValue}
-        {stat.suffix}
-      </div>
-      <div className="text-xs sm:text-sm text-muted-foreground">
-        {stat.label}
-      </div>
-    </motion.div>
   );
 }
