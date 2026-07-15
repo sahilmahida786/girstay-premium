@@ -1,14 +1,30 @@
 "use client";
 
-import { SafeImage } from "@/components/ui/SafeImage";
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star, MapPin, Heart, Wifi, Car, Waves, UtensilsCrossed, Snowflake, ShieldCheck } from "lucide-react";
-import { cardHover, tapScale, viewportReveal } from "@/lib/motion";
-import { Badge } from "@/components/ui/badge";
+import { SafeImage as Image } from "@/components/ui/SafeImage";
+import { 
+  Star, 
+  Heart, 
+  Wifi, 
+  Car, 
+  Waves, 
+  UtensilsCrossed, 
+  Snowflake, 
+  ShieldCheck, 
+  MapPin,
+  TrendingUp,
+  Award,
+  Clock,
+  Leaf
+} from "lucide-react";
 import { Property } from "@/types/property";
 import { formatPrice, cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+
+// ────────────────────────────────────────────────────────
+// CONFIGURATION & MAPPING
+// ────────────────────────────────────────────────────────
 
 const amenityIcons: Record<string, React.ReactNode> = {
   wifi: <Wifi className="w-3.5 h-3.5" />,
@@ -19,12 +35,24 @@ const amenityIcons: Record<string, React.ReactNode> = {
 };
 
 const typeLabels: Record<string, string> = {
-  resort: "Resort",
-  villa: "Luxury Villa",
+  resort: "Luxury Resort",
+  villa: "Private Villa",
   cottage: "Cottage",
-  farmhouse: "Farm House",
-  jungle_stay: "Jungle Stay",
+  farmhouse: "Farm Stay",
+  jungle_stay: "Jungle Lodge",
 };
+
+// Simulated dynamic badges based on property properties for the demo
+const getPremiumBadge = (prop: Property) => {
+  if (prop.rating >= 4.9) return { label: "Guest Favorite", icon: Award, color: "text-yellow-500", bg: "bg-yellow-500/10 border-yellow-500/20" };
+  if (prop.reviewCount > 100) return { label: "Trending", icon: TrendingUp, color: "text-orange-500", bg: "bg-orange-500/10 border-orange-500/20" };
+  if (prop.basePrice < 5000) return { label: "Only 2 rooms left", icon: Clock, color: "text-red-500", bg: "bg-red-500/10 border-red-500/20" };
+  return { label: "Eco Friendly", icon: Leaf, color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20" };
+};
+
+// ────────────────────────────────────────────────────────
+// COMPONENT
+// ────────────────────────────────────────────────────────
 
 interface PropertyCardProps {
   property: Property;
@@ -32,183 +60,167 @@ interface PropertyCardProps {
   variant?: "default" | "featured" | "compact";
 }
 
-export function PropertyCard({
-  property,
-  index = 0,
-  variant = "default",
-}: PropertyCardProps) {
+export function PropertyCard({ property, index = 0, variant = "default" }: PropertyCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
-
-  const primaryImage =
-    property.images.find((img) => img.isPrimary) || property.images[0];
+  const primaryImage = property.images.find((img) => img.isPrimary) || property.images[0];
+  const premiumBadge = getPremiumBadge(property);
+  const BadgeIcon = premiumBadge.icon;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={viewportReveal}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
+    <motion.article
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+      className="group"
     >
-      <Link href={`/properties/${property.slug}`}>
-        <motion.article
-          whileHover={cardHover}
-          whileTap={tapScale}
-          className={cn(
-            "group relative rounded-2xl overflow-hidden bg-card border border-border/50",
-            "hover:border-primary/30 transition-all duration-300",
-            "hover:shadow-luxury-lg",
-            variant === "featured" && "lg:flex"
-          )}
-        >
-          {/* Image Section */}
-          <div
-            className={cn(
-              "relative overflow-hidden",
-              variant === "featured"
-                ? "h-64 sm:h-72 lg:h-auto lg:w-2/5"
-                : "h-56 sm:h-64"
-            )}
-          >
-            <SafeImage
-              src={primaryImage?.url || ""}
-              alt={primaryImage?.alt || property.name}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              loading="lazy"
-              showSkeleton={true}
-            />
+      <Link href={`/properties/${property.slug}`} className="block focus-ring rounded-[2rem]">
+        <div className="relative rounded-[2rem] overflow-hidden bg-card/40 border border-border/50 shadow-sm hover:shadow-luxury-lg hover:border-primary/40 transition-all duration-500">
+          
+          {/* ────────────────────────────────────────────────────────
+              IMAGE EXPERIENCE
+              ──────────────────────────────────────────────────────── */}
+          <div className="relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-muted">
+            {/* Ken Burns effect on hover */}
+            <div className="absolute inset-0 transition-transform duration-[1.5s] ease-out group-hover:scale-110">
+              <Image
+                src={primaryImage?.url || ""}
+                alt={primaryImage?.alt || property.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                loading="lazy"
+                showSkeleton={true}
+              />
+            </div>
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            {/* Gradient Overlays */}
+            {/* Top gradient for badges */}
+            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none opacity-80" />
+            
+            {/* Heavy bottom gradient for text readability (Price) */}
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
 
-            {/* Wishlist button */}
-            <motion.button
-              whileTap={{ scale: 0.8 }}
+            {/* ────────────────────────────────────────────────────────
+                FLOATING BADGES & ACTIONS
+                ──────────────────────────────────────────────────────── */}
+            
+            {/* Top Left: Property Type */}
+            <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+              <div className="glass-dark px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
+                <span className="text-[10px] font-bold tracking-[0.1em] text-white uppercase">
+                  {typeLabels[property.type]}
+                </span>
+              </div>
+              
+              {/* Premium Dynamic Badge */}
+              <div className={cn("inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-md shadow-sm w-fit", premiumBadge.bg)}>
+                <BadgeIcon className={cn("w-3 h-3", premiumBadge.color)} />
+                <span className="text-[10px] font-bold tracking-wide text-white">
+                  {premiumBadge.label}
+                </span>
+              </div>
+            </div>
+
+            {/* Top Right: Animated Wishlist Heart */}
+            <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setIsWishlisted(!isWishlisted);
               }}
-              className="absolute top-4 right-4 w-10 h-10 sm:w-9 sm:h-9 rounded-full glass flex items-center justify-center hover:scale-110 transition-all z-10"
-              aria-label="Save to wishlist"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full glass flex items-center justify-center transition-transform hover:scale-110 active:scale-90"
+              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <motion.div
-                animate={isWishlisted ? { scale: [1, 1.3, 1] } : { scale: 1 }}
-                transition={{ duration: 0.4, type: "spring" }}
-              >
+              <motion.div animate={isWishlisted ? { scale: [1, 1.4, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}>
                 <Heart
                   className={cn(
-                    "w-4 h-4 transition-colors",
-                    isWishlisted
-                      ? "fill-red-500 text-red-500"
-                      : "text-white"
+                    "w-4 h-4 transition-colors duration-300",
+                    isWishlisted ? "fill-red-500 text-red-500" : "text-white"
                   )}
                 />
               </motion.div>
-            </motion.button>
+            </button>
 
-            {/* Property type badge */}
-            <div className="absolute top-4 left-4 z-10">
-              <Badge className="glass text-white border-white/20 text-xs font-medium">
-                {typeLabels[property.type]}
-              </Badge>
-            </div>
-
-            {/* Price tag - bottom of image */}
-            <div className="absolute bottom-4 left-4 z-10">
-              <div className="glass-dark rounded-lg px-3 py-1.5 inline-flex items-end gap-1">
-                <span className="text-xs text-white/60 mb-0.5">from</span>
-                <span className="price-number text-lg font-bold text-white">
+            {/* Bottom Right: Price */}
+            <div className="absolute bottom-4 right-4 z-10 flex flex-col items-end">
+              <span className="text-[10px] text-white/80 font-medium tracking-wide uppercase mb-0.5">Starting from</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-heading font-bold text-white drop-shadow-md">
                   {formatPrice(property.basePrice)}
                 </span>
-                <span className="text-xs text-white/60 mb-0.5">/night</span>
+                <span className="text-xs text-white/70 font-medium">/night</span>
               </div>
             </div>
           </div>
 
-          {/* Content Section */}
-          <div
-            className={cn(
-              "p-5",
-              variant === "featured" && "lg:flex-1 lg:p-6 lg:flex lg:flex-col lg:justify-between"
-            )}
-          >
-            {/* Title and rating */}
-            <div className="mb-3">
-              <div className="flex items-start justify-between gap-2 mb-1.5">
-                <h3 className="font-heading text-lg font-semibold line-clamp-1 group-hover:text-primary transition-colors">
-                  {property.name}
-                </h3>
-                <div className="flex items-center gap-1 shrink-0">
-                  <Star className="w-4 h-4 text-gold fill-gold" />
-                  <span className="text-sm font-semibold">{property.rating}</span>
-                  <span className="text-xs text-muted-foreground">
-                    ({property.reviewCount})
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <MapPin className="w-3.5 h-3.5 text-primary" />
-                <span>
-                  {property.city}, {property.state}
-                </span>
+          {/* ────────────────────────────────────────────────────────
+              CONTENT PANEL
+              ──────────────────────────────────────────────────────── */}
+          <div className="p-5 sm:p-6 bg-card relative z-20">
+            
+            {/* Title & Rating Row */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <h3 className="font-heading text-xl font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors duration-300">
+                {property.name}
+              </h3>
+              <div className="flex items-center gap-1 shrink-0 glass px-2 py-1 rounded-lg border-border/50 bg-background/50">
+                <Star className="w-3.5 h-3.5 text-[#D4AF37] fill-[#D4AF37]" />
+                <span className="text-sm font-bold text-foreground">{property.rating}</span>
+                <span className="text-[10px] text-muted-foreground">({property.reviewCount})</span>
               </div>
             </div>
 
-            {/* Description — featured only */}
-            {variant === "featured" && (
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                {property.shortDescription}
-              </p>
-            )}
+            {/* Location */}
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+              <MapPin className="w-3.5 h-3.5 text-primary/70" />
+              <span className="font-medium">
+                {property.city}, {property.state}
+              </span>
+            </div>
 
-            {/* Genuine trust signal */}
-            <div className="text-xs text-emerald-500 font-medium mb-3 flex items-center gap-1.5">
+            {/* Trust Signal */}
+            <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-5 bg-emerald-500/10 w-fit px-2 py-1 rounded-md">
               <ShieldCheck className="w-3.5 h-3.5" />
               Free cancellation available
             </div>
 
-            {/* Amenities */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {property.amenities.slice(0, 5).map(
-                (amenity) =>
+            {/* Divider */}
+            <hr className="border-border/60 mb-5" />
+
+            {/* Bottom Row: Amenities & CTA */}
+            <div className="flex items-center justify-between gap-4">
+              
+              {/* Amenities Row */}
+              <div className="flex items-center gap-3">
+                {property.amenities.slice(0, 4).map((amenity) => 
                   amenityIcons[amenity] && (
-                    <div
-                      key={amenity}
-                      className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                    <div 
+                      key={amenity} 
+                      className="w-8 h-8 rounded-full bg-accent/50 flex items-center justify-center text-primary/80"
                       title={amenity}
                     >
-                      <span className="text-primary">
-                        {amenityIcons[amenity]}
-                      </span>
+                      {amenityIcons[amenity]}
                     </div>
                   )
-              )}
-              {property.amenities.length > 5 && (
-                <span className="text-xs text-muted-foreground">
-                  +{property.amenities.length - 5} more
-                </span>
-              )}
-            </div>
-
-            {/* Highlights */}
-            {variant === "featured" && property.highlights.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {property.highlights.slice(0, 3).map((highlight) => (
-                  <Badge
-                    key={highlight}
-                    variant="secondary"
-                    className="text-xs font-normal"
-                  >
-                    {highlight}
-                  </Badge>
-                ))}
+                )}
+                {property.amenities.length > 4 && (
+                  <div className="w-8 h-8 rounded-full bg-accent/50 flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+                    +{property.amenities.length - 4}
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Hover CTA Button */}
+              <div className="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                Book
+              </div>
+
+            </div>
           </div>
-        </motion.article>
+          
+        </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 }
