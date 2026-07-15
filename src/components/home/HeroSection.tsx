@@ -1,165 +1,291 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
-import { Star, Trophy, ArrowRight, Flame } from "lucide-react";
+import {
+  Star,
+  Trophy,
+  ArrowRight,
+  Flame,
+  ShieldCheck,
+  Sparkles,
+  Trees,
+  Waves,
+  PawPrint,
+  Zap,
+  Dog,
+} from "lucide-react";
 import { SearchWidget } from "./SearchWidget";
-import { luxuryEasing, staggerContainer, fadeUpStagger } from "@/lib/motion";
+import { luxuryEasing } from "@/lib/motion";
 
+/* ─────────────────────────────────────────────────────────
+   ANIMATION VARIANTS — GPU-only transforms (no layout shifts)
+   ───────────────────────────────────────────────────────── */
+const heroStagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+  },
+};
+
+const fadeSlideUp = {
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.7, ease: luxuryEasing },
+  },
+};
+
+const scaleReveal = {
+  hidden: { opacity: 0, scale: 0.92 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.8, ease: luxuryEasing },
+  },
+};
+
+/* ─────────────────────────────────────────────────────────
+   QUICK ACTION CHIPS
+   ───────────────────────────────────────────────────────── */
+const QUICK_ACTIONS = [
+  { label: "Luxury Resorts", icon: Sparkles },
+  { label: "Safari", icon: Trees },
+  { label: "Pool Villas", icon: Waves },
+  { label: "Farm Stays", icon: PawPrint },
+  { label: "Instant Book", icon: Zap },
+  { label: "Pet Friendly", icon: Dog },
+];
+
+/* ═══════════════════════════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════════════════════════ */
 export function HeroSection() {
   const [browsing, setBrowsing] = useState(0);
+  const chipScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const base = 28 + Math.floor(Math.random() * 8); // e.g. 34 Guests
+    const base = 28 + Math.floor(Math.random() * 12);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setBrowsing(base);
-    const interval = setInterval(() => {
-      setBrowsing((prev) => Math.max(25, Math.min(45, prev + (Math.random() > 0.5 ? 1 : -1))));
-    }, 8000);
-    return () => clearInterval(interval);
+    const id = setInterval(() => {
+      setBrowsing((p) =>
+        Math.max(22, Math.min(48, p + (Math.random() > 0.5 ? 1 : -1)))
+      );
+    }, 7000);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <section className="relative min-h-[100dvh] flex flex-col justify-end overflow-hidden pb-safe pt-28 bg-[#050505]">
-      {/* ────────────────────────────────────────────────────────
-          CINEMATIC BACKGROUND
-          ──────────────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ scale: 1.05 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.5, ease: luxuryEasing }}
-        className="absolute inset-0 z-0 origin-top"
-      >
-        <Image
-          src="https://images.unsplash.com/photo-1542314831-c6a4d14b407a?auto=format&fit=crop&q=80&w=1920"
-          alt="Luxury Resort at Night"
-          fill
-          priority
-          quality={100}
-          className="object-cover object-center scale-105"
-          sizes="100vw"
-        />
-        {/* Cinematic darkness masks */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#050505]/40 to-[#050505]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/90 to-transparent h-4/5 bottom-0" />
-        <div className="absolute inset-0 gradient-aurora opacity-40 mix-blend-screen" />
-        <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none" />
-      </motion.div>
+    <section
+      className="relative min-h-[100dvh] flex flex-col overflow-hidden bg-[#060606]"
+      aria-label="Hero"
+    >
+      {/* ══════════════════════════════════════════════════════
+          LAYER 0 — CINEMATIC BACKGROUND IMAGE
+          ══════════════════════════════════════════════════════ */}
+      <div className="absolute inset-0 z-0">
+        {/* Hero Image with Ken Burns */}
+        <div className="absolute inset-0 animate-ken-burns">
+          <Image
+            src="https://images.unsplash.com/photo-1542314831-c6a4d14b407a?auto=format&fit=crop&q=80&w=1920"
+            alt="Luxury resort surrounded by nature in Sasan Gir"
+            fill
+            priority
+            quality={85}
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
 
-      {/* ────────────────────────────────────────────────────────
-          HERO CONTENT (STACKED LAYOUT)
-          ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-8 flex flex-col gap-6 sm:gap-10 pb-8">
-        
-        {/* 1. Headlines & Typography */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="text-left flex flex-col gap-3"
+        {/* Multi-layer cinematic overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060606]/70 via-[#060606]/30 to-[#060606]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060606] via-[#060606]/85 to-transparent" />
+
+        {/* Warm gold ambient glow — bottom center */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-20 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(212,175,55,0.3) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Subtle noise texture */}
+        <div className="absolute inset-0 bg-noise opacity-[0.15] pointer-events-none" />
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          LAYER 1 — CONTENT
+          ══════════════════════════════════════════════════════ */}
+      <motion.div
+        variants={heroStagger}
+        initial="hidden"
+        animate="visible"
+        className="relative z-10 flex-1 flex flex-col justify-end w-full max-w-5xl mx-auto px-5 sm:px-8 pb-8 pt-28 gap-7 sm:gap-10"
+      >
+        {/* ── Badge ───────────────────────────────────────── */}
+        <motion.div variants={fadeSlideUp} className="flex">
+          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.06] border border-white/[0.08] backdrop-blur-md shadow-[0_0_20px_rgba(212,175,55,0.08)]">
+            <Trophy className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.18em] text-[#D4AF37] uppercase">
+              #1 Luxury Resort Platform
+            </span>
+          </div>
+        </motion.div>
+
+        {/* ── Headline ───────────────────────────────────── */}
+        <motion.div variants={fadeSlideUp} className="flex flex-col gap-1">
+          <h1 className="font-heading text-[2.6rem] sm:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-[-0.02em]">
+            Sasan Gir&apos;s
+          </h1>
+          <h1 className="font-heading text-[2.6rem] sm:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-[-0.02em] bg-gradient-to-r from-[#D4AF37] via-[#F5E6C5] to-[#D4AF37] bg-clip-text text-transparent">
+            Finest Escapes
+          </h1>
+        </motion.div>
+
+        {/* ── Description ────────────────────────────────── */}
+        <motion.p
+          variants={fadeSlideUp}
+          className="text-white/55 text-[15px] sm:text-lg max-w-md font-normal leading-[1.65] tracking-[0.01em]"
         >
-          {/* Badge */}
-          <motion.div variants={fadeUpStagger} className="inline-flex items-center gap-2">
-            <div className="flex items-center gap-1.5 glass-dark px-3 py-1.5 rounded-full border border-yellow-700/30 shadow-[0_0_15px_rgba(234,179,8,0.15)]">
-              <Trophy className="w-3.5 h-3.5 text-yellow-500" />
-              <span className="text-[10px] sm:text-xs font-bold tracking-[0.15em] text-yellow-500 uppercase">
-                #1 Luxury Resort Platform
+          Handpicked luxury resorts, heritage farm stays &amp; jungle lodges in
+          the heart of Asiatic Lion country.
+        </motion.p>
+
+        {/* ── Trust Metrics Row ──────────────────────────── */}
+        <motion.div
+          variants={fadeSlideUp}
+          className="flex items-center flex-wrap gap-x-5 gap-y-3"
+        >
+          {/* Live visitors */}
+          <div className="flex items-center gap-2.5">
+            <div className="flex -space-x-2">
+              {[11, 15, 28].map((id, i) => (
+                <Image
+                  key={id}
+                  src={`https://i.pravatar.cc/80?img=${id}`}
+                  alt="Traveler"
+                  width={26}
+                  height={26}
+                  className="rounded-full border-[1.5px] border-[#111]"
+                  style={{ zIndex: 3 - i }}
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="text-[13px] text-white/70 font-medium">
+                <span className="text-white font-semibold">{browsing}</span>{" "}
+                browsing now
               </span>
             </div>
-          </motion.div>
-
-          {/* Headline */}
-          <div className="flex flex-col gap-0.5 mt-2">
-            <motion.h1 variants={fadeUpStagger} className="font-heading text-[2.75rem] sm:text-7xl font-bold text-white leading-[1.05] tracking-tight">
-              Sasan Gir&apos;s
-            </motion.h1>
-            <motion.h1 variants={fadeUpStagger} className="font-heading text-[2.75rem] sm:text-7xl font-bold gradient-gold-text leading-[1.05] tracking-tight">
-              Finest Escapes
-            </motion.h1>
           </div>
 
-          {/* Description */}
-          <motion.p variants={fadeUpStagger} className="text-white/60 text-[15px] sm:text-lg max-w-sm sm:max-w-md font-normal leading-relaxed mt-1 tracking-wide">
-            Handpicked luxury resorts, heritage farm stays, and jungle lodges in Asiatic Lion country.
-          </motion.p>
-        </motion.div>
+          {/* Divider */}
+          <span className="hidden sm:block w-px h-4 bg-white/15" />
 
-        {/* 2. Floating Search Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: luxuryEasing }}
-          className="w-full relative z-30"
-        >
-          <SearchWidget />
-        </motion.div>
-
-        {/* 3. Trust & Social Proof Row */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: luxuryEasing }}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-3xl p-4 sm:p-5 backdrop-blur-md"
-        >
-          {/* Live Visitors */}
-          <div className="flex items-center gap-3">
-            <div className="flex -space-x-2.5 shrink-0">
-              <Image src="https://i.pravatar.cc/100?img=11" alt="Traveler" width={28} height={28} className="rounded-full border-2 border-[#1a1a1a] z-30" />
-              <Image src="https://i.pravatar.cc/100?img=15" alt="Traveler" width={28} height={28} className="rounded-full border-2 border-[#1a1a1a] z-20" />
-              <Image src="https://i.pravatar.cc/100?img=28" alt="Traveler" width={28} height={28} className="rounded-full border-2 border-[#1a1a1a] z-10" />
-            </div>
-            <span className="text-sm text-white/90 font-medium">
-              <span className="text-white font-bold">{browsing} Guests</span> browsing now
+          {/* Rating */}
+          <div className="flex items-center gap-1.5">
+            <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
+            <span className="text-[13px] font-bold text-white">
+              4.9
+              <span className="text-white/40 font-normal ml-0.5">/ 5</span>
             </span>
           </div>
 
-          <div className="hidden sm:block w-px h-8 bg-white/10" />
+          <span className="hidden sm:block w-px h-4 bg-white/15" />
 
-          {/* Rating */}
-          <div className="flex items-center gap-2 border-t border-white/10 sm:border-none pt-3 sm:pt-0">
-            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-            <span className="text-sm font-bold text-white">4.9 <span className="text-white/50 font-normal">Rating</span></span>
-          </div>
-
-          <div className="hidden sm:block w-px h-8 bg-white/10" />
-
-          {/* Trust Badge */}
-          <div className="flex items-center gap-2 pb-1 sm:pb-0">
-            <Trophy className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm text-white/90 font-medium">Trusted by Premium Resorts</span>
+          {/* Verified */}
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
+            <span className="text-[13px] text-white/70 font-medium">
+              Verified Platform
+            </span>
           </div>
         </motion.div>
 
-        {/* 4. Seasonal Offer Card */}
+        {/* ── Search Widget ──────────────────────────────── */}
+        <motion.div variants={scaleReveal} className="w-full">
+          <SearchWidget />
+        </motion.div>
+
+        {/* ── Quick Action Chips ─────────────────────────── */}
+        <motion.div variants={fadeSlideUp} className="w-full -mx-5 px-5">
+          <div
+            ref={chipScrollRef}
+            className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1"
+          >
+            {QUICK_ACTIONS.map(({ label, icon: Icon }) => (
+              <button
+                key={label}
+                className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-[13px] text-white/80 font-medium tracking-wide whitespace-nowrap active:scale-95 transition-all duration-200 hover:bg-white/[0.1] hover:border-white/[0.15] hover:text-white"
+              >
+                <Icon className="w-3.5 h-3.5 text-[#D4AF37]/80" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Seasonal Offer Card ────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8, ease: luxuryEasing }}
-          className="relative group cursor-pointer active:scale-[0.98] transition-transform"
+          variants={fadeSlideUp}
+          className="relative group cursor-pointer active:scale-[0.98] transition-transform duration-200"
         >
-          {/* Animated glow on hover */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-600/30 to-orange-600/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          
-          <div className="relative bg-gradient-to-br from-[#1a1505] to-[#0a0802] border border-yellow-700/40 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
-            
+          <div className="relative bg-[#110f08] border border-[#D4AF37]/20 rounded-2xl sm:rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 overflow-hidden">
+            {/* Ambient glow */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/[0.06] rounded-full blur-3xl pointer-events-none" />
+
             <div className="relative z-10">
               <div className="flex items-center gap-1.5 mb-2">
                 <Flame className="w-3.5 h-3.5 text-orange-500" />
-                <span className="text-[10px] font-bold tracking-widest text-orange-500 uppercase">Seasonal Offer</span>
+                <span className="text-[10px] font-bold tracking-[0.15em] text-orange-500 uppercase">
+                  Seasonal Offer
+                </span>
               </div>
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-white mb-1 leading-tight tracking-tight">Up to 25% Off This Season</h3>
-              <p className="text-xs sm:text-sm text-white/50 font-medium">Book early & secure the finest luxury suites.</p>
+              <h3 className="font-heading text-lg sm:text-xl font-bold text-white mb-0.5 leading-snug">
+                Up to 25% Off This Season
+              </h3>
+              <p className="text-xs text-white/45 font-medium">
+                Book early &amp; secure the finest luxury suites.
+              </p>
             </div>
-            
-            <div className="relative z-10 flex items-center justify-between sm:justify-start gap-2 text-sm font-bold text-yellow-500 group-hover:text-yellow-400 transition-colors bg-white/5 sm:bg-transparent px-4 py-2 sm:p-0 rounded-full sm:rounded-none mt-2 sm:mt-0">
-              Explore Offers <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+            <div className="relative z-10 flex items-center gap-1.5 text-sm font-bold text-[#D4AF37] group-hover:text-[#F5E6C5] transition-colors">
+              Explore Offers
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
         </motion.div>
 
-      </div>
+        {/* ── Scroll Indicator ───────────────────────────── */}
+        <motion.div
+          variants={fadeSlideUp}
+          className="flex justify-center pb-2"
+        >
+          <div className="flex flex-col items-center gap-2 opacity-50">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">
+              Scroll to explore
+            </span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="w-[1px] h-6 bg-gradient-to-b from-[#D4AF37]/60 to-transparent"
+            />
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

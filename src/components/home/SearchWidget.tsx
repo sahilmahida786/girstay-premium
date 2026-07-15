@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Users, Search } from "lucide-react";
+import { CalendarDays, Users, Search, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { SearchModal } from "./SearchModal";
 
@@ -33,88 +33,123 @@ export function SearchWidget() {
     router.push(`/properties?${params.toString()}`);
   };
 
-  const getTodayStr = () => new Date().toISOString().split("T")[0];
-
   return (
     <>
+      {/* ═══════════════════════════════════════════════════════
+          FLOATING GLASS SEARCH CARD
+          ═══════════════════════════════════════════════════════ */}
       <div className="w-full">
-        {/* Luxury Glass Search Card */}
-        <div className="glass-dark border border-white/10 sm:border-yellow-700/30 rounded-[32px] p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden group transition-all duration-500">
-          {/* Subtle hover gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          
-          <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:bg-black/20 sm:border sm:border-white/10 sm:rounded-[24px] sm:p-2">
-            
-            {/* Mobile: Grid Layout | Desktop: Flex Row */}
-            <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-1 sm:divide-x sm:divide-white/10 sm:gap-0">
-              
-              {/* Check-in */}
-              <div 
-                className="col-span-1 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
-                  <CalendarDays className="w-3.5 h-3.5 text-yellow-500" />
-                  <span>Check In</span>
-                </div>
-                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
-                  {checkIn ? new Date(checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Select date"}
-                </div>
-              </div>
+        <div
+          className="relative rounded-[28px] p-[1px] overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(212,175,55,0.25) 0%, rgba(255,255,255,0.06) 50%, rgba(212,175,55,0.15) 100%)",
+          }}
+        >
+          {/* Inner card */}
+          <div className="rounded-[27px] bg-[#0c0c0c]/90 backdrop-blur-2xl p-4 sm:p-5 relative overflow-hidden">
+            {/* Subtle ambient glow inside */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#D4AF37]/[0.04] rounded-full blur-3xl pointer-events-none" />
 
-              {/* Check-out */}
-              <div 
-                className="col-span-1 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
-                  <CalendarDays className="w-3.5 h-3.5 text-yellow-500" />
-                  <span>Check Out</span>
-                </div>
-                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
-                  {checkOut ? new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Select date"}
-                </div>
-              </div>
+            {/* Header */}
+            <div className="relative z-10 flex items-center gap-2 mb-4">
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              <span className="text-sm font-semibold text-white tracking-wide">
+                Find your perfect stay
+              </span>
+            </div>
 
-              {/* Guests */}
-              <div 
-                className="col-span-2 bg-white/5 border border-white/5 sm:bg-transparent sm:border-none rounded-2xl sm:rounded-none p-4 sm:py-3 sm:px-6 cursor-pointer active:scale-95 sm:active:scale-100 transition-transform" 
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-2 text-white/40 text-[11px] sm:text-[10px] uppercase tracking-widest mb-1.5 font-medium">
-                  <Users className="w-3.5 h-3.5 text-yellow-500" />
-                  <span>Guests</span>
+            {/* Input Grid */}
+            <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-0 sm:bg-white/[0.03] sm:border sm:border-white/[0.06] sm:rounded-2xl sm:divide-x sm:divide-white/[0.06]">
+              {/* Mobile: Grid | Desktop: Row */}
+              <div className="grid grid-cols-2 gap-2.5 sm:contents">
+                {/* Check-in */}
+                <div
+                  className="bg-white/[0.04] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3.5 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <div className="flex items-center gap-1.5 text-white/35 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
+                    <CalendarDays className="w-3 h-3 text-[#D4AF37]/70" />
+                    <span>Check In</span>
+                  </div>
+                  <div className="text-white text-sm font-semibold">
+                    {checkIn
+                      ? new Date(checkIn).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "Add date"}
+                  </div>
                 </div>
-                <div className="text-white text-sm sm:text-base font-semibold whitespace-nowrap">
-                  {guests} {guests === "1" ? "Guest" : "Guests"}
+
+                {/* Check-out */}
+                <div
+                  className="bg-white/[0.04] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3.5 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <div className="flex items-center gap-1.5 text-white/35 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
+                    <CalendarDays className="w-3 h-3 text-[#D4AF37]/70" />
+                    <span>Check Out</span>
+                  </div>
+                  <div className="text-white text-sm font-semibold">
+                    {checkOut
+                      ? new Date(checkOut).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "Add date"}
+                  </div>
+                </div>
+
+                {/* Guests */}
+                <div
+                  className="col-span-2 bg-white/[0.04] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3.5 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <div className="flex items-center gap-1.5 text-white/35 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
+                    <Users className="w-3 h-3 text-[#D4AF37]/70" />
+                    <span>Guests</span>
+                  </div>
+                  <div className="text-white text-sm font-semibold">
+                    {guests} {guests === "1" ? "Guest" : "Guests"}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Search Button (Full width on mobile, circular on desktop) */}
-            <div className="mt-2 sm:mt-0 sm:shrink-0 sm:pr-2">
+            {/* Search Button */}
+            <div className="relative z-10 mt-4 sm:mt-3">
               <motion.button
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleSearch}
-                className="w-full sm:w-14 h-14 rounded-2xl sm:rounded-full gradient-gold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(234,179,8,0.2)] hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] transition-all duration-300"
+                className="w-full sm:w-auto sm:px-8 h-[52px] rounded-xl sm:rounded-full flex items-center justify-center gap-2.5 font-bold text-[15px] text-black transition-shadow duration-300 shadow-[0_4px_20px_rgba(212,175,55,0.2)] hover:shadow-[0_4px_30px_rgba(212,175,55,0.35)]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #D4AF37 0%, #F5E6C5 50%, #D4AF37 100%)",
+                }}
               >
-                <Search className="w-5 h-5 text-black" strokeWidth={2.5} />
-                <span className="sm:hidden text-black font-bold text-base">Search Stays</span>
+                <Search className="w-[18px] h-[18px]" strokeWidth={2.5} />
+                <span>Search Stays</span>
               </motion.button>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* Mobile Modal */}
+      {/* Search Modal for mobile date/guest picker */}
       <SearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         checkIn={checkIn}
-        setCheckIn={(v) => { setCheckIn(v); setDateError(null); }}
+        setCheckIn={(v) => {
+          setCheckIn(v);
+          setDateError(null);
+        }}
         checkOut={checkOut}
-        setCheckOut={(v) => { setCheckOut(v); setDateError(null); }}
+        setCheckOut={(v) => {
+          setCheckOut(v);
+          setDateError(null);
+        }}
         guests={guests}
         setGuests={setGuests}
         propertyType={propertyType}
