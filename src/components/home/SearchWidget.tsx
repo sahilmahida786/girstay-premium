@@ -2,9 +2,52 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Users, Search, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { CalendarDays, Users, Search, MapPin } from "lucide-react";
 import { SearchModal } from "./SearchModal";
+import { cn } from "@/lib/utils";
+
+// Reusable Field Component
+interface FieldProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  placeholder: string;
+  onClick: () => void;
+  className?: string;
+}
+
+function SearchField({ icon, label, value, placeholder, onClick, className }: FieldProps) {
+  return (
+    <div
+      onClick={onClick}
+      className={cn(
+        "group relative flex-1 px-5 py-3 sm:py-4 cursor-pointer transition-all duration-300",
+        "hover:bg-white/[0.04] active:bg-white/[0.08]",
+        className
+      )}
+    >
+      {/* Animated Focus/Hover Glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      
+      <div className="relative z-10 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-black/20 border border-white/5 flex items-center justify-center text-[#FFD27A] shadow-inner group-hover:scale-110 transition-transform duration-300">
+          {icon}
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.15em] text-white/40 group-hover:text-[#FFD27A]/80 transition-colors">
+            {label}
+          </span>
+          <span className={cn(
+            "text-[13px] sm:text-[14px] font-semibold mt-0.5",
+            value ? "text-white" : "text-white/30"
+          )}>
+            {value || placeholder}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function SearchWidget() {
   const router = useRouter();
@@ -35,103 +78,79 @@ export function SearchWidget() {
 
   return (
     <>
-      <div className="w-full">
-        {/* ═══ Gradient Border Wrapper ═══ */}
-        <div
-          className="relative rounded-[24px] sm:rounded-[28px] p-[1px] overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(212,175,55,0.35) 0%, rgba(255,255,255,0.08) 40%, rgba(212,175,55,0.2) 100%)",
-          }}
-        >
-          {/* ═══ Inner Glass Card ═══ */}
-          <div className="rounded-[23px] sm:rounded-[27px] bg-black/70 backdrop-blur-2xl p-4 sm:p-5 relative overflow-hidden">
-            {/* Ambient internal glow */}
-            <div className="absolute -top-16 -right-16 w-32 h-32 bg-[#D4AF37]/[0.06] rounded-full blur-3xl pointer-events-none" />
+      <div className="w-full will-change-transform">
+        {/* ═══ LUXURY FLOATING CARD ═══ */}
+        <div className="relative rounded-[28px] sm:rounded-[36px] bg-[#060606]/40 backdrop-blur-2xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)] overflow-hidden group">
+          
+          {/* Subtle Ambient Reflections */}
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
+          <div className="absolute -inset-x-20 top-0 h-[200px] bg-[#D4AF37]/[0.03] rounded-[100%] blur-[50px] pointer-events-none group-hover:bg-[#D4AF37]/[0.05] transition-colors duration-1000" />
 
-            {/* Header */}
-            <div className="relative z-10 flex items-center gap-2 mb-3.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#FFD27A]" />
-              <span className="text-[13px] font-semibold text-white/90 tracking-wide">
-                Find your perfect stay
-              </span>
+          {/* Desktop Flow (Row) / Mobile Flow (Stacked) */}
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center p-2 sm:p-2.5">
+            
+            {/* Input Fields Wrapper */}
+            <div className="flex flex-col sm:flex-row flex-1 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
+              
+              <SearchField 
+                label="Destination"
+                placeholder="Sasan Gir, Gujarat"
+                value="Sasan Gir"
+                icon={<MapPin className="w-3.5 h-3.5" />}
+                onClick={() => {}}
+                className="rounded-t-[20px] sm:rounded-none sm:rounded-l-[26px]"
+              />
+
+              <div className="flex flex-1 divide-x divide-white/[0.08]">
+                <SearchField 
+                  label="Check In"
+                  placeholder="Add Date"
+                  value={checkIn ? new Date(checkIn).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""}
+                  icon={<CalendarDays className="w-3.5 h-3.5" />}
+                  onClick={() => setIsModalOpen(true)}
+                />
+                
+                <SearchField 
+                  label="Check Out"
+                  placeholder="Add Date"
+                  value={checkOut ? new Date(checkOut).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""}
+                  icon={<CalendarDays className="w-3.5 h-3.5" />}
+                  onClick={() => setIsModalOpen(true)}
+                />
+              </div>
+
+              <SearchField 
+                label="Guests"
+                placeholder="Add Guests"
+                value={`${guests} ${guests === "1" ? "Guest" : "Guests"}`}
+                icon={<Users className="w-3.5 h-3.5" />}
+                onClick={() => setIsModalOpen(true)}
+                className="rounded-b-[20px] sm:rounded-none"
+              />
             </div>
 
-            {/* ═══ Input Grid ═══ */}
-            <div className="relative z-10 grid grid-cols-2 gap-2 sm:flex sm:gap-0 sm:bg-white/[0.03] sm:border sm:border-white/[0.06] sm:rounded-2xl sm:divide-x sm:divide-white/[0.06]">
-              {/* Check-in */}
-              <div
-                className="bg-white/[0.06] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-1.5 text-white/30 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
-                  <CalendarDays className="w-3 h-3 text-[#D4AF37]/60" />
-                  <span>Check In</span>
-                </div>
-                <div className="text-white text-[13px] sm:text-sm font-semibold">
-                  {checkIn
-                    ? new Date(checkIn).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })
-                    : "Add date"}
-                </div>
-              </div>
-
-              {/* Check-out */}
-              <div
-                className="bg-white/[0.06] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-1.5 text-white/30 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
-                  <CalendarDays className="w-3 h-3 text-[#D4AF37]/60" />
-                  <span>Check Out</span>
-                </div>
-                <div className="text-white text-[13px] sm:text-sm font-semibold">
-                  {checkOut
-                    ? new Date(checkOut).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })
-                    : "Add date"}
-                </div>
-              </div>
-
-              {/* Guests — spans full width on mobile */}
-              <div
-                className="col-span-2 bg-white/[0.06] border border-white/[0.06] sm:bg-transparent sm:border-none rounded-xl sm:rounded-none p-3 sm:py-3 sm:px-5 sm:flex-1 cursor-pointer active:scale-[0.97] sm:active:scale-100 transition-transform"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center gap-1.5 text-white/30 text-[10px] uppercase tracking-[0.12em] mb-1 font-medium">
-                  <Users className="w-3 h-3 text-[#D4AF37]/60" />
-                  <span>Guests</span>
-                </div>
-                <div className="text-white text-[13px] sm:text-sm font-semibold">
-                  {guests} {guests === "1" ? "Guest" : "Guests"}
-                </div>
-              </div>
-            </div>
-
-            {/* ═══ Search Button ═══ */}
-            <div className="relative z-10 mt-3 sm:mt-3">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
+            {/* ═══ CTA BUTTON ═══ */}
+            <div className="mt-2 sm:mt-0 sm:ml-2 w-full sm:w-auto shrink-0">
+              <button
                 onClick={handleSearch}
-                className="w-full sm:w-auto sm:px-8 h-[50px] rounded-xl sm:rounded-full flex items-center justify-center gap-2 font-bold text-[14px] text-black transition-shadow duration-300 shadow-[0_4px_24px_rgba(212,175,55,0.25)] hover:shadow-[0_4px_32px_rgba(212,175,55,0.4)]"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #D4AF37 0%, #F8E7B5 45%, #D4AF37 100%)",
-                }}
+                className="relative w-full sm:w-[120px] h-14 sm:h-16 flex items-center justify-center rounded-[20px] sm:rounded-[26px] bg-gradient-to-br from-[#F8E7B5] via-[#D4AF37] to-[#8B6A32] overflow-hidden group/btn active:scale-95 transition-transform duration-300 shadow-[0_8px_25px_rgba(212,175,55,0.3)]"
               >
-                <Search className="w-[17px] h-[17px]" strokeWidth={2.5} />
-                <span>Search Stays</span>
-              </motion.button>
+                {/* Shine animation */}
+                <div className="absolute inset-0 translate-x-[-100%] group-hover/btn:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12" />
+                
+                <div className="relative z-10 flex items-center gap-2 text-black">
+                  <Search className="w-5 h-5" strokeWidth={2.5} />
+                  <span className="sm:hidden font-bold tracking-wide uppercase">Search</span>
+                </div>
+              </button>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* Search Modal for mobile date/guest picker */}
+      {/* ═══ MOBILE MODAL ═══ */}
       <SearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
