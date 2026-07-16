@@ -1,7 +1,6 @@
 "use client";
 
 import { HeroSection } from "@/components/home/HeroSection";
-import { TrustBar } from "@/components/home/TrustBar";
 import dynamic from "next/dynamic";
 
 const PopularStays = dynamic(() => import("@/components/home/PopularStays").then(m => ({ default: m.PopularStays })));
@@ -16,12 +15,6 @@ export default function HomePage() {
         so it blends perfectly into this dark #060606 background. 
       */}
       <HeroSection />
-      
-      {/* 
-        TrustBar now acts as a floating luxury metric bar directly below the Hero, 
-        maintaining the cinematic dark aesthetic. 
-      */}
-      <TrustBar />
       
       {/* 
         PopularStays provides the core booking functionality.

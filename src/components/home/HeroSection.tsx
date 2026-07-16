@@ -13,8 +13,7 @@ import {
   Dog,
 } from "lucide-react";
 import { SearchWidget } from "./SearchWidget";
-import { LiveStatus } from "./hero/LiveStatus";
-import { SeasonalOffer } from "./hero/SeasonalOffer";
+import { HeroBottomPanel } from "./hero/HeroBottomPanel";
 import { ScrollIndicator } from "./hero/ScrollIndicator";
 import { luxuryEasing } from "@/lib/motion";
 
@@ -153,11 +152,6 @@ export function HeroSection() {
           in the heart of Asiatic Lion country.
         </motion.p>
 
-        {/* ── LIVE STATUS CHIPS ─────────────────────────── */}
-        <motion.div variants={fadeBlurUp}>
-          <LiveStatus />
-        </motion.div>
-
         {/* ── Floating Search Card ──────────────────────── */}
         <motion.div variants={scaleIn} className="w-full relative z-20">
           <SearchWidget />
@@ -181,13 +175,13 @@ export function HeroSection() {
           </div>
         </motion.div>
 
-        {/* ── BOTTOM EXPERIENCE (Seasonal Offer & Scroll) ─ */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-4 mt-2 sm:mt-4 relative z-20">
-          <motion.div variants={fadeBlurUp} className="w-full sm:w-auto">
-            <SeasonalOffer />
+        {/* ── BOTTOM EXPERIENCE (Panel & Scroll) ─ */}
+        <div className="flex flex-col gap-6 mt-4 relative z-20">
+          <motion.div variants={fadeBlurUp} className="w-full">
+            <HeroBottomPanel />
           </motion.div>
 
-          <motion.div variants={fadeBlurUp} className="shrink-0">
+          <motion.div variants={fadeBlurUp} className="flex justify-center">
             <ScrollIndicator />
           </motion.div>
         </div>
