@@ -7,9 +7,13 @@ import { CONTACT_INFO } from "@/lib/constants";
 
 export function CTASection() {
   return (
-    <section className="relative py-32 sm:py-48 overflow-hidden bg-[#060606] flex flex-col items-center justify-center min-h-[80vh]">
+    <section className="relative py-32 sm:py-48 overflow-hidden atmosphere-bronze flex flex-col items-center justify-center min-h-[80vh]">
       
-      {/* ── AMBIENT BACKGROUND ── */}
+      {/* ── LUXURY BACKGROUND SYSTEM ── */}
+      
+      {/* Section transition from above */}
+      <div className="absolute top-0 inset-x-0 h-48 section-fade-top z-[1]" />
+      
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Massive breathing gold glow */}
         <motion.div 
@@ -24,9 +28,19 @@ export function CTASection() {
           }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[1000px] sm:h-[1000px] bg-gradient-to-tr from-[#D4AF37]/20 to-[#FFD27A]/20 rounded-full blur-[120px]"
         />
-        {/* Noise overlay for texture */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+        
+        {/* Secondary warm bronze glow — top left */}
+        <div className="absolute top-[10%] -left-[15%] w-[400px] h-[400px] glow-bronze animate-breathe-slow" />
+        
+        {/* Deep forest accent — bottom right */}
+        <div className="absolute bottom-[10%] -right-[10%] w-[500px] h-[500px] glow-forest animate-breathe-slow" style={{ animationDelay: "6s" }} />
       </div>
+      
+      {/* Noise texture */}
+      <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none mix-blend-overlay z-[1]" />
+      
+      {/* Vignette for cinematic depth */}
+      <div className="absolute inset-0 vignette z-[1]" />
 
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center">
         
@@ -66,7 +80,7 @@ export function CTASection() {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
           className="text-lg sm:text-xl text-white/60 font-light max-w-2xl leading-relaxed mb-12 sm:mb-16"
         >
-          Speak directly with our local Gir experts. We’ll secure the finest villas, arrange private safari permits, and handle every detail of your journey.
+          Speak directly with our local Gir experts. We&apos;ll secure the finest villas, arrange private safari permits, and handle every detail of your journey.
         </motion.p>
 
         {/* Actions */}

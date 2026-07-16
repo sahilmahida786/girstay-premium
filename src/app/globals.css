@@ -484,6 +484,68 @@
   .animate-hero-shimmer {
     animation: hero-shimmer 8s ease-in-out infinite;
   }
+
+  /* ═══ Luxury Background System ═══ */
+
+  /* Section atmospheres — unique rich tones, never plain black */
+  .atmosphere-charcoal {
+    background: #0B0B0B;
+  }
+  .atmosphere-espresso {
+    background: linear-gradient(180deg, #0B0B0B 0%, #17120D 50%, #0B0B0B 100%);
+  }
+  .atmosphere-forest {
+    background: linear-gradient(180deg, #0B0B0B 0%, #0E120E 50%, #0B0B0B 100%);
+  }
+  .atmosphere-bronze {
+    background: linear-gradient(180deg, #0B0B0B 0%, #1A140D 50%, #0B0B0B 100%);
+  }
+
+  /* Ambient glows — positioned absolutely */
+  .glow-gold {
+    background: radial-gradient(ellipse at center, rgba(232,197,106,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .glow-gold-strong {
+    background: radial-gradient(ellipse at center, rgba(232,197,106,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .glow-bronze {
+    background: radial-gradient(ellipse at center, rgba(42,29,18,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .glow-forest {
+    background: radial-gradient(ellipse at center, rgba(14,18,14,0.5) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Section transition dividers */
+  .section-fade-top {
+    background: linear-gradient(to bottom, #0B0B0B 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .section-fade-bottom {
+    background: linear-gradient(to top, #0B0B0B 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Slow-breathing glow animation */
+  .animate-breathe {
+    animation: breathe 8s ease-in-out infinite;
+  }
+  .animate-breathe-slow {
+    animation: breathe 20s ease-in-out infinite;
+  }
+
+  /* Luxury vignette overlay */
+  .vignette {
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+  }
+  .vignette-soft {
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+  }
 }
 
 /* ═══ Keyframes ═══ */
@@ -543,6 +605,17 @@
   }
 }
 
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
 /* ═══ Accessibility ═══ */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -558,7 +631,9 @@
   .animate-shimmer,
   .animate-ken-burns,
   .animate-gradient,
-  .animate-pulse-slow {
+  .animate-pulse-slow,
+  .animate-breathe,
+  .animate-breathe-slow {
     animation: none !important;
   }
 }

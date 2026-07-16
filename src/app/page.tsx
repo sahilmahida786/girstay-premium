@@ -9,7 +9,7 @@ const CTASection = dynamic(() => import("@/components/home/CTASection").then(m =
 
 export default function HomePage() {
   return (
-    <main className="bg-[#060606] text-white min-h-screen">
+    <main className="bg-[#0B0B0B] text-white min-h-screen">
       {/* 
         The HeroSection already ends with a heavy black cinematic gradient 
         so it blends perfectly into this dark #060606 background. 

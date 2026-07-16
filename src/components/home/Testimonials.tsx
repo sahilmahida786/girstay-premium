@@ -34,11 +34,15 @@ export function Testimonials() {
   const t = testimonials[current];
 
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden bg-[#060606]">
-      {/* ── CINEMATIC BACKGROUND ── */}
+    <section className="relative py-24 sm:py-32 overflow-hidden atmosphere-forest">
+      {/* ── LUXURY BACKGROUND SYSTEM ── */}
+      
+      {/* Section transition from above */}
+      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-[1]" />
+
+      {/* Soft luxury image in background */}
       <div className="absolute inset-0 z-0">
-        {/* Soft luxury image in background */}
-        <div className="absolute inset-0 opacity-30 mix-blend-luminosity">
+        <div className="absolute inset-0 opacity-20 mix-blend-luminosity">
           <Image
             src="https://images.unsplash.com/photo-1542314831-c6a4d1424b61?auto=format&fit=crop&q=80&w=2000"
             alt="Luxury Resort Background"
@@ -47,13 +51,32 @@ export function Testimonials() {
           />
         </div>
         
-        {/* Gradients to blend edges into #060606 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#060606] via-transparent to-[#060606] opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#060606] via-[#060606]/60 to-[#060606] opacity-95" />
-        
-        {/* Warm ambient glow behind the card */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#D4AF37]/[0.03] rounded-full blur-[100px] pointer-events-none" />
+        {/* Heavy gradients to contain the image within the atmosphere */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, #0B0B0B 0%, rgba(14,18,14,0.7) 30%, rgba(14,18,14,0.6) 70%, #0B0B0B 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to right, #0B0B0B 0%, rgba(14,18,14,0.4) 30%, rgba(14,18,14,0.4) 70%, #0B0B0B 100%)",
+          }}
+        />
       </div>
+        
+      {/* Warm ambient glow behind the card */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] glow-gold animate-breathe-slow z-[1]" />
+      
+      {/* Noise texture */}
+      <div className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none mix-blend-overlay z-[1]" />
+      
+      {/* Soft vignette */}
+      <div className="absolute inset-0 vignette z-[1]" />
+      
+      {/* Section transition into below */}
+      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-[1]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         
@@ -99,6 +122,9 @@ export function Testimonials() {
               <div className="absolute top-8 left-8 sm:top-12 sm:left-12">
                 <Quote className="w-16 h-16 sm:w-24 sm:h-24 text-white/[0.03] rotate-180" />
               </div>
+
+              {/* Internal ambient glow */}
+              <div className="absolute -top-20 -right-20 w-48 h-48 glow-gold rounded-full blur-[60px] opacity-40" />
 
               {/* Slider Content */}
               <AnimatePresence mode="wait" custom={direction}>

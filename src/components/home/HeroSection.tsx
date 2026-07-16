@@ -64,7 +64,7 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden bg-[#060606]"
+      className="relative min-h-[100dvh] flex flex-col overflow-hidden bg-[#0B0B0B]"
       aria-label="Hero"
     >
       {/* ══════════════════════════════════════════════════════
@@ -192,7 +192,7 @@ export function HeroSection() {
           LAYER 2 — CINEMATIC BOTTOM TRANSITION
           Blends the hero seamlessly into the next dark section.
           ══════════════════════════════════════════════════════ */}
-      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-[#060606] via-[#060606]/80 to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-[#0B0B0B] via-[#0B0B0B]/80 to-transparent pointer-events-none z-10" />
     </section>
   );
 }

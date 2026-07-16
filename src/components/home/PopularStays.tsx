@@ -38,19 +38,31 @@ export function PopularStays() {
       : mockProperties.filter((p) => p.type === activeCategory);
 
   return (
-    <section className="py-24 sm:py-32 relative overflow-hidden bg-background">
+    <section className="relative py-24 sm:py-32 overflow-hidden atmosphere-espresso">
       {/* ────────────────────────────────────────────────────────
-          CINEMATIC BACKGROUND EFFECTS
+          LUXURY BACKGROUND LAYERS
           ──────────────────────────────────────────────────────── */}
-      {/* Subtle top gradient blending into the section above */}
-      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-background via-background/80 to-transparent pointer-events-none z-10" />
       
-      {/* Soft animated ambient glows */}
-      <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-float opacity-50 dark:opacity-20" />
-      <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none animate-float opacity-50 dark:opacity-20" style={{ animationDelay: '2s' }} />
+      {/* Section transition from Hero/above */}
+      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-10" />
       
-      {/* Subtle Noise Texture */}
-      <div className="absolute inset-0 bg-noise opacity-[0.03] dark:opacity-[0.05] pointer-events-none mix-blend-overlay" />
+      {/* Warm golden spotlight — left side, behind heading */}
+      <div className="absolute top-[10%] -left-[20%] w-[600px] h-[600px] glow-gold animate-breathe-slow" />
+      
+      {/* Deep forest accent — right side, behind cards */}
+      <div className="absolute bottom-[20%] -right-[10%] w-[500px] h-[500px] glow-forest animate-breathe-slow" style={{ animationDelay: "4s" }} />
+      
+      {/* Bronze warmth — center bottom */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] glow-bronze" />
+
+      {/* Noise texture for film grain */}
+      <div className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none mix-blend-overlay" />
+      
+      {/* Soft vignette for depth */}
+      <div className="absolute inset-0 vignette-soft" />
+
+      {/* Bottom transition into next section */}
+      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-10" />
 
       <div className="max-w-[90rem] mx-auto px-5 sm:px-8 relative z-20">
         
@@ -66,9 +78,9 @@ export function PopularStays() {
         >
           {/* Small Badge */}
           <motion.div variants={fadeUpStagger} className="mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-primary/20 shadow-luxury">
-              <Trophy className="w-4 h-4 text-primary" />
-              <span className="text-xs font-bold tracking-[0.2em] text-primary uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+              <Trophy className="w-4 h-4 text-[#FFD27A]" />
+              <span className="text-xs font-bold tracking-[0.2em] text-[#FFD27A] uppercase">
                 Discover Gir
               </span>
             </div>
@@ -77,16 +89,16 @@ export function PopularStays() {
           {/* Large Editorial Heading */}
           <motion.h2 
             variants={fadeUpStagger}
-            className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.1]"
+            className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
           >
             Luxury Stays for <br className="hidden sm:block" />
-            <span className="gradient-gold-text">Every Traveler</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F8E7B5]">Every Traveler</span>
           </motion.h2>
 
           {/* Elegant Description */}
           <motion.p 
             variants={fadeUpStagger}
-            className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+            className="text-white/60 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
           >
             From private pool villas and rustic jungle lodges to heritage farm stays, 
             discover handpicked destinations across Sasan Gir.
@@ -118,7 +130,7 @@ export function PopularStays() {
                     "border backdrop-blur-md overflow-hidden active:scale-95",
                     isActive
                       ? "text-black border-transparent shadow-gold"
-                      : "bg-card/50 text-foreground/80 border-border/40 hover:bg-card hover:border-primary/30 hover:text-foreground shadow-sm"
+                      : "bg-white/[0.03] text-white/80 border-white/10 hover:bg-white/[0.08] hover:border-white/20 hover:text-white shadow-sm"
                   )}
                 >
                   {/* Active Background Glow */}
@@ -132,18 +144,18 @@ export function PopularStays() {
                   
                   {/* Subtle Hover Gradient for inactive pills */}
                   {!isActive && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/5 to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   )}
 
                   <span className="relative z-10 flex items-center gap-2">
-                    <Icon className={cn("w-4 h-4", isActive ? "text-black" : "text-primary/70 group-hover:text-primary")} />
+                    <Icon className={cn("w-4 h-4", isActive ? "text-black" : "text-[#FFD27A]/70 group-hover:text-[#FFD27A]")} />
                     {cat.label}
                   </span>
                   
                   {/* Property Count */}
                   <span className={cn(
                     "relative z-10 text-[10px] px-2 py-0.5 rounded-full font-bold ml-1 transition-colors",
-                    isActive ? "bg-black/10 text-black" : "bg-foreground/5 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                    isActive ? "bg-black/10 text-black" : "bg-white/5 text-white/50 group-hover:bg-[#D4AF37]/10 group-hover:text-[#FFD27A]"
                   )}>
                     {cat.count}
                   </span>
@@ -179,11 +191,11 @@ export function PopularStays() {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20 glass-card rounded-3xl mx-auto max-w-2xl mt-8 border-dashed"
+            className="text-center py-20 rounded-3xl mx-auto max-w-2xl mt-8 border border-white/10 border-dashed bg-white/[0.02] backdrop-blur-md"
           >
-            <Trees className="w-12 h-12 text-primary/30 mx-auto mb-4" />
-            <h3 className="text-xl font-heading font-semibold text-foreground mb-2">No retreats available</h3>
-            <p className="text-muted-foreground">
+            <Trees className="w-12 h-12 text-[#FFD27A]/30 mx-auto mb-4" />
+            <h3 className="text-xl font-heading font-semibold text-white mb-2">No retreats available</h3>
+            <p className="text-white/50">
               We are currently curating more exquisite properties in this category. Please explore our other collections.
             </p>
           </motion.div>
@@ -201,22 +213,22 @@ export function PopularStays() {
         >
           <div className="relative rounded-[2rem] p-[1px] overflow-hidden group">
             {/* Animated Gradient Border */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/60 to-primary/20 opacity-50 group-hover:opacity-100 animate-gradient transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/20 via-[#D4AF37]/60 to-[#D4AF37]/20 opacity-50 group-hover:opacity-100 animate-gradient transition-opacity duration-700" />
             
-            <div className="relative glass-card bg-card/60 rounded-[31px] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left overflow-hidden">
+            <div className="relative bg-[#0a0a0a]/80 backdrop-blur-2xl rounded-[31px] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left overflow-hidden border border-white/[0.03]">
               
               {/* Decorative Background Elements */}
-              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[60px] pointer-events-none group-hover:bg-primary/20 transition-colors duration-700" />
+              <div className="absolute -top-24 -right-24 w-64 h-64 glow-gold-strong rounded-full blur-[60px] group-hover:opacity-100 opacity-60 transition-opacity duration-700" />
               
               <div className="relative z-10 flex-1">
                 <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
-                  <Headset className="w-5 h-5 text-primary" />
-                  <span className="text-xs font-bold tracking-widest text-primary uppercase">Concierge Service</span>
+                  <Headset className="w-5 h-5 text-[#FFD27A]" />
+                  <span className="text-xs font-bold tracking-widest text-[#FFD27A] uppercase">Concierge Service</span>
                 </div>
-                <h3 className="font-heading text-2xl sm:text-3xl font-bold text-foreground mb-3 leading-tight">
+                <h3 className="font-heading text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
                   Can&apos;t decide where to stay?
                 </h3>
-                <p className="text-muted-foreground text-sm sm:text-base max-w-md">
+                <p className="text-white/50 text-sm sm:text-base max-w-md">
                   Let our travel experts curate the perfect personalized resort experience for your Gir safari.
                 </p>
               </div>
