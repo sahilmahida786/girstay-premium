@@ -586,6 +586,11 @@
     background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.95) 100%);
     pointer-events: none;
   }
+  
+  .mask-fade-edges {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
 
 /* ═══ Keyframes ═══ */
 @keyframes float {
