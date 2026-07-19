@@ -57,7 +57,10 @@ export function PropertiesSearchPanel({
 
           {/* Search Button */}
           <div className="sm:pl-2 shrink-0">
-            <button className="w-full sm:w-auto h-14 sm:h-full px-8 rounded-2xl sm:rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F8E7B5] to-[#D4AF37] text-black font-bold flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.3)] min-w-[120px]">
+            <button className="relative overflow-hidden w-full sm:w-auto h-14 sm:h-full px-8 rounded-2xl sm:rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F8E7B5] to-[#D4AF37] text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_4px_20px_rgba(212,175,55,0.4)] min-w-[120px] group/btn">
+              {/* Shimmer Effect every 8s */}
+              <div className="absolute inset-0 -translate-x-[150%] bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12 animate-shimmer-slow" />
+              
               <Search className="w-4 h-4" />
               <span>Search</span>
             </button>

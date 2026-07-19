@@ -39,6 +39,12 @@ export function PropertiesHeroBackground() {
         style={{ background: "radial-gradient(circle at center, rgba(16, 96, 72, 0.08) 0%, transparent 60%)" }} 
       />
 
+      {/* 4.5 Luxury Bokeh Lights */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-[#FFD27A]/[0.015] blur-[100px] animate-breathe-slow" />
+        <div className="absolute bottom-[30%] right-[15%] w-[500px] h-[500px] rounded-full bg-[#FFD27A]/[0.02] blur-[120px] animate-breathe-slow" style={{ animationDelay: "3s" }} />
+      </div>
+
       {/* 5. Luxury Vignette */}
       <div className="absolute inset-0 vignette-heavy mix-blend-multiply opacity-80" />
 
@@ -68,8 +74,9 @@ export function PropertiesHeroBackground() {
       <div className="absolute top-[-20%] right-[10%] w-[100px] h-[140%] bg-gradient-to-b from-transparent via-[#FFD27A]/5 to-transparent rotate-[35deg] blur-3xl animate-breathe-slow" />
       <div className="absolute top-[-20%] right-[30%] w-[150px] h-[140%] bg-gradient-to-b from-transparent via-[#FFD27A]/3 to-transparent rotate-[35deg] blur-[40px] animate-breathe-slow" style={{ animationDelay: "5s" }} />
 
-      {/* 9. Luxury Fog (Bottom edge) */}
-      <div className="absolute bottom-0 left-0 right-0 h-[30vh] bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-90" />
+      {/* 9. Luxury Fog (Bottom edge & mist) */}
+      <div className="absolute bottom-0 left-0 right-0 h-[40vh] bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent opacity-95" />
+      <div className="absolute bottom-0 left-0 right-0 h-[100vh] bg-gradient-to-t from-transparent via-[#050505]/10 to-transparent opacity-50 blur-3xl" />
     </div>
   );
 }

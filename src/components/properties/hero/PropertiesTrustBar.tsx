@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, ShieldCheck, Compass, Headphones } from "lucide-react";
+import { Star, ShieldCheck, Compass, Headphones, Users, Tag } from "lucide-react";
 
 export function PropertiesTrustBar() {
   return (
@@ -30,6 +30,16 @@ export function PropertiesTrustBar() {
         <div className="flex items-center gap-2">
           <Headphones className="w-4 h-4 text-[#D4AF37]" />
           <span className="text-xs sm:text-sm font-semibold text-white/90">24×7 Concierge</span>
+        </div>
+        <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#D4AF37]" />
+          <span className="text-xs sm:text-sm font-semibold text-white/90">10000+ Happy Guests</span>
+        </div>
+        <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
+        <div className="flex items-center gap-2">
+          <Tag className="w-4 h-4 text-[#D4AF37]" />
+          <span className="text-xs sm:text-sm font-semibold text-white/90">Best Price Guarantee</span>
         </div>
       </div>
     </motion.div>

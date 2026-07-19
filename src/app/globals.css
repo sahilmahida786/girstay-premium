@@ -250,6 +250,18 @@
     background: linear-gradient(135deg, oklch(0.42 0.15 155), oklch(0.55 0.15 155));
   }
 
+  .animate-shimmer-slow {
+    animation: shimmer-slow 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+}
+
+@keyframes shimmer-slow {
+  0% { transform: translateX(-150%) skewX(12deg); opacity: 0; }
+  10% { opacity: 1; }
+  20% { transform: translateX(150%) skewX(12deg); opacity: 0; }
+  100% { transform: translateX(150%) skewX(12deg); opacity: 0; }
+}
+
   .gradient-hero {
     background: linear-gradient(135deg,
         oklch(0.08 0.01 60) 0%,
@@ -574,7 +586,6 @@
     background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.95) 100%);
     pointer-events: none;
   }
-}
 
 /* ═══ Keyframes ═══ */
 @keyframes float {

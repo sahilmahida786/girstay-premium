@@ -112,14 +112,14 @@ export default function PropertiesClient() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.35 }}
-          className="relative z-20 mt-8 max-w-4xl mx-auto w-full px-4 flex flex-wrap justify-center gap-3"
+          className="relative z-20 mt-8 max-w-4xl mx-auto w-full px-4 flex sm:flex-wrap overflow-x-auto snap-x snap-mandatory scrollbar-hide sm:justify-center gap-3 pb-4 sm:pb-0"
         >
           {propertyTypes.map(type => (
             <button 
               key={type.value}
               onClick={() => setSelectedType(type.value)}
               className={cn(
-                "px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border backdrop-blur-md hover:-translate-y-0.5",
+                "px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border backdrop-blur-md hover:-translate-y-0.5 whitespace-nowrap shrink-0 snap-center",
                 selectedType === type.value
                   ? "bg-[#D4AF37]/20 border-[#D4AF37] text-[#FFD27A] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
                   : "bg-white/[0.03] border-white/10 text-white/70 hover:bg-white/[0.08] hover:text-white"
