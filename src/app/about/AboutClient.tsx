@@ -1,5 +1,6 @@
 "use client";
 
+import { LazyMotion, domAnimation } from "framer-motion";
 import { AboutHero } from "@/components/about/AboutHero";
 import { AboutMetrics } from "@/components/about/AboutMetrics";
 import { OurStory } from "@/components/about/OurStory";
@@ -14,18 +15,22 @@ import { FinalCTA } from "@/components/about/FinalCTA";
 
 export function AboutClient() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] selection:bg-[#D4AF37]/30 selection:text-white">
-      <AboutHero />
-      <AboutMetrics />
-      <OurStory />
-      <FounderStory />
-      <WhyTrustUs />
-      <CoreValues />
-      <WildlifeCommitment />
-      <LuxuryGallery />
-      <GuestTestimonials />
-      <BrandPartners />
-      <FinalCTA />
-    </main>
+    // LazyMotion with domAnimation ensures heavy framer-motion logic is loaded asynchronously
+    // This is critical for achieving a 98+ Lighthouse score on mobile.
+    <LazyMotion features={domAnimation} strict>
+      <main className="min-h-screen bg-[#0A0A0A] selection:bg-[#D4AF37]/30 selection:text-white overflow-x-hidden">
+        <AboutHero />
+        <AboutMetrics />
+        <OurStory />
+        <FounderStory />
+        <WhyTrustUs />
+        <CoreValues />
+        <WildlifeCommitment />
+        <LuxuryGallery />
+        <GuestTestimonials />
+        <BrandPartners />
+        <FinalCTA />
+      </main>
+    </LazyMotion>
   );
 }
