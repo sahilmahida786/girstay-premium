@@ -3,15 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
-import { ShieldCheck, Star, Users, Play, Award, Gem, Mouse } from "lucide-react";
-
-const trustPills = [
-  { icon: ShieldCheck, label: "Verified Luxury Properties" },
-  { icon: Users, label: "10,000+ Happy Guests" },
-  { icon: Star, label: "4.9 Guest Rating" },
-  { icon: Award, label: "Premium Hospitality" },
-  { icon: Gem, label: "24×7 Concierge" },
-];
+import { Play, Mouse } from "lucide-react";
 
 export function AboutHero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -103,39 +95,6 @@ export function AboutHero() {
         </div>
       </div>
 
-      {/* ────────────────────────────────────────────────────────
-          TOP: TRUST BAR (Below Nav)
-          ──────────────────────────────────────────────────────── */}
-      <div className="relative z-30 w-full pt-28 sm:pt-32 lg:pt-36 flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <motion.div 
-            initial="hidden"
-            animate="visible"
-            variants={{
-              visible: { transition: { staggerChildren: 0.15 } }
-            }}
-            className="w-full overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory"
-          >
-            <div className="flex lg:justify-center items-center gap-8 lg:gap-12 w-max lg:w-full pb-2">
-              {trustPills.map((pill, i) => (
-                <motion.div
-                  key={i}
-                  variants={{
-                    hidden: { opacity: 0, filter: 'blur(4px)' },
-                    visible: { opacity: 1, filter: 'blur(0px)', transition: { duration: 1, ease: "easeOut" } }
-                  }}
-                  className="flex items-center gap-3 cursor-default group snap-center"
-                >
-                  <div className="w-7 h-7 rounded-full bg-white/5 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:bg-white/10 transition-colors">
-                    <pill.icon className="w-3.5 h-3.5 text-white/60 group-hover:text-[#D4AF37] transition-colors" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-[10px] lg:text-[11px] font-medium text-white/60 uppercase tracking-[0.15em] whitespace-nowrap group-hover:text-white transition-colors">{pill.label}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </div>
 
       {/* ────────────────────────────────────────────────────────
           LARGE BREATHING SPACE FOR LION EYES
