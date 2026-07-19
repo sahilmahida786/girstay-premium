@@ -6,10 +6,10 @@ import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { ShieldCheck, Star, Users, Play, Award, Gem } from "lucide-react";
 
 const trustPills = [
-  { icon: Users, label: "10,000+ Guests" },
-  { icon: ShieldCheck, label: "Verified Properties" },
-  { icon: Star, label: "Premium Hospitality" },
-  { icon: Award, label: "4.9 Rating" },
+  { icon: ShieldCheck, label: "Verified Luxury Properties" },
+  { icon: Users, label: "10,000+ Happy Guests" },
+  { icon: Star, label: "4.9 Guest Rating" },
+  { icon: Award, label: "Premium Hospitality" },
   { icon: Gem, label: "24×7 Concierge" },
 ];
 
@@ -215,9 +215,9 @@ export function AboutHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="text-white/80 text-[15px] sm:text-lg lg:text-xl font-light leading-[1.8] max-w-[620px] mb-10 lg:mb-12"
+          className="text-white/80 text-[15px] sm:text-lg lg:text-xl font-light leading-[1.8] max-w-[620px] mb-10 lg:mb-12 text-balance"
         >
-          A world where untamed wilderness meets unparalleled luxury. We curate exclusive, personally verified stays so you can immerse yourself entirely in the majesty of the forest.
+          Every journey into Gir begins with trust, comfort, and unforgettable hospitality. We carefully curate exceptional stays that allow you to experience the untamed beauty of Sasan Gir without compromising luxury.
         </motion.p>
 
         {/* Dual CTAs */}
