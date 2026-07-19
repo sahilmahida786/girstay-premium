@@ -4,6 +4,10 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X, ChevronDown, Map, List } from "lucide-react";
 import { PropertyCard } from "@/components/properties/PropertyCard";
+import { PropertiesHeroBackground } from "@/components/properties/hero/PropertiesHeroBackground";
+import { PropertiesHeroContent } from "@/components/properties/hero/PropertiesHeroContent";
+import { PropertiesSearchPanel } from "@/components/properties/hero/PropertiesSearchPanel";
+import { PropertiesTrustBar } from "@/components/properties/hero/PropertiesTrustBar";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { RecentlyViewed } from "@/components/properties/RecentlyViewed";
 import { mockProperties } from "@/data/mockProperties";
@@ -97,52 +101,36 @@ export default function PropertiesClient() {
 
   return (
     <div className="min-h-screen">
-      {/* Page Header */}
-      <section className="relative py-16 sm:py-24 overflow-hidden">
-        <div className="absolute inset-0 gradient-hero opacity-30" />
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
-              Discover Your Perfect Stay
-            </span>
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Premium <span className="gradient-gold-text">Properties</span> in
-              Sasan Gir
-            </h1>
-            <p className="text-muted-foreground max-w-lg mx-auto mb-8">
-              Browse our curated collection of luxury resorts, villas, cottages,
-              and jungle lodges in the heart of Gir forest.
-            </p>
-
-            {/* Search Bar */}
-            <div className="max-w-xl mx-auto relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search properties, locations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-4 h-14 text-base rounded-full bg-card/80 backdrop-blur border-border/50 shadow-luxury"
-                aria-label="Search properties"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20"
-                  aria-label="Clear search"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+      {/* Ultimate Luxury Page Header */}
+      <section className="relative min-h-[80vh] flex flex-col items-center justify-center pt-20 pb-16 overflow-hidden">
+        <PropertiesHeroBackground />
+        <PropertiesHeroContent />
+        <PropertiesSearchPanel searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        
+        {/* Quick Filters */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.35 }}
+          className="relative z-20 mt-8 max-w-4xl mx-auto w-full px-4 flex flex-wrap justify-center gap-3"
+        >
+          {propertyTypes.map(type => (
+            <button 
+              key={type.value}
+              onClick={() => setSelectedType(type.value)}
+              className={cn(
+                "px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 border backdrop-blur-md hover:-translate-y-0.5",
+                selectedType === type.value
+                  ? "bg-[#D4AF37]/20 border-[#D4AF37] text-[#FFD27A] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                  : "bg-white/[0.03] border-white/10 text-white/70 hover:bg-white/[0.08] hover:text-white"
               )}
-            </div>
-          </motion.div>
-        </div>
+            >
+              {type.label}
+            </button>
+          ))}
+        </motion.div>
+
+        <PropertiesTrustBar />
       </section>
 
       {/* Recently Viewed Strip */}
@@ -152,28 +140,8 @@ export default function PropertiesClient() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
         {/* Filter Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          {/* H1 Fix: horizontal scrolling filter pills with fade mask for visual cue */}
-          <div className="relative w-full sm:w-auto">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2 sm:mx-0 sm:px-0 sm:pb-0 sm:flex-wrap">
-              {propertyTypes.map((type) => (
-                <button
-                  key={type.value}
-                  onClick={() => setSelectedType(type.value)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap shrink-0 active:scale-95",
-                    selectedType === type.value
-                      ? "gradient-gold text-black shadow-gold"
-                      : "bg-muted text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                  aria-label={`Filter by ${type.label}`}
-                >
-                  {type.label}
-                </button>
-              ))}
-            </div>
-            {/* Visual cue for scrollable area on mobile */}
-            <div className="absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none sm:hidden" />
-          </div>
+          {/* Quick Filters have been moved to the Luxury Hero Section */}
+          <div className="hidden sm:block" />
 
           <div className="flex items-center gap-3 shrink-0">
             {/* Sort dropdown */}
