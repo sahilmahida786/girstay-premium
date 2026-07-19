@@ -34,49 +34,56 @@ export function Testimonials() {
   const t = testimonials[current];
 
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden atmosphere-forest">
-      {/* ── LUXURY BACKGROUND SYSTEM ── */}
+    <section className="relative py-24 sm:py-32 overflow-hidden bg-[#050505]">
+      {/* ────────────────────────────────────────────────────────
+          PHOTOGRAPHIC LUXURY BACKGROUND
+          ──────────────────────────────────────────────────────── */}
       
-      {/* Section transition from above */}
-      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-[1]" />
-
-      {/* Soft luxury image in background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 opacity-20 mix-blend-luminosity">
-          <Image
-            src="https://images.unsplash.com/photo-1542314831-c6a4d1424b61?auto=format&fit=crop&q=80&w=2000"
-            alt="Luxury Resort Background"
+      {/* Base Image with Ken Burns Pan */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <div className="absolute inset-[-5%] w-[110%] h-[110%] animate-cinematic-pan">
+          <Image 
+            src="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=2500&auto=format&fit=crop"
+            alt="Luxury Resort Lounge Sunrise"
             fill
-            className="object-cover object-center"
+            className="object-cover object-[70%_center] sm:object-center opacity-[0.85]"
+            sizes="100vw"
           />
         </div>
-        
-        {/* Heavy gradients to contain the image within the atmosphere */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, #0B0B0B 0%, rgba(14,18,14,0.7) 30%, rgba(14,18,14,0.6) 70%, #0B0B0B 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to right, #0B0B0B 0%, rgba(14,18,14,0.4) 30%, rgba(14,18,14,0.4) 70%, #0B0B0B 100%)",
-          }}
-        />
       </div>
-        
-      {/* Warm ambient glow behind the card */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] glow-gold animate-breathe-slow z-[1]" />
-      
-      {/* Noise texture */}
-      <div className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none mix-blend-overlay z-[1]" />
-      
-      {/* Soft vignette */}
-      <div className="absolute inset-0 vignette z-[1]" />
-      
-      {/* Section transition into below */}
-      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-[1]" />
+
+      {/* Layer: Glass Shadow Overlay for Text Contrast */}
+      <div className="absolute inset-0 bg-[#080808]/85 backdrop-blur-[2px] pointer-events-none z-[2]" />
+
+      {/* Layer: Warm Light Bloom (Sunrise feeling) */}
+      <div className="absolute top-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
+           style={{ background: "radial-gradient(circle at center, rgba(255, 180, 100, 0.15) 0%, transparent 70%)" }} />
+
+      {/* LAYER: Animated Light Dust (Bokeh) */}
+      <div className="absolute inset-0 pointer-events-none z-[4]">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={`dust-${i}`}
+            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+            style={{
+              top: `${(i * 17) % 100}%`,
+              left: `${(i * 31) % 100}%`,
+              width: `${(i % 3) + 2}px`,
+              height: `${(i % 3) + 2}px`,
+              opacity: ((i * 7) % 30) / 100 + 0.05,
+              animationDelay: `-${(i * 3) % 15}s`,
+              animationDuration: `${(i % 10) + 20}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Layer: Vignette (Heavy edges) */}
+      <div className="absolute inset-0 vignette-heavy z-[5]" />
+
+      {/* Section transition dividers for seamless scrolling */}
+      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-[6]" />
+      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-[6]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         

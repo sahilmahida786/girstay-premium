@@ -98,7 +98,7 @@ export function PropertyDetailClient({ property }: Props) {
   if (!property) return null;
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 overflow-x-hidden">
       {/* ═══ Image Gallery ═══ */}
       <section className="relative">
         {/* Desktop: Grid Gallery */}
@@ -152,10 +152,10 @@ export function PropertyDetailClient({ property }: Props) {
         </div>
 
         {/* Mobile: Swipeable carousel */}
-        <div className="md:hidden relative h-72 sm:h-80 bg-black/5" ref={emblaRef}>
+        <div className="md:hidden relative h-72 sm:h-80 bg-black/5 overflow-hidden" ref={emblaRef}>
           <div className="flex h-full touch-pan-y">
             {property.images.map((img, i) => (
-              <div key={img.id} className="relative flex-[0_0_100%] h-full">
+              <div key={img.id} className="relative flex-[0_0_100%] min-w-0 h-full">
                 <Image
                   src={img.url}
                   alt={img.alt}
@@ -225,14 +225,16 @@ export function PropertyDetailClient({ property }: Props) {
           >
             <ChevronRight className="w-6 h-6 text-white" />
           </button>
-          <div className="relative w-full max-w-5xl h-[70vh] mx-4">
-            <Image
-              src={property.images[selectedImageIndex]?.url || ""}
-              alt={property.images[selectedImageIndex]?.alt || ""}
-              fill
-              className="object-contain"
-              sizes="90vw"
-            />
+          <div className="relative w-full max-w-5xl h-[70vh] px-4">
+            <div className="relative w-full h-full">
+              <Image
+                src={property.images[selectedImageIndex]?.url || ""}
+                alt={property.images[selectedImageIndex]?.alt || ""}
+                fill
+                className="object-contain"
+                sizes="90vw"
+              />
+            </div>
           </div>
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm">
             {selectedImageIndex + 1} / {property.images.length}

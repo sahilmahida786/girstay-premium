@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,31 +39,61 @@ export function PopularStays() {
       : mockProperties.filter((p) => p.type === activeCategory);
 
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden atmosphere-espresso">
+    <section className="relative py-24 sm:py-32 overflow-hidden bg-[#050505]">
       {/* ────────────────────────────────────────────────────────
-          LUXURY BACKGROUND LAYERS
+          PHOTOGRAPHIC LUXURY BACKGROUND
           ──────────────────────────────────────────────────────── */}
       
-      {/* Section transition from Hero/above */}
-      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-10" />
-      
-      {/* Warm golden spotlight — left side, behind heading */}
-      <div className="absolute top-[10%] -left-[20%] w-[600px] h-[600px] glow-gold animate-breathe-slow" />
-      
-      {/* Deep forest accent — right side, behind cards */}
-      <div className="absolute bottom-[20%] -right-[10%] w-[500px] h-[500px] glow-forest animate-breathe-slow" style={{ animationDelay: "4s" }} />
-      
-      {/* Bronze warmth — center bottom */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] glow-bronze" />
+      {/* Base Image with Ken Burns Pan */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <div className="absolute inset-[-5%] w-[110%] h-[110%] animate-cinematic-pan">
+          <Image 
+            src="https://images.unsplash.com/photo-1542314831-c6a4d14d837e?q=80&w=2500&auto=format&fit=crop"
+            alt="Luxury Resort Background"
+            fill
+            className="object-cover object-[60%_center] sm:object-center opacity-[0.85]"
+            priority
+            sizes="100vw"
+          />
+        </div>
+      </div>
 
-      {/* Noise texture for film grain */}
-      <div className="absolute inset-0 bg-noise opacity-[0.04] pointer-events-none mix-blend-overlay" />
-      
-      {/* Soft vignette for depth */}
-      <div className="absolute inset-0 vignette-soft" />
+      {/* Layer: Glass Shadow Overlay for Text Contrast */}
+      <div className="absolute inset-0 bg-[#080808]/75 backdrop-blur-[2px] pointer-events-none z-[2]" />
 
-      {/* Bottom transition into next section */}
-      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-10" />
+      {/* Layer: Warm Light Bloom (Sunset feeling) */}
+      <div className="absolute top-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
+           style={{ background: "radial-gradient(circle at center, rgba(255, 180, 100, 0.15) 0%, transparent 70%)" }} />
+           
+      {/* Layer: Deep Emerald Glow */}
+      <div className="absolute bottom-0 left-0 w-[120vw] h-[120vw] sm:w-[800px] sm:h-[800px] -translate-x-1/4 translate-y-1/4 pointer-events-none z-[3]"
+           style={{ background: "radial-gradient(circle at center, rgba(16, 96, 72, 0.2) 0%, transparent 70%)" }} />
+
+      {/* LAYER: Animated Light Dust (Bokeh) */}
+      <div className="absolute inset-0 pointer-events-none z-[4]">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`dust-${i}`}
+            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+            style={{
+              top: `${(i * 13) % 100}%`,
+              left: `${(i * 27) % 100}%`,
+              width: `${(i % 3) + 2.5}px`,
+              height: `${(i % 3) + 2.5}px`,
+              opacity: ((i * 7) % 30) / 100 + 0.05,
+              animationDelay: `-${(i * 3) % 15}s`,
+              animationDuration: `${(i % 10) + 20}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Layer: Vignette (Heavy edges) */}
+      <div className="absolute inset-0 vignette-heavy z-[5]" />
+
+      {/* Section transition dividers for seamless scrolling */}
+      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-[6]" />
+      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-[6]" />
 
       <div className="max-w-[90rem] mx-auto px-5 sm:px-8 relative z-20">
         

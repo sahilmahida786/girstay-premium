@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { motion } from "framer-motion";
 import { Phone, ArrowRight, Sparkles } from "lucide-react";
@@ -7,40 +8,61 @@ import { CONTACT_INFO } from "@/lib/constants";
 
 export function CTASection() {
   return (
-    <section className="relative py-32 sm:py-48 overflow-hidden atmosphere-bronze flex flex-col items-center justify-center min-h-[80vh]">
+    <section className="relative py-32 sm:py-48 overflow-hidden bg-[#050505] flex flex-col items-center justify-center min-h-[80vh]">
       
-      {/* ── LUXURY BACKGROUND SYSTEM ── */}
+      {/* ────────────────────────────────────────────────────────
+          PHOTOGRAPHIC LUXURY BACKGROUND
+          ──────────────────────────────────────────────────────── */}
       
-      {/* Section transition from above */}
-      <div className="absolute top-0 inset-x-0 h-48 section-fade-top z-[1]" />
-      
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Massive breathing gold glow */}
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.15, 0.25, 0.15]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[1000px] sm:h-[1000px] bg-gradient-to-tr from-[#D4AF37]/20 to-[#FFD27A]/20 rounded-full blur-[120px]"
-        />
-        
-        {/* Secondary warm bronze glow — top left */}
-        <div className="absolute top-[10%] -left-[15%] w-[400px] h-[400px] glow-bronze animate-breathe-slow" />
-        
-        {/* Deep forest accent — bottom right */}
-        <div className="absolute bottom-[10%] -right-[10%] w-[500px] h-[500px] glow-forest animate-breathe-slow" style={{ animationDelay: "6s" }} />
+      {/* Base Image with Ken Burns Pan */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <div className="absolute inset-[-5%] w-[110%] h-[110%] animate-cinematic-pan">
+          <Image 
+            src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=2500&auto=format&fit=crop"
+            alt="Luxury Safari Sunset"
+            fill
+            className="object-cover object-[50%_center] opacity-[0.85]"
+            sizes="100vw"
+          />
+        </div>
       </div>
-      
-      {/* Noise texture */}
-      <div className="absolute inset-0 bg-noise opacity-[0.05] pointer-events-none mix-blend-overlay z-[1]" />
-      
-      {/* Vignette for cinematic depth */}
-      <div className="absolute inset-0 vignette z-[1]" />
+
+      {/* Layer: Glass Shadow Overlay for Text Contrast */}
+      <div className="absolute inset-0 bg-[#080808]/75 backdrop-blur-[2px] pointer-events-none z-[2]" />
+
+      {/* Layer: Emerald Glow */}
+      <div className="absolute top-0 left-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] -translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
+           style={{ background: "radial-gradient(circle at center, rgba(16, 96, 72, 0.25) 0%, transparent 70%)" }} />
+
+      {/* Layer: Bronze Glow */}
+      <div className="absolute bottom-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 translate-y-1/4 pointer-events-none z-[3]"
+           style={{ background: "radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%)" }} />
+
+      {/* LAYER: Animated Light Dust (Bokeh) */}
+      <div className="absolute inset-0 pointer-events-none z-[4]">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`dust-${i}`}
+            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+            style={{
+              top: `${(i * 19) % 100}%`,
+              left: `${(i * 37) % 100}%`,
+              width: `${(i % 3) + 2}px`,
+              height: `${(i % 3) + 2}px`,
+              opacity: ((i * 7) % 30) / 100 + 0.05,
+              animationDelay: `-${(i * 3) % 15}s`,
+              animationDuration: `${(i % 10) + 20}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Layer: Vignette (Heavy edges) */}
+      <div className="absolute inset-0 vignette-heavy z-[5]" />
+
+      {/* Section transition from above and below */}
+      <div className="absolute top-0 inset-x-0 h-40 section-fade-top z-[6]" />
+      <div className="absolute bottom-0 inset-x-0 h-40 section-fade-bottom z-[6]" />
 
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center">
         
