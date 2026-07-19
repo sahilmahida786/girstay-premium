@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Send, Upload, ChevronDown, Calendar as CalendarIcon, Users, Building, Wallet } from "lucide-react";
+import { Send, Upload, Calendar as CalendarIcon, Users, Building, Wallet } from "lucide-react";
 
 export function AdvancedForm() {
   const [isHovered, setIsHovered] = useState(false);

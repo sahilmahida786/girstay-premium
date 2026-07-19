@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X, ChevronDown, Map, List } from "lucide-react";
+import { Search, SlidersHorizontal, ChevronDown, Map, List } from "lucide-react";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { PropertiesHeroBackground } from "@/components/properties/hero/PropertiesHeroBackground";
 import { PropertiesHeroContent } from "@/components/properties/hero/PropertiesHeroContent";
@@ -12,7 +12,6 @@ import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { RecentlyViewed } from "@/components/properties/RecentlyViewed";
 import { mockProperties } from "@/data/mockProperties";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 

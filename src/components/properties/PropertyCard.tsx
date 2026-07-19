@@ -60,7 +60,7 @@ interface PropertyCardProps {
   variant?: "default" | "featured" | "compact";
 }
 
-export function PropertyCard({ property, index = 0, variant = "default" }: PropertyCardProps) {
+export function PropertyCard({ property, index = 0 }: PropertyCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const primaryImage = property.images.find((img) => img.isPrimary) || property.images[0];
   const premiumBadge = getPremiumBadge(property);
