@@ -14,10 +14,10 @@ const trustPills = [
 ];
 
 const floatingCards = [
-  { icon: ShieldCheck, label: "Verified Partner", position: "top-[25%] left-[5%]", delay: 0 },
-  { icon: Award, label: "Trusted Since 2019", position: "top-[40%] right-[10%]", delay: 2 },
-  { icon: Gem, label: "Luxury Collection", position: "bottom-[25%] left-[10%]", delay: 4 },
-  { icon: Star, label: "Curated Experiences", position: "bottom-[35%] right-[5%]", delay: 6 },
+  { icon: ShieldCheck, label: "Verified Partner", position: "top-[15%] left-[3%]", delay: 0 },
+  { icon: Award, label: "Trusted Since 2019", position: "top-[30%] right-[3%]", delay: 2 },
+  { icon: Gem, label: "Luxury Collection", position: "bottom-[20%] left-[3%]", delay: 4 },
+  { icon: Star, label: "Curated Experiences", position: "bottom-[25%] right-[3%]", delay: 6 },
 ];
 
 export function AboutHero() {
@@ -141,7 +141,7 @@ export function AboutHero() {
       {/* ────────────────────────────────────────────────────────
           FLOATING GLASS CARDS (Desktop Only)
           ──────────────────────────────────────────────────────── */}
-      <div className="hidden lg:block absolute inset-0 z-20 pointer-events-none">
+      <div className="hidden xl:block absolute inset-0 z-20 pointer-events-none">
         {floatingCards.map((card, i) => (
           <motion.div
             key={i}
@@ -164,7 +164,7 @@ export function AboutHero() {
       {/* ────────────────────────────────────────────────────────
           MAIN CONTENT
           ──────────────────────────────────────────────────────── */}
-      <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-start lg:items-center text-left lg:text-center mt-auto lg:mt-0 lg:pt-20">
+      <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-start lg:items-center text-left lg:text-center mt-auto lg:mt-0 pt-24 lg:pt-32 xl:pt-40">
         
         {/* Mobile Swipeable Trust Badges */}
         <motion.div 
