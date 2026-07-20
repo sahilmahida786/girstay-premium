@@ -2,38 +2,39 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ShieldCheck, MapPin, Search, HeartHandshake, Leaf, Star, Sparkles } from "lucide-react";
+import { ShieldCheck, MapPin, Search, HeartHandshake, Leaf, Star, Sparkles, Target, Compass } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const values = [
   { 
     icon: ShieldCheck, 
-    title: "Verified Stays", 
-    description: "Every property in our portfolio is personally inspected to guarantee uncompromising luxury and safety." 
+    title: "Trust & Transparency", 
+    description: "Absolute honesty in pricing and promises. No hidden fees, no surprises—just complete peace of mind." 
   },
   { 
     icon: MapPin, 
-    title: "Local Hospitality", 
-    description: "Deep-rooted connections with the region ensure an authentic, immersive Sasan Gir experience." 
-  },
-  { 
-    icon: Search, 
-    title: "Transparent Booking", 
-    description: "Clear pricing with zero hidden fees. We believe trust begins with absolute honesty." 
+    title: "Verified Luxury Properties", 
+    description: "Every resort is personally inspected to guarantee uncompromising standards of comfort, safety, and exclusivity." 
   },
   { 
     icon: HeartHandshake, 
-    title: "Exceptional Service", 
-    description: "A dedicated luxury concierge anticipating your every need from arrival to departure." 
-  },
-  { 
-    icon: Leaf, 
-    title: "Sustainable Tourism", 
-    description: "Partnering exclusively with eco-conscious resorts that actively protect the delicate forest ecosystem." 
+    title: "Exceptional Hospitality", 
+    description: "From booking to departure, our dedicated concierge anticipates your needs to provide a flawless journey." 
   },
   { 
     icon: Star, 
-    title: "Guest Satisfaction", 
-    description: "Our singular focus is exceeding the expectations of the world's most discerning travelers." 
+    title: "Guest-First Experience", 
+    description: "Our entire ecosystem is designed around you. Your comfort and satisfaction dictate every decision we make." 
+  },
+  { 
+    icon: Search, 
+    title: "Technology & Innovation", 
+    description: "A seamless, world-class digital booking experience that matches the luxury of the resorts we represent." 
+  },
+  { 
+    icon: Leaf, 
+    title: "Responsible Tourism", 
+    description: "We exclusively partner with properties that actively protect the Asiatic lion and support the local Gir community." 
   },
 ];
 
@@ -41,7 +42,6 @@ export function CoreValues() {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLElement>(null);
 
-  // Stagger variants for the cards grid
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -57,63 +57,40 @@ export function CoreValues() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   return (
     <section 
       ref={containerRef}
-      className="relative py-24 sm:py-32 lg:py-40 overflow-hidden bg-[#0A0A0A]"
-      aria-labelledby="values-heading"
+      className="relative py-24 sm:py-32 lg:py-40 overflow-hidden bg-black"
+      aria-labelledby="purpose-heading"
     >
       {/* ────────────────────────────────────────────────────────
           LUXURY CINEMATIC BACKGROUND
           ──────────────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {/* Charcoal base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#0a0a0a] to-[#050505]" />
+        {/* Seamless blend from Story (Black top) */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black to-transparent z-10" />
         
-        {/* Forest green radial gradients (subtle corners) */}
-        <div className="absolute top-0 left-0 w-full h-[50vh] bg-[radial-gradient(ellipse_at_top_left,rgba(14,24,14,0.3)_0%,transparent_60%)]" />
-        <div className="absolute bottom-0 right-0 w-full h-[50vh] bg-[radial-gradient(ellipse_at_bottom_right,rgba(14,24,14,0.3)_0%,transparent_60%)]" />
+        {/* Layer 1: Dark charcoal base */}
+        <div className="absolute inset-0 bg-[#060606]" />
         
-        {/* Warm gold ambient lighting (center) */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_60%)]" />
+        {/* Layer 2: Forest green ambient glow */}
+        <div className="absolute top-[20%] left-0 w-[80%] h-[60%] bg-[radial-gradient(ellipse_at_left,rgba(14,24,14,0.4)_0%,transparent_70%)] blur-[100px]" />
         
-        {/* Luxury grain texture */}
+        {/* Layer 3: Warm gold ambient lighting */}
+        <div className="absolute bottom-[10%] right-0 w-[70%] h-[50%] bg-[radial-gradient(ellipse_at_right,rgba(212,175,55,0.03)_0%,transparent_60%)] blur-[100px]" />
+        
+        {/* Layer 4: Luxury grain texture */}
         <div 
-          className="absolute inset-0 opacity-[0.03] mix-blend-overlay" 
-          style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }} 
+          className="absolute inset-0 opacity-[0.02] mix-blend-overlay" 
+          style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')" }} 
         />
 
-        {/* Minimal floating particles */}
-        {!prefersReducedMotion && (
-          <div className="absolute inset-0 hidden sm:block">
-             {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-[#D4AF37] opacity-20 blur-[1px] will-change-transform [transform:translateZ(0)]"
-                  style={{
-                    top: `${15 + (i * 35)}%`,
-                    left: `${20 + (i * 25)}%`,
-                    width: '2px',
-                    height: '2px',
-                  }}
-                  animate={{
-                    y: [0, -40, 0],
-                    x: [0, 15, 0],
-                    opacity: [0.1, 0.3, 0.1]
-                  }}
-                  transition={{ duration: 25 + i * 5, repeat: Infinity, ease: "linear", delay: i * 2 }}
-                />
-             ))}
-          </div>
-        )}
-
-        {/* Top & Bottom blends */}
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black to-transparent" />
-        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        {/* Bottom blend to next section */}
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent z-10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
@@ -125,85 +102,131 @@ export function CoreValues() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="will-change-transform"
           >
-            <span className="inline-flex items-center justify-center gap-2 text-[#D4AF37] text-xs font-semibold uppercase tracking-[0.3em] mb-6">
-              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" /> Our Values
-            </span>
+            {/* Luxury Eyebrow */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-8 h-[1px] bg-[#D4AF37]" aria-hidden="true" />
+              <span className="text-[#D4AF37] text-xs font-semibold uppercase tracking-[0.25em]">
+                Purpose & Principles
+              </span>
+              <div className="w-8 h-[1px] bg-[#D4AF37]" aria-hidden="true" />
+            </div>
             
-            <h2 id="values-heading" className="font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.1] font-medium text-white mb-6 tracking-tight text-balance">
-              Luxury Experiences <br className="hidden sm:block" />
+            {/* Editorial Heading */}
+            <h2 id="purpose-heading" className="font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.1] font-medium text-white mb-6 tracking-tight text-balance">
+              Redefining Wildlife <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F9E5A8] via-[#D4AF37] to-[#F9E5A8] bg-[length:200%_auto] animate-shimmer-slow pb-2 inline-block">
-                Built on Trust
+                Tourism in India
               </span>
             </h2>
             
+            {/* Short Introduction */}
             <p className="text-white/70 text-[16px] sm:text-[18px] leading-[1.8] font-light text-balance max-w-2xl mx-auto">
-              We believe that true luxury lies in absolute peace of mind. Our entire approach is guided by unwavering principles that ensure your journey is seamless, authentic, and unforgettable.
+              We exist to elevate the standard of hospitality in Sasan Gir. By merging world-class digital experiences with exceptional on-ground service, we ensure your journey is flawless from discovery to departure.
             </p>
           </motion.div>
         </div>
 
         {/* ────────────────────────────────────────────────────────
-            VALUE CARDS GRID
+            MISSION & VISION (2-Column Layout)
             ──────────────────────────────────────────────────────── */}
         <motion.div 
           variants={prefersReducedMotion ? {} : containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-10%" }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 lg:mb-12"
+        >
+          {/* Mission Card */}
+          <motion.div
+            variants={prefersReducedMotion ? {} : cardVariants}
+            whileHover={prefersReducedMotion ? {} : { y: -6 }}
+            className="group relative rounded-[2rem] bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 hover:border-[#D4AF37]/40 p-8 sm:p-12 backdrop-blur-2xl transition-all duration-700 ease-out will-change-transform flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_50px_rgba(212,175,55,0.08)] overflow-hidden"
+          >
+            {/* Soft Glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" aria-hidden="true" />
+            {/* Gold Accent Line */}
+            <div className="absolute top-0 left-12 right-12 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" aria-hidden="true" />
+
+            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-[#D4AF37]/10 group-hover:border-[#D4AF37]/30 transition-all duration-500 will-change-transform group-hover:scale-110">
+              <Compass className="w-8 h-8 text-white/70 group-hover:text-[#D4AF37] transition-colors duration-500" strokeWidth={1.5} aria-hidden="true" />
+            </div>
+            
+            <h3 className="font-serif text-[1.75rem] sm:text-3xl font-medium text-white mb-4 group-hover:text-[#F8E7B5] transition-colors duration-500">
+              Our Mission
+            </h3>
+            
+            <p className="text-white/70 text-base sm:text-lg leading-[1.7] font-light group-hover:text-white/90 transition-colors duration-500 max-w-lg">
+              Helping travelers discover verified premium stays in Sasan Gir through uncompromising trust, absolute transparency, and exceptional hospitality.
+            </p>
+          </motion.div>
+
+          {/* Vision Card */}
+          <motion.div
+            variants={prefersReducedMotion ? {} : cardVariants}
+            whileHover={prefersReducedMotion ? {} : { y: -6 }}
+            className="group relative rounded-[2rem] bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 hover:border-[#D4AF37]/40 p-8 sm:p-12 backdrop-blur-2xl transition-all duration-700 ease-out will-change-transform flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_50px_rgba(212,175,55,0.08)] overflow-hidden"
+          >
+            {/* Soft Glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" aria-hidden="true" />
+            {/* Gold Accent Line */}
+            <div className="absolute top-0 left-12 right-12 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" aria-hidden="true" />
+
+            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-[#D4AF37]/10 group-hover:border-[#D4AF37]/30 transition-all duration-500 will-change-transform group-hover:scale-110">
+              <Target className="w-8 h-8 text-white/70 group-hover:text-[#D4AF37] transition-colors duration-500" strokeWidth={1.5} aria-hidden="true" />
+            </div>
+            
+            <h3 className="font-serif text-[1.75rem] sm:text-3xl font-medium text-white mb-4 group-hover:text-[#F8E7B5] transition-colors duration-500">
+              Our Vision
+            </h3>
+            
+            <p className="text-white/70 text-base sm:text-lg leading-[1.7] font-light group-hover:text-white/90 transition-colors duration-500 max-w-lg">
+              To become the most trusted luxury accommodation platform for Sasan Gir and eventually India's definitive standard for premium wildlife travel.
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* ────────────────────────────────────────────────────────
+            CORE VALUES GRID (3-Column Layout)
+            ──────────────────────────────────────────────────────── */}
+        <motion.div 
+          variants={prefersReducedMotion ? {} : containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
           {values.map((value, i) => (
             <motion.div
               key={i}
               variants={prefersReducedMotion ? {} : cardVariants}
-              whileHover={prefersReducedMotion ? {} : { y: -5 }}
-              className="group relative h-full rounded-[2rem] bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] hover:border-[#D4AF37]/30 p-8 sm:p-10 backdrop-blur-xl transition-all duration-700 ease-out will-change-transform flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_40px_rgba(212,175,55,0.05)]"
+              whileHover={prefersReducedMotion ? {} : { y: -6 }}
+              className="group relative h-full rounded-[2rem] bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-[#D4AF37]/30 p-8 sm:p-10 backdrop-blur-xl transition-all duration-700 ease-out will-change-transform flex flex-col overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.06)]"
             >
-              {/* Abstract decorative graphic (Right aligned, subtle) */}
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none" aria-hidden="true">
-                <value.icon className="w-full h-full text-white" />
-              </div>
+              {/* Subtle Gold Accent Line */}
+              <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" aria-hidden="true" />
               
-              {/* Subtle gradient sweep on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 via-transparent to-[#D4AF37]/0 group-hover:from-[#D4AF37]/[0.05] group-hover:to-transparent transition-all duration-700 pointer-events-none rounded-[2rem]" aria-hidden="true" />
+              {/* Soft Radial Glow on Hover */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.03)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-[2rem]" aria-hidden="true" />
 
               <div className="relative z-10 flex flex-col h-full">
-                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-[#D4AF37]/10 group-hover:border-[#D4AF37]/30 transition-all duration-500 will-change-transform group-hover:scale-110 group-hover:rotate-[5deg]">
-                  <value.icon className="w-6 h-6 text-white/70 group-hover:text-[#D4AF37] transition-colors duration-500" aria-hidden="true" strokeWidth={1.5} />
+                <div className="w-12 h-12 rounded-[1rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:bg-[#D4AF37]/10 group-hover:border-[#D4AF37]/30 transition-all duration-500 will-change-transform group-hover:scale-110">
+                  <value.icon className="w-5 h-5 text-white/70 group-hover:text-[#D4AF37] transition-colors duration-500" aria-hidden="true" strokeWidth={1.5} />
                 </div>
                 
-                <h3 className="font-serif text-2xl font-medium text-white mb-4 group-hover:text-[#F8E7B5] transition-colors duration-500">
+                <h4 className="font-serif text-xl sm:text-2xl font-medium text-white mb-3 group-hover:text-[#F8E7B5] transition-colors duration-500">
                   {value.title}
-                </h3>
+                </h4>
                 
-                <p className="text-white/60 text-[15px] sm:text-base leading-[1.7] font-light group-hover:text-white/80 transition-colors duration-500 mt-auto">
+                <p className="text-white/60 text-[15px] sm:text-base leading-[1.6] font-light group-hover:text-white/80 transition-colors duration-500 mt-auto">
                   {value.description}
                 </p>
               </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* ────────────────────────────────────────────────────────
-            CLOSING BRAND STATEMENT
-            ──────────────────────────────────────────────────────── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-20 lg:mt-32 text-center"
-        >
-          <div className="inline-flex flex-col items-center">
-            <div className="w-px h-12 bg-gradient-to-b from-[#D4AF37]/50 to-transparent mb-8" aria-hidden="true" />
-            <p className="text-white/50 font-serif text-lg sm:text-xl font-light italic tracking-wide max-w-xl text-balance">
-              "Excellence is not an act, but a habit. We are what we repeatedly do for our guests."
-            </p>
-          </div>
         </motion.div>
 
       </div>
