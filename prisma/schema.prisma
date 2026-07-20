@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  GUEST
+  HOST
+  ADMIN
+}
+
+enum BookingStatus {
+  HOLD
+  PAYMENT_PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?   // For Credentials provider
+  role          Role      @default(GUEST)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bookings      Booking[]
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String?
+  basePrice   Float
+  maxGuests   Int
+  rooms       Room[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Room {
+  id         String   @id @default(uuid())
+  propertyId String
+  roomNumber String
+  property   Property @relation(fields: [propertyId], references: [id])
+  bookings   Booking[]
+  holds      BookingHold[]
+
+  @@unique([propertyId, roomNumber])
+}
+
+model BookingHold {
+  id          String   @id @default(uuid())
+  roomId      String
+  userId      String?
+  checkIn     DateTime
+  checkOut    DateTime
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  
+  room        Room     @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, checkIn, checkOut])
+}
+
+model Booking {
+  id            String   @id @default(uuid())
+  userId        String
+  roomId        String
+  checkIn       DateTime
+  checkOut      DateTime
+  totalAmount   Float
+  status        BookingStatus @default(PAYMENT_PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id])
+  room          Room     @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, checkIn, checkOut])
+}

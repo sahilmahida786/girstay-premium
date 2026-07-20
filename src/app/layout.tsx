@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { LazyMotionProvider } from "@/components/ui/motion/LazyMotionProvider";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -180,18 +182,24 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <ThemeProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-primary focus:text-primary-foreground focus:text-sm focus:font-medium"
-          >
-            Skip to main content
-          </a>
-          <Header />
-          <main id="main-content" className="flex-1 pb-nav lg:pb-0">{children}</main>
-          <Footer />
-          <BottomNav />
-        </ThemeProvider>
+        <LazyMotionProvider>
+          <ThemeProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-primary focus:text-primary-foreground focus:text-sm focus:font-medium"
+            >
+              Skip to main content
+            </a>
+            <Header />
+            <main id="main-content" className="flex-1 pb-nav lg:pb-0">{children}</main>
+            <Footer />
+            <BottomNav />
+          </ThemeProvider>
+        </LazyMotionProvider>
+        
+        {/* Analytics & Tracking (Placeholder IDs - replace in production) */}
+        <GoogleAnalytics gaId="G-XXXXXXX" />
+        <GoogleTagManager gtmId="GTM-XXXXXXX" />
       </body>
     </html>
   );

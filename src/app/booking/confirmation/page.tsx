@@ -1,174 +1,109 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Check, Download, Calendar, MapPin, ArrowRight, Phone, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
-import { CONTACT_INFO } from "@/lib/constants";
+import React, { useEffect } from "react";
+import { m } from "framer-motion";
+import { ConfirmationHeader } from "@/components/booking/confirmation/ConfirmationHeader";
+import { BookingSummaryCard } from "@/components/booking/confirmation/BookingSummaryCard";
+import { QuickActionsGrid } from "@/components/booking/confirmation/QuickActionsGrid";
+import { BookingTimeline } from "@/components/booking/confirmation/BookingTimeline";
+import { TripPreparation } from "@/components/booking/confirmation/TripPreparation";
+import { Crown } from "lucide-react";
+
+// Mock Data for the Dashboard (Would normally come from API / Global State)
+const MOCK_BOOKING = {
+  id: "GIR-7829-XL",
+  guestName: "Alexander",
+  resortName: "GirStay Premium Resort & Spa",
+  roomName: "Luxury Wilderness Tent",
+  checkIn: "24 Oct 2026",
+  checkOut: "27 Oct 2026",
+  guests: 2,
+  nights: 3,
+  amountPaid: 24500,
+  balanceRemaining: 24500,
+};
 
 export default function BookingConfirmationPage() {
+  // Scroll to top on load to ensure animation is seen
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen py-12 sm:py-20">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
-        {/* Success Animation */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", bounce: 0.4, duration: 0.8 }}
-          className="w-20 h-20 rounded-full gradient-gold flex items-center justify-center mx-auto mb-8 shadow-gold-lg"
-        >
-          <Check className="w-10 h-10 text-black" strokeWidth={3} />
-        </motion.div>
+    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#D9A94D]/30 pb-32">
+      {/* Cinematic Background Gradient */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-emerald-900/20 blur-[120px] rounded-full opacity-50" />
+        <div className="absolute top-1/4 -right-64 w-[500px] h-[500px] bg-[#D9A94D]/10 blur-[100px] rounded-full opacity-30" />
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-center mb-10"
-        >
-          <h1 className="font-heading text-3xl sm:text-4xl font-bold mb-3">
-            Booking <span className="gradient-gold-text">Confirmed!</span>
-          </h1>
-          <p className="text-muted-foreground">
-            Your reservation has been confirmed. A confirmation email has been sent to your inbox.
-          </p>
-        </motion.div>
-
-        {/* Booking Details Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="rounded-2xl bg-card border border-border/50 shadow-luxury overflow-hidden"
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20">
+        
+        {/* The Orchestrator - Staggers all children seamlessly */}
+        <m.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.2
+              }
+            }
+          }}
+          className="space-y-8 sm:space-y-12"
         >
           {/* Header */}
-          <div className="p-6 gradient-gold">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-black/60 text-xs font-medium uppercase tracking-wider">Booking Reference</p>
-                <p className="text-black text-2xl font-heading font-bold mt-1">GIR-2025-87432</p>
-              </div>
-              <div className="text-right">
-                <p className="text-black/60 text-xs font-medium">Status</p>
-                <span className="inline-flex items-center gap-1.5 bg-black/10 px-3 py-1 rounded-full mt-1">
-                  <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse" />
-                  <span className="text-black font-semibold text-sm">Confirmed</span>
-                </span>
-              </div>
-            </div>
-          </div>
+          <ConfirmationHeader guestName={MOCK_BOOKING.guestName} />
 
-          {/* Details */}
-          <div className="p-6 space-y-5">
-            <div>
-              <h3 className="font-heading font-semibold text-lg">The Fern Gir Forest Resort</h3>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1">
-                <MapPin className="w-4 h-4 text-primary" />
-                Sasan Gir Road, Talala, Gujarat
-              </div>
-            </div>
+          {/* Main Booking Summary */}
+          <BookingSummaryCard 
+            bookingId={MOCK_BOOKING.id}
+            resortName={MOCK_BOOKING.resortName}
+            roomName={MOCK_BOOKING.roomName}
+            checkIn={MOCK_BOOKING.checkIn}
+            checkOut={MOCK_BOOKING.checkOut}
+            guests={MOCK_BOOKING.guests}
+            nights={MOCK_BOOKING.nights}
+            amountPaid={MOCK_BOOKING.amountPaid}
+            balanceRemaining={MOCK_BOOKING.balanceRemaining}
+          />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 rounded-xl bg-muted/50">
-                <p className="text-xs text-muted-foreground">Check-in</p>
-                <p className="font-semibold text-sm mt-0.5">Sat, 20 Dec 2025</p>
-                <p className="text-xs text-muted-foreground">After 2:00 PM</p>
-              </div>
-              <div className="p-3 rounded-xl bg-muted/50">
-                <p className="text-xs text-muted-foreground">Check-out</p>
-                <p className="font-semibold text-sm mt-0.5">Tue, 23 Dec 2025</p>
-                <p className="text-xs text-muted-foreground">Before 11:00 AM</p>
-              </div>
-            </div>
+          {/* Quick Actions (Buttons) */}
+          <QuickActionsGrid />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground">Room</p>
-                <p className="font-medium text-sm">Forest View Deluxe Room</p>
+          {/* Journey Timeline */}
+          <BookingTimeline />
+
+          {/* Trip Prep */}
+          <TripPreparation />
+
+          {/* Loyalty Upsell Banner */}
+          <m.div
+            variants={{
+              hidden: { opacity: 0, y: 20, scale: 0.98 },
+              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6 } }
+            }}
+            className="bg-gradient-to-br from-[#D9A94D] to-[#B8832C] rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+            <div className="relative z-10 flex items-center gap-4 text-black">
+              <div className="w-12 h-12 rounded-full bg-black/10 flex items-center justify-center shrink-0">
+                <Crown className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Guests</p>
-                <p className="font-medium text-sm">2 Adults</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Duration</p>
-                <p className="font-medium text-sm">3 Nights</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Booking Date</p>
-                <p className="font-medium text-sm">1 Jun 2025</p>
+                <h4 className="font-heading font-bold text-xl mb-1">Join GirStay Rewards</h4>
+                <p className="text-black/70 text-sm max-w-md">Create an account to save this booking and earn complimentary room upgrades on future stays.</p>
               </div>
             </div>
+            <button className="relative z-10 w-full sm:w-auto px-8 py-4 bg-black text-[#D9A94D] font-semibold rounded-xl hover:bg-black/90 transition-colors shadow-lg active:scale-95">
+              Create Account
+            </button>
+          </m.div>
 
-            <Separator />
-
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Room charges (3 nights)</span>
-                <span className="price-number">{formatPrice(25500)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Gir Safari Package</span>
-                <span className="price-number">{formatPrice(3500)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">GST (18%)</span>
-                <span className="price-number">{formatPrice(5220)}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between font-bold">
-                <span>Total</span>
-                <span className="price-number gradient-gold-text text-base">{formatPrice(34220)}</span>
-              </div>
-              <div className="flex justify-between text-emerald-gir font-medium">
-                <span>Paid (Advance 50%)</span>
-                <span className="price-number">{formatPrice(17110)}</span>
-              </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>Due at Check-in</span>
-                <span className="price-number">{formatPrice(17110)}</span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="mt-8 space-y-3"
-        >
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Button variant="outline" className="gap-2 h-12 rounded-xl text-sm">
-              <Download className="w-4 h-4" />
-              Invoice
-            </Button>
-            <Button variant="outline" className="gap-2 h-12 rounded-xl text-sm">
-              <Calendar className="w-4 h-4" />
-              Add to Cal
-            </Button>
-            <Button variant="outline" className="gap-2 h-12 rounded-xl text-sm">
-              <Share2 className="w-4 h-4" />
-              Share
-            </Button>
-            <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}>
-              <Button variant="outline" className="gap-2 h-12 rounded-xl text-sm w-full">
-                <Phone className="w-4 h-4" />
-                Call Us
-              </Button>
-            </a>
-          </div>
-
-          <Link href="/properties">
-            <Button className="w-full h-14 gradient-gold text-black font-bold text-base rounded-xl shadow-gold gap-2 mt-4">
-              Explore More Properties
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-          </Link>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

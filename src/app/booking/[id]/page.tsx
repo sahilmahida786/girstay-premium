@@ -4,6 +4,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
+import { MobilePriceSummary } from "@/components/booking/MobilePriceSummary";
+import { GuestSelector } from "@/components/booking/GuestSelector";
+import { DateSelector } from "@/components/booking/DateSelector";
+import { GuestForm } from "@/components/booking/GuestForm";
+import { AddOnsMarketplace, EXPERIENCES_DATA } from "@/components/booking/AddOnsMarketplace";
+import { PaymentGateway } from "@/components/booking/PaymentGateway";
+import { LuxuryInput } from "@/components/ui/LuxuryInput";
 import {
   CalendarDays,
   Users,
@@ -34,12 +41,7 @@ const steps = [
   { id: 4, label: "Payment", icon: CreditCard },
 ];
 
-const addOns = [
-  { id: "safari", name: "Gir Safari Package", description: "Morning jeep safari with expert naturalist", price: 3500, icon: "🦁" },
-  { id: "airport", name: "Airport Pickup", description: "Rajkot/Ahmedabad airport transfer", price: 4500, icon: "✈️" },
-  { id: "dinner", name: "Bonfire Dinner", description: "Special outdoor dining experience", price: 2000, icon: "🔥" },
-  { id: "spa", name: "Couples Spa Package", description: "90-min rejuvenation therapy", price: 5000, icon: "💆" },
-];
+// Removed old mock addOns array
 
 export default function BookingPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -51,13 +53,24 @@ export default function BookingPage() {
   const property = mockProperties[0];
   const room = property.rooms[0];
   const nights = 3;
+  
   const roomCharges = room.basePrice * nights;
-  const addOnTotal = addOns
-    .filter((a) => selectedAddOns.includes(a.id))
-    .reduce((sum, a) => sum + a.price, 0);
+  
+  const addOnTotal = selectedAddOns.reduce((sum, id) => {
+    const exp = EXPERIENCES_DATA.find(e => e.id === id);
+    return sum + (exp?.price || 0);
+  }, 0);
+  
+  const bundleSavings = selectedAddOns.reduce((sum, id) => {
+    const exp = EXPERIENCES_DATA.find(e => e.id === id);
+    return sum + (exp?.savings || 0);
+  }, 0);
+
   const subtotal = roomCharges + addOnTotal;
-  const gst = Math.round(subtotal * 0.18);
-  const total = subtotal + gst;
+  const discountAmount = (couponCode === "LUXURY" ? 2500 : 0) + bundleSavings;
+  const taxableAmount = Math.max(0, subtotal - discountAmount);
+  const gst = Math.round(taxableAmount * 0.18);
+  const total = taxableAmount + gst;
   const advance = Math.round(total * 0.5);
 
   const toggleAddOn = (id: string) => {
@@ -88,8 +101,17 @@ export default function BookingPage() {
           </h1>
         </motion.div>
 
-        {/* Step Progress */}
-        <div className="mb-10">
+        {/* Mobile Sticky Progress Bar */}
+        <div className="-mx-4 mb-6 sm:mx-0 sm:mb-0">
+          <MobileStepIndicator 
+            currentStep={currentStep} 
+            totalSteps={4} 
+            stepLabel={steps[currentStep - 1].label} 
+          />
+        </div>
+
+        {/* Desktop Step Progress */}
+        <div className="hidden lg:block mb-10">
           <div className="flex items-center justify-between max-w-xl">
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
@@ -179,49 +201,14 @@ export default function BookingPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Check-in Date</label>
-                        <div className="relative">
-                          <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <input
-                            type="date"
-                            className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-border bg-background"
-                            defaultValue="2025-12-20"
-                          />
-                        </div>
+                      <div className="lg:col-span-2 space-y-4">
+                        <label className="text-sm font-medium mb-1.5 block">Dates</label>
+                        <DateSelector />
                       </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Check-out Date</label>
-                        <div className="relative">
-                          <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <input
-                            type="date"
-                            className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-border bg-background"
-                            defaultValue="2025-12-23"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Adults</label>
-                        <div className="relative">
-                          <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <select className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-border bg-background appearance-none">
-                            {[1, 2, 3, 4].map((n) => (
-                              <option key={n} value={n}>{n} Adult{n > 1 ? "s" : ""}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Children</label>
-                        <div className="relative">
-                          <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <select className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-border bg-background appearance-none">
-                            {[0, 1, 2, 3].map((n) => (
-                              <option key={n} value={n}>{n} Child{n !== 1 ? "ren" : ""}</option>
-                            ))}
-                          </select>
-                        </div>
+                      
+                      <div className="lg:col-span-2 space-y-4">
+                        <label className="text-sm font-medium mb-1.5 block">Guests</label>
+                        <GuestSelector />
                       </div>
                     </div>
                   </div>
@@ -239,51 +226,19 @@ export default function BookingPage() {
                   transition={{ duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
-                  <div className="p-6 rounded-2xl bg-card border border-border/50">
-                    <h2 className="font-heading text-lg font-semibold mb-4">Guest Information</h2>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium mb-1.5 block">First Name</label>
-                          <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input placeholder="John" className="pl-10 h-12 rounded-xl" />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium mb-1.5 block">Last Name</label>
-                          <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input placeholder="Doe" className="pl-10 h-12 rounded-xl" />
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Email Address</label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input type="email" placeholder="you@example.com" className="pl-10 h-12 rounded-xl" />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Phone Number</label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input type="tel" placeholder="+91 98765 43210" className="pl-10 h-12 rounded-xl" />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-1.5 block">Special Requests (Optional)</label>
-                        <div className="relative">
-                          <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-                          <textarea
-                            placeholder="Early check-in, birthday surprise, dietary requirements..."
-                            rows={3}
-                            className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-border bg-background resize-none"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                  <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury">
+                    <h2 className="luxury-heading text-2xl mb-6">Guest Information</h2>
+                    
+                    <GuestForm 
+                      onNextStep={() => {
+                        setDirection(1);
+                        setCurrentStep(currentStep + 1);
+                      }}
+                      onPreviousStep={() => {
+                        setDirection(-1);
+                        setCurrentStep(currentStep - 1);
+                      }}
+                    />
                   </div>
                 </motion.div>
               )}
@@ -299,62 +254,33 @@ export default function BookingPage() {
                   transition={{ duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
-                  <div className="p-6 rounded-2xl bg-card border border-border/50">
-                    <h2 className="font-heading text-lg font-semibold mb-2">Enhance Your Stay</h2>
-                    <p className="text-sm text-muted-foreground mb-6">Add premium experiences to your booking</p>
-
-                    <div className="space-y-3">
-                      {addOns.map((addon) => (
-                        <button
-                          key={addon.id}
-                          onClick={() => toggleAddOn(addon.id)}
-                          className={cn(
-                            "w-full flex items-center gap-4 p-4 rounded-xl border text-left transition-all",
-                            selectedAddOns.includes(addon.id)
-                              ? "border-primary bg-primary/5 shadow-gold"
-                              : "border-border/50 hover:border-primary/30"
-                          )}
-                        >
-                          <span className="text-2xl">{addon.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm">{addon.name}</p>
-                            <p className="text-xs text-muted-foreground mt-0.5">{addon.description}</p>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="price-number font-bold text-sm">{formatPrice(addon.price)}</p>
-                            <div
-                              className={cn(
-                                "mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                                selectedAddOns.includes(addon.id)
-                                  ? "border-primary bg-primary"
-                                  : "border-muted-foreground/30"
-                              )}
-                            >
-                              {selectedAddOns.includes(addon.id) && (
-                                <Check className="w-3 h-3 text-primary-foreground" />
-                              )}
-                            </div>
-                          </div>
-                        </button>
-                      ))}
+                  <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury">
+                    <div className="mb-8">
+                      <h2 className="luxury-heading text-2xl mb-2">Enhance Your Stay</h2>
+                      <p className="text-sm text-white/50">Add premium curated experiences to your booking</p>
                     </div>
 
-                    <Separator className="my-6" />
+                    <AddOnsMarketplace 
+                      selectedIds={selectedAddOns} 
+                      onToggle={toggleAddOn} 
+                    />
+
+                    <Separator className="my-8 opacity-50" />
 
                     {/* Coupon */}
                     <div>
-                      <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Tag className="w-4 h-4 text-primary" />
+                      <h3 className="text-sm font-medium mb-3 flex items-center gap-2 text-[#D9A94D]">
+                        <Tag className="w-4 h-4" />
                         Have a coupon code?
                       </h3>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 max-w-sm">
                         <Input
                           value={couponCode}
                           onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                          placeholder="Enter coupon code"
-                          className="h-11 rounded-xl uppercase"
+                          placeholder="Try 'LUXURY'"
+                          className="h-12 rounded-xl uppercase bg-white/5 border-white/10"
                         />
-                        <Button variant="outline" className="h-11 px-6 rounded-xl shrink-0">
+                        <Button variant="outline" className="h-12 px-6 rounded-xl shrink-0 border-[#D9A94D]/30 text-[#D9A94D] hover:bg-[#D9A94D]/10">
                           Apply
                         </Button>
                       </div>
@@ -374,115 +300,57 @@ export default function BookingPage() {
                   transition={{ duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
-                  <div className="p-6 rounded-2xl bg-card border border-border/50">
-                    <h2 className="font-heading text-lg font-semibold mb-4">Payment Summary</h2>
-
-                    <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 mb-6">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Shield className="w-4 h-4 text-emerald-gir" />
-                        <span className="text-sm font-medium">50% Advance Payment</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Pay {formatPrice(advance)} now to confirm your booking. Remaining {formatPrice(total - advance)} at check-in.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">{room.name} × {nights} nights</span>
-                        <span className="price-number font-medium">{formatPrice(roomCharges)}</span>
-                      </div>
-                      {selectedAddOns.length > 0 && (
-                        <>
-                          {addOns
-                            .filter((a) => selectedAddOns.includes(a.id))
-                            .map((a) => (
-                              <div key={a.id} className="flex justify-between">
-                                <span className="text-muted-foreground">{a.name}</span>
-                                <span className="price-number font-medium">{formatPrice(a.price)}</span>
-                              </div>
-                            ))}
-                        </>
-                      )}
-                      <Separator />
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Subtotal</span>
-                        <span className="price-number font-medium">{formatPrice(subtotal)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">GST (18%)</span>
-                        <span className="price-number font-medium">{formatPrice(gst)}</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between text-base font-bold">
-                        <span>Total</span>
-                        <span className="price-number gradient-gold-text">{formatPrice(total)}</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between text-primary font-semibold">
-                        <span>Pay Now (50%)</span>
-                        <span className="price-number">{formatPrice(advance)}</span>
-                      </div>
-                      <div className="flex justify-between text-muted-foreground">
-                        <span>Pay at Check-in</span>
-                        <span className="price-number">{formatPrice(total - advance)}</span>
-                      </div>
-                    </div>
-
-                    <Button
-                      className="w-full h-14 mt-6 gradient-gold text-black font-bold text-base rounded-xl shadow-gold hover:shadow-gold-lg transition-all gap-2"
-                      onClick={() => {
-                        // Razorpay integration would go here
-                        window.location.href = "/booking/confirmation";
+                  <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury overflow-hidden">
+                    <h2 className="luxury-heading text-2xl mb-6">Complete Booking</h2>
+                    
+                    <PaymentGateway 
+                      advanceAmount={advance}
+                      totalAmount={total}
+                      onPreviousStep={() => {
+                        setDirection(-1);
+                        setCurrentStep(currentStep - 1);
                       }}
-                    >
-                      <CreditCard className="w-5 h-5" />
-                      Pay {formatPrice(advance)} Now
-                    </Button>
-
-                    <div className="flex flex-wrap items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> 256-bit SSL</span>
-                      <span>UPI</span>
-                      <span>Cards</span>
-                      <span>Net Banking</span>
-                    </div>
+                    />
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-6">
-              {currentStep > 1 ? (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setDirection(-1);
-                    setCurrentStep(currentStep - 1);
-                  }}
-                  className="gap-2 h-12 px-6 rounded-xl"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Previous
-                </Button>
-              ) : (
-                <div />
-              )}
-              {currentStep < 4 && (
-                <Button
-                  onClick={() => {
-                    setDirection(1);
-                    setCurrentStep(currentStep + 1);
-                  }}
-                  className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold"
-                >
-                  Next Step <ArrowRight className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
+            {/* Desktop Navigation Buttons (Hidden on Mobile) */}
+            {/* Hidden for Steps 2 and 4 because GuestForm and PaymentGateway handle their own actions */}
+            {currentStep !== 2 && currentStep !== 4 && (
+              <div className="hidden lg:flex justify-between mt-6">
+                {currentStep > 1 ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setDirection(-1);
+                      setCurrentStep(currentStep - 1);
+                    }}
+                    className="gap-2 h-12 px-6 rounded-xl"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> Previous
+                  </Button>
+                ) : (
+                  <div />
+                )}
+                {currentStep < 4 && (
+                  <Button
+                    onClick={() => {
+                      setDirection(1);
+                      setCurrentStep(currentStep + 1);
+                    }}
+                    className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold"
+                  >
+                    Next Step <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Price Summary Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Desktop Price Summary Sidebar (Hidden on Mobile) */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24 p-6 rounded-2xl bg-card border border-border/50 shadow-luxury">
               <h3 className="font-heading font-semibold mb-4">Price Summary</h3>
 
@@ -496,38 +364,44 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              <Separator className="mb-4" />
+              <Separator className="mb-6 opacity-50" />
 
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">{nights} nights</span>
-                  <span className="price-number">{formatPrice(roomCharges)}</span>
-                </div>
-                {addOnTotal > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Add-ons</span>
-                    <span className="price-number">{formatPrice(addOnTotal)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">GST</span>
-                  <span className="price-number">{formatPrice(gst)}</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between font-bold text-base">
-                  <span>Total</span>
-                  <span className="price-number gradient-gold-text">{formatPrice(total)}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 p-3 rounded-xl bg-primary/5 text-xs text-muted-foreground">
-                <Shield className="w-3.5 h-3.5 inline text-emerald-gir mr-1" />
-                Free cancellation up to 48 hours before check-in
-              </div>
+              <PriceSummaryDetails 
+                roomName={room.name}
+                nights={nights}
+                roomCharges={roomCharges}
+                addOnTotal={addOnTotal}
+                discountAmount={discountAmount}
+                gst={gst}
+                total={total}
+                advance={advance}
+              />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Sticky Price Summary & CTA */}
+      {currentStep !== 4 && (
+        <MobilePriceSummary
+          roomName={room.name}
+          nights={nights}
+          roomCharges={roomCharges}
+          addOnTotal={addOnTotal}
+          discountAmount={discountAmount}
+          gst={gst}
+          total={total}
+          advance={advance}
+          onNextStep={() => {
+            if (currentStep < 4) {
+              setDirection(1);
+              setCurrentStep(currentStep + 1);
+            }
+          }}
+          nextStepLabel="Next Step"
+          isLastStep={false}
+        />
+      )}
     </div>
   );
 }

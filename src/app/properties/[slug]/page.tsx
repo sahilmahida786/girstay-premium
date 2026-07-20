@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { mockProperties } from "@/data/mockProperties";
 import { PropertyDetailClient } from "./PropertyDetailClient";
+import { PropertySchema } from "@/components/seo/PropertySchema";
 import type { Metadata } from "next";
 
 type Params = Promise<{ slug: string }>;
@@ -35,5 +36,10 @@ export default async function PropertyDetailPage({ params }: { params: Params })
     notFound();
   }
 
-  return <PropertyDetailClient property={property} />;
+  return (
+    <>
+      <PropertySchema property={property} />
+      <PropertyDetailClient property={property} />
+    </>
+  );
 }
