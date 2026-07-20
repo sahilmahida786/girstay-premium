@@ -9,6 +9,9 @@ import Link from "next/link";
 import { useBookingStore } from "@/store/useBookingStore";
 import { validateCheckout } from "@/actions/checkout";
 import { MobilePriceSummary } from "@/components/booking/MobilePriceSummary";
+import { useNetworkState } from "@/hooks/useNetworkState";
+import { withRetry } from "@/lib/api-client";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import { GuestSelector } from "@/components/booking/GuestSelector";
 import { DateSelector } from "@/components/booking/DateSelector";
 import { GuestForm } from "@/components/booking/GuestForm";
@@ -59,6 +62,8 @@ export default function BookingPage() {
   const bookingData = getBooking(propertyId);
   const { step: currentStep, date, selectedAddOns, couponCode, adults, children, verifiedPricing, isCalculating, pricingError } = bookingData;
   const [direction, setDirection] = useState(1);
+  const [retryTrigger, setRetryTrigger] = useState(0);
+  const { isOnline } = useNetworkState();
 
   useEffect(() => {
     validateAndHydrate(propertyId);
@@ -66,22 +71,22 @@ export default function BookingPage() {
 
   // Server-Side Pricing Validation Engine
   useEffect(() => {
-    if (!date?.from || !date?.to) return;
+    if (!date?.from || !date?.to || !isOnline) return;
     
     let isMounted = true;
     const timeoutId = setTimeout(async () => {
       if (isMounted) {
         updateBooking(propertyId, { isCalculating: true, pricingError: null });
         try {
-          const res = await validateCheckout({
+          const res = await withRetry('validateCheckout', () => validateCheckout({
             propertyId,
-            checkIn: date.from,
-            checkOut: date.to,
+            checkIn: date.from!,
+            checkOut: date.to!,
             adults,
             children,
             selectedAddOns,
             couponCode
-          });
+          }));
 
           if (!isMounted) return;
 
@@ -111,7 +116,7 @@ export default function BookingPage() {
       isMounted = false;
       clearTimeout(timeoutId);
     };
-  }, [propertyId, date?.from, date?.to, adults, children, selectedAddOns, couponCode, updateBooking]);
+  }, [propertyId, date?.from, date?.to, adults, children, selectedAddOns, couponCode, updateBooking, isOnline, retryTrigger]);
 
   const setCurrentStep = (newStep: number) => {
     updateBooking(propertyId, { step: newStep });
@@ -439,6 +444,24 @@ export default function BookingPage() {
           <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24 p-6 rounded-2xl bg-card border border-border/50 shadow-luxury">
               <h3 className="font-heading font-semibold mb-4">Price Summary</h3>
+              
+              {pricingError && (
+                <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/20 flex flex-col gap-3" role="alert" aria-live="assertive">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                    <div className="text-red-200 text-sm leading-relaxed">
+                      {pricingError}
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setRetryTrigger(prev => prev + 1)}
+                    disabled={!isOnline}
+                    className="w-full py-2.5 mt-1 rounded-lg bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <RefreshCw className="w-4 h-4" /> Retry Calculation
+                  </button>
+                </div>
+              )}
 
               <div className="flex gap-3 mb-4">
                 <div className="relative w-16 h-14 rounded-lg overflow-hidden shrink-0">
@@ -461,6 +484,7 @@ export default function BookingPage() {
                 gst={gst}
                 total={total}
                 advance={advance}
+                isCalculating={isCalculating}
               />
             </div>
           </div>
@@ -487,7 +511,8 @@ export default function BookingPage() {
           }}
           nextStepLabel={currentStep === 1 && !isValidDate ? "Select valid dates" : "Next Step"}
           isLastStep={false}
-          disabled={currentStep === 1 && !isValidDate}
+          disabled={currentStep === 1 && (!isValidDate || isCalculating || !!pricingError)}
+          isCalculating={isCalculating}
         />
       )}
     </div>
