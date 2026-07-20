@@ -7,7 +7,7 @@ import * as z from "zod";
 import { User, Phone, Mail, MessageSquare, Sparkles } from "lucide-react";
 import { LuxuryFloatingInput } from "@/components/ui/LuxuryFloatingInput";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
-import { m, AnimatePresence } from "framer-motion";
+import { m } from "framer-motion";
 import { useBookingStore } from "@/store/useBookingStore";
 
 // 1. Zod Validation Schema
@@ -77,7 +77,6 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
   }, [watch, isLoaded, propertyId, updateBooking]);
 
   const onSubmit = (data: GuestFormValues) => {
-    // Optionally save to global state or API here before moving to next step
     onNextStep();
   };
 
@@ -93,7 +92,7 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
   if (!isLoaded) return null; // Prevent hydration mismatch flash
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 relative">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 relative" noValidate>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name Fields */}
         <LuxuryFloatingInput
@@ -102,9 +101,10 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
           icon={<User className="w-5 h-5" />}
           error={errors.firstName?.message}
           isValid={!errors.firstName && touchedFields.firstName}
+          autoComplete="given-name"
+          required
           {...register("firstName", {
             onChange: (e) => {
-              // Auto-capitalize first letter
               const val = e.target.value;
               if (val.length > 0) {
                 e.target.value = val.charAt(0).toUpperCase() + val.slice(1);
@@ -119,6 +119,8 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
           icon={<User className="w-5 h-5" />}
           error={errors.lastName?.message}
           isValid={!errors.lastName && touchedFields.lastName}
+          autoComplete="family-name"
+          required
           {...register("lastName", {
             onChange: (e) => {
               const val = e.target.value;
@@ -137,6 +139,9 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
           icon={<Mail className="w-5 h-5" />}
           error={errors.email?.message}
           isValid={!errors.email && touchedFields.email}
+          autoComplete="email"
+          inputMode="email"
+          required
           {...register("email")}
         />
 
@@ -147,45 +152,52 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
           icon={<Phone className="w-5 h-5" />}
           error={errors.phone?.message}
           isValid={!errors.phone && touchedFields.phone}
-          placeholder="+91 98765 43210" // shown only briefly before label floats
+          autoComplete="tel"
+          inputMode="tel"
+          required
           {...register("phone")}
         />
 
         {/* Special Requests */}
         <div className="md:col-span-2 space-y-3">
           <div className="relative group">
-            <MessageSquare className="absolute left-4 top-5 w-5 h-5 text-white/40 group-focus-within:text-[#D9A94D] transition-colors" />
+            <MessageSquare aria-hidden="true" className="absolute left-4 top-5 w-5 h-5 text-white/40 group-focus-within:text-[#D9A94D] transition-colors pointer-events-none" />
+            <label htmlFor="specialRequests" className="sr-only">Special Requests</label>
             <textarea
               id="specialRequests"
               placeholder="Any special requests? (Optional)"
-              className="w-full min-h-[120px] bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 focus:border-[#D9A94D] focus:shadow-[0_0_0_4px_rgba(217,169,77,0.1)] focus:bg-white/10 rounded-xl px-12 py-5 text-white/90 text-sm sm:text-base outline-none resize-none transition-all"
+              className="w-full min-h-[120px] bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/30 focus:border-[#D9A94D] focus:shadow-[0_0_0_4px_rgba(217,169,77,0.1)] focus:bg-white/10 rounded-xl px-12 py-5 text-white/90 text-base outline-none resize-none transition-all touch-manipulation"
               {...register("specialRequests")}
             />
           </div>
           
           {/* Smart Suggestions */}
-          <div className="flex flex-wrap gap-2">
-            {SMART_SUGGESTIONS.map((suggestion) => (
-              <button
-                key={suggestion}
-                type="button"
-                onClick={() => handleSuggestionClick(suggestion)}
-                className="px-4 py-2 min-h-[48px] rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs sm:text-sm text-white/70 hover:text-white transition-colors flex items-center gap-1.5 active:scale-95 touch-manipulation"
-              >
-                <Sparkles className="w-3 h-3 text-[#D9A94D]" />
-                {suggestion}
-              </button>
-            ))}
-          </div>
+          <fieldset>
+            <legend className="sr-only">Quick suggestions for special requests</legend>
+            <div className="flex flex-wrap gap-2">
+              {SMART_SUGGESTIONS.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  aria-label={`Add ${suggestion} to special requests`}
+                  className="px-4 py-2 min-h-[44px] rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white/70 hover:text-white transition-colors flex items-center gap-1.5 active:scale-95 touch-manipulation focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:outline-none"
+                >
+                  <Sparkles className="w-4 h-4 text-[#D9A94D]" aria-hidden="true" />
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </fieldset>
         </div>
       </div>
 
-      {/* Desktop Navigation (Hidden on Mobile, as Mobile has Sticky Footer) */}
+      {/* Desktop Navigation */}
       <div className="hidden lg:flex justify-between items-center pt-6 border-t border-white/10">
         <button
           type="button"
           onClick={onPreviousStep}
-          className="px-6 py-3 text-white/60 hover:text-white transition-colors"
+          className="px-6 py-3 min-h-[44px] text-white/60 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:outline-none rounded-lg"
         >
           Back
         </button>
@@ -198,13 +210,14 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
       <m.div 
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 p-4 pb-safe-offset lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 p-4 pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
         <div className="flex gap-3">
           <button
             type="button"
             onClick={onPreviousStep}
-            className="px-4 py-3 min-h-[52px] border border-white/20 rounded-xl text-white/80 active:bg-white/10 active:scale-[0.98] transition-transform touch-manipulation"
+            aria-label="Go back to previous step"
+            className="px-4 py-3 min-h-[52px] min-w-[52px] flex items-center justify-center border border-white/20 rounded-xl text-white/80 active:bg-white/10 active:scale-[0.98] transition-transform touch-manipulation focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:outline-none"
           >
             Back
           </button>

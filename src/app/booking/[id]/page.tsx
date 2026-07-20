@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { differenceInCalendarDays, addDays, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { useBookingStore } from "@/store/useBookingStore";
@@ -118,8 +118,14 @@ export default function BookingPage() {
     };
   }, [propertyId, date?.from, date?.to, adults, children, selectedAddOns, couponCode, updateBooking, isOnline, retryTrigger]);
 
+  const prefersReducedMotion = useReducedMotion();
+  const stepContainerRef = useRef<HTMLDivElement>(null);
+
   const setCurrentStep = (newStep: number) => {
     updateBooking(propertyId, { step: newStep });
+    setTimeout(() => {
+      stepContainerRef.current?.focus();
+    }, 150);
   };
   
   const setDate = (newDate: DateRange | undefined) => {
@@ -168,10 +174,13 @@ export default function BookingPage() {
     <div className="min-h-screen py-8 sm:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 overflow-hidden sm:overflow-visible">
         {/* Page Header */}
+        <div aria-live="polite" className="sr-only">
+          {`Step ${currentStep} of 4: ${steps[currentStep - 1].label}`}
+        </div>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: luxuryEasing }}
+          initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+          animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: luxuryEasing }}
           className="mb-8"
         >
           <Link
@@ -243,17 +252,17 @@ export default function BookingPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 relative">
+          <div className="lg:col-span-2 relative" ref={stepContainerRef} tabIndex={-1} style={{ outline: 'none' }}>
             <AnimatePresence mode="wait" custom={direction}>
               {/* Step 1: Dates & Room */}
               {currentStep === 1 && (
                 <motion.div
                   key="step1"
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -20 : 20 }}
-                  transition={{ duration: 0.4, ease: luxuryEasing }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? 20 : -20 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? -20 : 20 }}
+                  transition={prefersReducedMotion ? { duration: 0.15 } : { duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
                   <div className="p-6 rounded-2xl bg-card border border-border/50">
@@ -305,10 +314,10 @@ export default function BookingPage() {
                 <motion.div
                   key="step2"
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -20 : 20 }}
-                  transition={{ duration: 0.4, ease: luxuryEasing }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? 20 : -20 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? -20 : 20 }}
+                  transition={prefersReducedMotion ? { duration: 0.15 } : { duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
                   <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury">
@@ -334,10 +343,10 @@ export default function BookingPage() {
                 <motion.div
                   key="step3"
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -20 : 20 }}
-                  transition={{ duration: 0.4, ease: luxuryEasing }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? 20 : -20 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? -20 : 20 }}
+                  transition={prefersReducedMotion ? { duration: 0.15 } : { duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
                   <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury">
@@ -380,10 +389,10 @@ export default function BookingPage() {
                 <motion.div
                   key="step4"
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -20 : 20 }}
-                  transition={{ duration: 0.4, ease: luxuryEasing }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? 20 : -20 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction > 0 ? -20 : 20 }}
+                  transition={prefersReducedMotion ? { duration: 0.15 } : { duration: 0.4, ease: luxuryEasing }}
                   className="space-y-6"
                 >
                   <div className="p-6 sm:p-8 rounded-2xl bg-card border border-border/50 shadow-luxury overflow-hidden">

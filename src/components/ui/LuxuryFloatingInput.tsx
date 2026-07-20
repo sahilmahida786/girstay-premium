@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useId } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,11 @@ interface LuxuryFloatingInputProps extends React.InputHTMLAttributes<HTMLInputEl
 }
 
 export const LuxuryFloatingInput = React.forwardRef<HTMLInputElement, LuxuryFloatingInputProps>(
-  ({ label, error, isValid, icon, className, id, value, onChange, onBlur, ...props }, ref) => {
+  ({ label, error, isValid, icon, className, id: externalId, value, onChange, onBlur, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
+    const generatedId = useId();
+    const id = externalId || generatedId;
+    const errorId = `${id}-error`;
     
     // Check if the input has content (either controlled value or uncontrolled default)
     const hasValue = value !== undefined && value !== null && value !== "";
@@ -35,10 +38,13 @@ export const LuxuryFloatingInput = React.forwardRef<HTMLInputElement, LuxuryFloa
         >
           {/* Left Icon */}
           {icon && (
-            <div className={cn(
-              "absolute left-4 transition-colors duration-300",
-              isFocused ? "text-[#D9A94D]" : error ? "text-red-400" : "text-white/40"
-            )}>
+            <div 
+              aria-hidden="true"
+              className={cn(
+                "absolute left-4 transition-colors duration-300 pointer-events-none",
+                isFocused ? "text-[#D9A94D]" : error ? "text-red-400" : "text-white/40"
+              )}
+            >
               {icon}
             </div>
           )}
@@ -51,10 +57,11 @@ export const LuxuryFloatingInput = React.forwardRef<HTMLInputElement, LuxuryFloa
               icon ? "left-12" : "left-4",
               isFocused || hasValue
                 ? "top-1.5 text-[10px] sm:text-xs font-medium uppercase tracking-wider text-[#D9A94D]"
-                : "top-1/2 -translate-y-1/2 text-sm text-white/50"
+                : "top-1/2 -translate-y-1/2 text-base text-white/50"
             )}
           >
             {label}
+            {props.required && <span className="text-red-400 ml-1" aria-hidden="true">*</span>}
           </label>
 
           {/* Actual Input */}
@@ -70,16 +77,21 @@ export const LuxuryFloatingInput = React.forwardRef<HTMLInputElement, LuxuryFloa
               setIsFocused(false);
               if (onBlur) onBlur(e);
             }}
+            aria-invalid={!!error}
+            aria-describedby={error ? errorId : undefined}
             className={cn(
-              "w-full h-full bg-transparent outline-none text-white/90 text-sm sm:text-base font-medium px-4 pt-5 pb-1.5",
+              "w-full h-full bg-transparent outline-none text-white/90 text-base font-medium px-4 pt-5 pb-1.5",
               icon && "pl-12",
-              "placeholder:text-transparent" // Hide default placeholder in favor of floating label
+              "placeholder:text-transparent", // Hide default placeholder in favor of floating label
+              // Mobile specific improvements
+              "touch-manipulation"
             )}
+            // Prevent zoom on mobile by forcing 16px font-size if necessary, but text-base should be 16px.
             {...props}
           />
 
           {/* Right Validation Icon */}
-          <div className="absolute right-4 flex items-center">
+          <div className="absolute right-4 flex items-center pointer-events-none" aria-hidden="true">
             <AnimatePresence mode="wait">
               {isValid && !error && hasValue && (
                 <m.div
@@ -108,18 +120,21 @@ export const LuxuryFloatingInput = React.forwardRef<HTMLInputElement, LuxuryFloa
         </div>
 
         {/* Error Message Helper */}
-        <AnimatePresence>
-          {error && (
-            <m.p
-              initial={{ opacity: 0, height: 0, y: -5 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -5 }}
-              className="text-xs text-red-400 mt-2 pl-2 font-medium"
-            >
-              {error}
-            </m.p>
-          )}
-        </AnimatePresence>
+        <div aria-live="polite" aria-atomic="true">
+          <AnimatePresence>
+            {error && (
+              <m.p
+                id={errorId}
+                initial={{ opacity: 0, height: 0, y: -5 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -5 }}
+                className="text-sm text-red-400 mt-2 pl-2 font-medium"
+              >
+                {error}
+              </m.p>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     );
   }

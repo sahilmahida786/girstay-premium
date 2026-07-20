@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { format, differenceInDays } from "date-fns";
 import { CalendarDays, ChevronDown, Check } from "lucide-react";
 import { DateRange } from "react-day-picker";
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { LuxuryCalendar } from "@/components/booking/LuxuryCalendar";
 import { LuxuryBottomSheet } from "@/components/ui/LuxuryBottomSheet";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
@@ -17,6 +17,7 @@ interface DateSelectorProps {
 
 export function DateSelector({ date, onDateChange }: DateSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   
   // Local state fallback if not controlled (for backward compatibility if used elsewhere)
   const [localDate, setLocalDate] = useState<DateRange | undefined>({
@@ -47,18 +48,30 @@ export function DateSelector({ date, onDateChange }: DateSelectorProps) {
   return (
     <>
       {/* Trigger Inputs */}
-      <div className="grid grid-cols-2 gap-4" onClick={() => setIsOpen(true)}>
-        <button className="w-full relative text-left h-12 luxury-input flex items-center justify-between group">
+      <div className="grid grid-cols-2 gap-4">
+        <button 
+          onClick={() => setIsOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          aria-label={`Check-in date: ${activeDate?.from ? format(activeDate.from, "MMM dd, yyyy") : "Select date"}. Tap to select dates.`}
+          className="w-full relative text-left h-12 luxury-input flex items-center justify-between group touch-manipulation focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:outline-none"
+        >
           <div className="flex items-center gap-2 overflow-hidden">
-            <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" />
+            <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" aria-hidden="true" />
             <span className="text-white/90 truncate text-sm sm:text-base">
               {activeDate?.from ? format(activeDate.from, "MMM dd, yyyy") : "Check-in"}
             </span>
           </div>
         </button>
-        <button className="w-full relative text-left h-12 luxury-input flex items-center justify-between group">
+        <button 
+          onClick={() => setIsOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          aria-label={`Check-out date: ${activeDate?.to ? format(activeDate.to, "MMM dd, yyyy") : "Select date"}. Tap to select dates.`}
+          className="w-full relative text-left h-12 luxury-input flex items-center justify-between group touch-manipulation focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:outline-none"
+        >
           <div className="flex items-center gap-2 overflow-hidden">
-            <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" />
+            <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" aria-hidden="true" />
             <span className="text-white/90 truncate text-sm sm:text-base">
               {activeDate?.to ? format(activeDate.to, "MMM dd, yyyy") : "Check-out"}
             </span>
@@ -75,9 +88,12 @@ export function DateSelector({ date, onDateChange }: DateSelectorProps) {
               onClick={() => setIsOpen(false)} 
             />
             <m.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Select dates"
+              initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: -20 }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: -20 }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 luxury-bg border border-white/10 p-6 rounded-3xl shadow-2xl w-max"
             >
               <div className="flex justify-between items-center mb-6">
@@ -135,21 +151,21 @@ export function DateSelector({ date, onDateChange }: DateSelectorProps) {
         </div>
 
         {/* Mobile Sticky Action Footer - Smart Insights */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 pb-safe-offset bg-black/60 backdrop-blur-xl border-t border-white/10">
+        <div className="absolute bottom-0 left-0 right-0 p-4 pb-[env(safe-area-inset-bottom)] bg-black/60 backdrop-blur-xl border-t border-white/10">
           <div className="flex justify-between items-center mb-3 px-2">
             <div>
-              <p className="text-xs text-white/60 uppercase tracking-widest">
+              <p className="text-xs text-white/60 uppercase tracking-widest" aria-live="polite">
                 {activeDate?.from ? format(activeDate.from, "MMM d") : "Check-in"} - {activeDate?.to ? format(activeDate.to, "MMM d") : "Check-out"}
               </p>
               {nights > 0 ? (
-                <p className="text-[#D9A94D] text-sm font-medium mt-0.5">{nights} Nights</p>
+                <p className="text-[#D9A94D] text-sm font-medium mt-0.5" aria-live="polite">{nights} Nights</p>
               ) : (
                 <p className="text-white/40 text-sm mt-0.5">Select check-out date</p>
               )}
             </div>
             {nights > 0 && (
-              <div className="text-right">
-                <p className="luxury-price text-lg">₹<AnimatedNumber value={estimatedTotal} /></p>
+              <div className="text-right" aria-live="polite">
+                <p className="luxury-price text-lg tabular-nums">₹<AnimatedNumber value={estimatedTotal} /></p>
                 <p className="text-[10px] text-white/40">Taxes excluded</p>
               </div>
             )}
@@ -157,7 +173,7 @@ export function DateSelector({ date, onDateChange }: DateSelectorProps) {
           
           <LuxuryButton 
             onClick={() => setIsOpen(false)}
-            className="w-full h-12 gap-2"
+            className="w-full h-12 gap-2 touch-manipulation min-h-[48px]"
             disabled={!activeDate?.from || !activeDate?.to}
           >
             Confirm Dates
