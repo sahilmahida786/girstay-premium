@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { differenceInCalendarDays, addDays } from "date-fns";
+import { useState, useMemo, useEffect } from "react";
+import { differenceInCalendarDays, addDays, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { motion, AnimatePresence } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
+import { useBookingStore } from "@/store/useBookingStore";
 import { MobilePriceSummary } from "@/components/booking/MobilePriceSummary";
 import { GuestSelector } from "@/components/booking/GuestSelector";
 import { DateSelector } from "@/components/booking/DateSelector";
@@ -46,23 +47,54 @@ const steps = [
 // Removed old mock addOns array
 
 export default function BookingPage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [direction, setDirection] = useState(1);
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
-  const [couponCode, setCouponCode] = useState("");
-
-  // Use first property as demo
   const property = mockProperties[0];
   const room = property.rooms[0];
+  const propertyId = property.id;
+
+  const getBooking = useBookingStore(state => state.getBooking);
+  const updateBooking = useBookingStore(state => state.updateBooking);
+  const validateAndHydrate = useBookingStore(state => state.validateAndHydrate);
+
+  const bookingData = getBooking(propertyId);
+  const { step: currentStep, date, selectedAddOns, couponCode } = bookingData;
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    validateAndHydrate(propertyId);
+  }, [propertyId, validateAndHydrate]);
+
+  const setCurrentStep = (newStep: number) => {
+    updateBooking(propertyId, { step: newStep });
+  };
   
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 3),
-  });
+  const setDate = (newDate: DateRange | undefined) => {
+    updateBooking(propertyId, { 
+      date: { 
+        from: newDate?.from?.toISOString(), 
+        to: newDate?.to?.toISOString() 
+      } 
+    });
+  };
+
+  const setSelectedAddOns = (updater: any) => {
+    const newAddOns = typeof updater === 'function' ? updater(selectedAddOns) : updater;
+    updateBooking(propertyId, { selectedAddOns: newAddOns });
+  };
+
+  const setCouponCode = (code: string) => {
+    updateBooking(propertyId, { couponCode: code });
+  };
+
+  const dateRange = useMemo(() => {
+    return {
+      from: date?.from ? parseISO(date.from) : undefined,
+      to: date?.to ? parseISO(date.to) : undefined,
+    } as DateRange;
+  }, [date]);
 
   const nights = useMemo(() => {
     if (date?.from && date?.to) {
-      return Math.max(0, differenceInCalendarDays(date.to, date.from));
+      return Math.max(0, differenceInCalendarDays(parseISO(date.to), parseISO(date.from)));
     }
     return 0;
   }, [date]);
@@ -218,12 +250,12 @@ export default function BookingPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="lg:col-span-2 space-y-4">
                         <label className="text-sm font-medium mb-1.5 block">Dates</label>
-                        <DateSelector date={date} onDateChange={setDate} />
+                        <DateSelector date={dateRange} onDateChange={setDate} />
                       </div>
                       
                       <div className="lg:col-span-2 space-y-4">
                         <label className="text-sm font-medium mb-1.5 block">Guests</label>
-                        <GuestSelector />
+                        <GuestSelector propertyId={propertyId} />
                       </div>
                     </div>
                   </div>
@@ -245,6 +277,7 @@ export default function BookingPage() {
                     <h2 className="luxury-heading text-2xl mb-6">Guest Information</h2>
                     
                     <GuestForm 
+                      propertyId={propertyId}
                       onNextStep={() => {
                         setDirection(1);
                         setCurrentStep(currentStep + 1);
@@ -319,6 +352,7 @@ export default function BookingPage() {
                     <h2 className="luxury-heading text-2xl mb-6">Complete Booking</h2>
                     
                     <PaymentGateway 
+                      propertyId={propertyId}
                       advanceAmount={advance}
                       totalAmount={total}
                       onPreviousStep={() => {

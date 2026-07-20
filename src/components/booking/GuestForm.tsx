@@ -8,6 +8,7 @@ import { User, Phone, Mail, MessageSquare, Sparkles } from "lucide-react";
 import { LuxuryFloatingInput } from "@/components/ui/LuxuryFloatingInput";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
 import { m, AnimatePresence } from "framer-motion";
+import { useBookingStore } from "@/store/useBookingStore";
 
 // 1. Zod Validation Schema
 const guestFormSchema = z.object({
@@ -30,12 +31,15 @@ const SMART_SUGGESTIONS = [
 ];
 
 interface GuestFormProps {
+  propertyId: string;
   onNextStep: () => void;
   onPreviousStep: () => void;
 }
 
-export function GuestForm({ onNextStep, onPreviousStep }: GuestFormProps) {
+export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const getBooking = useBookingStore(state => state.getBooking);
+  const updateBooking = useBookingStore(state => state.updateBooking);
 
   // 2. React Hook Form Setup
   const {
@@ -51,32 +55,26 @@ export function GuestForm({ onNextStep, onPreviousStep }: GuestFormProps) {
 
   const specialRequests = watch("specialRequests");
 
-  // 3. Auto Save / Restore (Local Storage)
+  // 3. Auto Save / Restore (Zustand Store)
   useEffect(() => {
-    const savedData = localStorage.getItem("girstay_guest_info");
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        // Safely set each value
-        Object.keys(parsed).forEach((key) => {
-          setValue(key as keyof GuestFormValues, parsed[key], { shouldValidate: true });
-        });
-      } catch (e) {
-        console.error("Failed to parse saved guest info", e);
-      }
+    const booking = getBooking(propertyId);
+    if (booking.guestInfo) {
+      Object.keys(booking.guestInfo).forEach((key) => {
+        setValue(key as keyof GuestFormValues, (booking.guestInfo as any)[key], { shouldValidate: true });
+      });
     }
     setIsLoaded(true);
-  }, [setValue]);
+  }, [propertyId, getBooking, setValue]);
 
   // Save on every valid change
   useEffect(() => {
     if (isLoaded) {
       const subscription = watch((value) => {
-        localStorage.setItem("girstay_guest_info", JSON.stringify(value));
+        updateBooking(propertyId, { guestInfo: value as GuestFormValues });
       });
       return () => subscription.unsubscribe();
     }
-  }, [watch, isLoaded]);
+  }, [watch, isLoaded, propertyId, updateBooking]);
 
   const onSubmit = (data: GuestFormValues) => {
     // Optionally save to global state or API here before moving to next step

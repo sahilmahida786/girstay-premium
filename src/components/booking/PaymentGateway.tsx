@@ -12,15 +12,18 @@ import {
   CheckCircle2, 
   Shield, 
   AlertCircle,
-  Loader2
+  Loader2,
+  Check
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { PaymentMethodCard } from "./PaymentMethodCard";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
+import { useBookingStore } from "@/store/useBookingStore";
 
 type PaymentState = "IDLE" | "PROCESSING" | "ERROR" | "SUCCESS";
 
 interface PaymentGatewayProps {
+  propertyId: string;
   advanceAmount: number;
   totalAmount: number;
   onPreviousStep: () => void;
@@ -40,8 +43,13 @@ const PROCESSING_STEPS = [
   "Confirming payment...",
 ];
 
-export function PaymentGateway({ advanceAmount, totalAmount, onPreviousStep }: PaymentGatewayProps) {
-  const [selectedMethod, setSelectedMethod] = useState("upi");
+export function PaymentGateway({ propertyId, advanceAmount, totalAmount, onPreviousStep }: PaymentGatewayProps) {
+  const getBooking = useBookingStore(state => state.getBooking);
+  const updateBooking = useBookingStore(state => state.updateBooking);
+  
+  const { paymentMethod: selectedMethod } = getBooking(propertyId);
+  const setSelectedMethod = (method: string) => updateBooking(propertyId, { paymentMethod: method });
+
   const [paymentState, setPaymentState] = useState<PaymentState>("IDLE");
   const [processingStepIndex, setProcessingStepIndex] = useState(0);
 

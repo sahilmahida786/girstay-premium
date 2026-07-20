@@ -3,11 +3,21 @@
 import React, { useState } from "react";
 import { Users, Plus, Minus } from "lucide-react";
 import { LuxuryBottomSheet } from "@/components/ui/LuxuryBottomSheet";
+import { useBookingStore } from "@/store/useBookingStore";
 
-export function GuestSelector() {
+interface GuestSelectorProps {
+  propertyId: string;
+}
+
+export function GuestSelector({ propertyId }: GuestSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
+  const getBooking = useBookingStore(state => state.getBooking);
+  const updateBooking = useBookingStore(state => state.updateBooking);
+  
+  const { adults, children } = getBooking(propertyId);
+
+  const setAdults = (val: number) => updateBooking(propertyId, { adults: val });
+  const setChildren = (val: number) => updateBooking(propertyId, { children: val });
 
   const totalGuests = adults + children;
 
