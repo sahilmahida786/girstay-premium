@@ -140,24 +140,34 @@ export function WildlifeCommitment() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24 lg:mb-32">
           
           {/* Left: Cinematic Panoramic Image */}
-          <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[4/5] rounded-[2rem] lg:rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] group">
+          <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[4/5] h-full">
+            {/* Soft Ambient Glows Behind Image */}
+            <div className="absolute -inset-4 bg-gradient-to-bl from-[#1A241A]/60 via-[#D4AF37]/10 to-transparent blur-3xl rounded-[32px] z-0 pointer-events-none opacity-60 transition-opacity duration-1000 group-hover:opacity-100" aria-hidden="true" />
+            
             <motion.div
               style={prefersReducedMotion ? {} : { scale: imgScale, y: imgY }}
-              className="w-full h-full will-change-transform origin-center"
+              className="relative w-full h-full rounded-[32px] overflow-hidden group will-change-transform [transform:translateZ(0)] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-shadow duration-700 hover:shadow-[0_30px_70px_rgba(212,175,55,0.15)] bg-black"
             >
-              <Image
-                src="https://images.unsplash.com/photo-1534759846116-5799c33ce22a?w=1200&h=1600&fit=crop&q=90&auto=format"
-                alt="Sun rays peering through the lush canopy of Sasan Gir forest"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                quality={90}
-                lazyBoundary="800px"
-              />
-              {/* Sunrise Lighting & Fog Overlays */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(212,175,55,0.15)_0%,transparent_60%)] mix-blend-screen pointer-events-none" aria-hidden="true" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
-              <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] pointer-events-none" aria-hidden="true" />
+              <div className="absolute inset-[-5%] w-[110%] h-[110%] will-change-transform origin-center transition-transform duration-700 ease-out group-hover:scale-[1.02]">
+                <Image
+                  src="https://images.unsplash.com/photo-1534759846116-5799c33ce22a?w=1200&h=1600&fit=crop&q=90&auto=format"
+                  alt="Sun rays peering through the lush canopy of Sasan Gir forest"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  quality={90}
+                  lazyBoundary="800px"
+                  placeholder="blur"
+                  blurDataURL="data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoIAAYAAUAmJaQAA3AA/vhL3oAA/v02XqX0Y38hQo1eT9r2e+3x//nK739u/7y/98z/2D/P//gY42V9H+b/8j4A/9f/O+wz+h/3voDf6T1ZPQH/wAA="
+                />
+              </div>
+
+              {/* Subtle Cinematic Gradient Overlay: Dark at bottom, warm gold in one corner */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.25)_0%,transparent_60%)] mix-blend-screen z-10 pointer-events-none" />
+              
+              {/* Subtle Glass Border Accent */}
+              <div className="absolute inset-0 border border-white/10 rounded-[32px] z-20 pointer-events-none transition-colors duration-700 group-hover:border-white/20" />
             </motion.div>
           </div>
 

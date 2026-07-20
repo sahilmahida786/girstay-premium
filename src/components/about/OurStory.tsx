@@ -81,43 +81,41 @@ export function OurStory() {
               MOBILE FIRST: IMAGE (Right on Desktop, Top on Mobile)
               ──────────────────────────────────────────────────────── */}
           <div className="order-1 lg:order-2 w-full lg:w-1/2 relative h-full">
+            {/* Soft Ambient Glows Behind Image */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#1A241A]/60 via-[#D4AF37]/10 to-transparent blur-3xl rounded-[32px] z-0 pointer-events-none opacity-60 transition-opacity duration-1000 group-hover:opacity-100" aria-hidden="true" />
+
             <motion.div 
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[3/4] rounded-2xl lg:rounded-[2rem] overflow-hidden group will-change-transform [transform:translateZ(0)] border border-white/5 bg-white/5"
+              className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[3/4] rounded-[32px] overflow-hidden group will-change-transform [transform:translateZ(0)] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-shadow duration-700 hover:shadow-[0_30px_70px_rgba(212,175,55,0.15)] bg-black"
             >
-              {/* Image Container with Scroll Parallax */}
+              {/* Image Container with Gentle Scroll Parallax and Hover Scale (1.02) */}
               <motion.div 
-                className="absolute inset-[-10%] w-[120%] h-[120%] will-change-transform origin-center"
+                className="absolute inset-[-5%] w-[110%] h-[110%] will-change-transform origin-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                 style={prefersReducedMotion ? {} : { scale: imgScale, y: imgY }}
               >
                 <Image
                   src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?w=1200&h=1600&fit=crop&q=90&auto=format"
                   alt="Golden sunrise lighting up a luxury eco-resort nestled deep within the Sasan Gir forest"
                   fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   quality={90}
                   lazyBoundary="800px"
+                  placeholder="blur"
+                  blurDataURL="data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoIAAYAAUAmJaQAA3AA/vhL3oAA/v02XqX0Y38hQo1eT9r2e+3x//nK739u/7y/98z/2D/P//gY42V9H+b/8j4A/9f/O+wz+h/3voDf6T1ZPQH/wAA="
                 />
               </motion.div>
 
-              {/* Luxury Overlays & Hover Effects */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-black/10 mix-blend-overlay z-10 pointer-events-none" />
-              <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.6)] z-10 pointer-events-none transition-shadow duration-700 group-hover:shadow-[inset_0_0_120px_rgba(0,0,0,0.8)]" />
+              {/* Subtle Cinematic Gradient Overlay: Dark at bottom, warm gold in one corner */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.25)_0%,transparent_60%)] mix-blend-screen z-10 pointer-events-none" />
               
-              {/* Glass Border Accent */}
-              <div className="absolute inset-0 border-[1.5px] border-white/10 rounded-2xl lg:rounded-[2rem] z-20 pointer-events-none transition-colors duration-700 group-hover:border-[#D4AF37]/30" />
-
-              {/* Subtle animated accent lines on hover */}
-              <div className="absolute top-8 left-8 w-0 h-[1px] bg-gradient-to-r from-[#D4AF37] to-transparent z-20 transition-all duration-700 ease-out group-hover:w-32 opacity-0 group-hover:opacity-100" />
-              <div className="absolute bottom-8 right-8 w-0 h-[1px] bg-gradient-to-l from-[#D4AF37] to-transparent z-20 transition-all duration-700 ease-out group-hover:w-32 opacity-0 group-hover:opacity-100" />
+              {/* Subtle Glass Border Accent */}
+              <div className="absolute inset-0 border border-white/10 rounded-[32px] z-20 pointer-events-none transition-colors duration-700 group-hover:border-white/20" />
             </motion.div>
-
-            {/* Premium External Shadow */}
-            <div className="absolute -inset-4 bg-[#D4AF37]/5 blur-3xl rounded-full z-0 pointer-events-none opacity-0 lg:opacity-50 transition-opacity duration-1000 group-hover:opacity-70" />
           </div>
 
           {/* ────────────────────────────────────────────────────────
