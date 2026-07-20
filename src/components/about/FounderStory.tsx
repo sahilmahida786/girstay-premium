@@ -127,7 +127,7 @@ export function FounderStory() {
                   className="w-full h-full will-change-transform origin-center"
                 >
                   <Image
-                    src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&h=1000&fit=crop"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1000&fit=crop&q=90&auto=format"
                     alt="Sahil Mahida - Founder of GirStay Premium"
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"

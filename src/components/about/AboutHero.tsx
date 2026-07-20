@@ -111,7 +111,7 @@ export function AboutHero() {
         >
           {/* Layer 1: Ultra high-quality lion image */}
           <Image
-            src="https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=1920&h=1080&fit=crop"
+            src="https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&h=1600&fit=crop&q=90&auto=format"
             alt="Majestic Asiatic Lion in Sasan Gir forest"
             fill
             priority

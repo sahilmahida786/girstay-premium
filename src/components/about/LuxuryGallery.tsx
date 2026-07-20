@@ -7,25 +7,25 @@ import { cn } from "@/lib/utils";
 
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&h=1200&fit=crop",
+    src: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&h=1200&fit=crop&q=90&auto=format",
     colSpan: "col-span-12 md:col-span-4",
     rowSpan: "row-span-2",
     alt: "Luxury Safari Tent",
   },
   {
-    src: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&h=800&fit=crop",
+    src: "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=1200&h=800&fit=crop&q=90&auto=format",
     colSpan: "col-span-12 md:col-span-8",
     rowSpan: "row-span-1",
     alt: "Gir Forest Landscape",
   },
   {
-    src: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&h=800&fit=crop",
+    src: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&h=800&fit=crop&q=90&auto=format",
     colSpan: "col-span-6 md:col-span-4",
     rowSpan: "row-span-1",
     alt: "Premium Dining Experience",
   },
   {
-    src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=800&fit=crop",
+    src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=800&fit=crop&q=90&auto=format",
     colSpan: "col-span-6 md:col-span-4",
     rowSpan: "row-span-1",
     alt: "Luxury Villa Interior",

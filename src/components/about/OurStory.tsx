@@ -94,7 +94,7 @@ export function OurStory() {
                 style={prefersReducedMotion ? {} : { scale: imgScale, y: imgY }}
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=1200&h=1600&fit=crop"
+                  src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?w=1200&h=1600&fit=crop&q=90&auto=format"
                   alt="Golden sunrise lighting up a luxury eco-resort nestled deep within the Sasan Gir forest"
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"

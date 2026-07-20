@@ -146,7 +146,7 @@ export function WildlifeCommitment() {
               className="w-full h-full will-change-transform origin-center"
             >
               <Image
-                src="https://images.unsplash.com/photo-1547960416-5fa023e387c1?w=1200&h=1600&fit=crop"
+                src="https://images.unsplash.com/photo-1534759846116-5799c33ce22a?w=1200&h=1600&fit=crop&q=90&auto=format"
                 alt="Sun rays peering through the lush canopy of Sasan Gir forest"
                 fill
                 className="object-cover"
