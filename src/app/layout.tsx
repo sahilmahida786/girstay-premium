@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/layout/BottomNav";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { LazyMotionProvider } from "@/components/ui/motion/LazyMotionProvider";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { WebVitals } from "@/components/seo/WebVitals";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -183,6 +184,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
+        <WebVitals />
         <OfflineBanner />
         <LazyMotionProvider>
           <ThemeProvider>

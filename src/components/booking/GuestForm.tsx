@@ -8,7 +8,8 @@ import { User, Phone, Mail, MessageSquare, Sparkles } from "lucide-react";
 import { LuxuryFloatingInput } from "@/components/ui/LuxuryFloatingInput";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
 import { m } from "framer-motion";
-import { useBookingStore } from "@/store/useBookingStore";
+import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
+import { useShallow } from "zustand/react/shallow";
 
 // 1. Zod Validation Schema
 const guestFormSchema = z.object({
@@ -38,8 +39,10 @@ interface GuestFormProps {
 
 export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const getBooking = useBookingStore(state => state.getBooking);
   const updateBooking = useBookingStore(state => state.updateBooking);
+  const { guestInfo } = useBookingStore(
+    useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
+  );
 
   // 2. React Hook Form Setup
   const {
@@ -57,14 +60,14 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
 
   // 3. Auto Save / Restore (Zustand Store)
   useEffect(() => {
-    const booking = getBooking(propertyId);
-    if (booking.guestInfo) {
+    const booking = useBookingStore.getState().bookings[propertyId];
+    if (booking?.guestInfo) {
       Object.keys(booking.guestInfo).forEach((key) => {
         setValue(key as keyof GuestFormValues, (booking.guestInfo as any)[key], { shouldValidate: true });
       });
     }
     setIsLoaded(true);
-  }, [propertyId, getBooking, setValue]);
+  }, [propertyId, setValue]);
 
   // Save on every valid change
   useEffect(() => {

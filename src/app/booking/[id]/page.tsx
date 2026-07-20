@@ -6,7 +6,8 @@ import { DateRange } from "react-day-picker";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
-import { useBookingStore } from "@/store/useBookingStore";
+import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
+import { useShallow } from "zustand/react/shallow";
 import { validateCheckout } from "@/actions/checkout";
 import { MobilePriceSummary } from "@/components/booking/MobilePriceSummary";
 import { useNetworkState } from "@/hooks/useNetworkState";
@@ -14,9 +15,13 @@ import { withRetry } from "@/lib/api-client";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { GuestSelector } from "@/components/booking/GuestSelector";
 import { DateSelector } from "@/components/booking/DateSelector";
-import { GuestForm } from "@/components/booking/GuestForm";
-import { AddOnsMarketplace, EXPERIENCES_DATA } from "@/components/booking/AddOnsMarketplace";
-import { PaymentGateway } from "@/components/booking/PaymentGateway";
+import dynamic from "next/dynamic";
+import { EXPERIENCES_DATA } from "@/components/booking/AddOnsMarketplace";
+
+const GuestForm = dynamic(() => import("@/components/booking/GuestForm").then(m => m.GuestForm));
+const AddOnsMarketplace = dynamic(() => import("@/components/booking/AddOnsMarketplace").then(m => m.AddOnsMarketplace));
+const PaymentGateway = dynamic(() => import("@/components/booking/PaymentGateway").then(m => m.PaymentGateway));
+
 import { LuxuryInput } from "@/components/ui/LuxuryInput";
 import {
   CalendarDays,
@@ -55,11 +60,12 @@ export default function BookingPage() {
   const room = property.rooms[0];
   const propertyId = property.id;
 
-  const getBooking = useBookingStore(state => state.getBooking);
   const updateBooking = useBookingStore(state => state.updateBooking);
   const validateAndHydrate = useBookingStore(state => state.validateAndHydrate);
 
-  const bookingData = getBooking(propertyId);
+  const bookingData = useBookingStore(
+    useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
+  );
   const { step: currentStep, date, selectedAddOns, couponCode, adults, children, verifiedPricing, isCalculating, pricingError } = bookingData;
   const [direction, setDirection] = useState(1);
   const [retryTrigger, setRetryTrigger] = useState(0);

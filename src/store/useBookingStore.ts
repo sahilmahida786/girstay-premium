@@ -36,7 +36,7 @@ interface BookingState {
   validateAndHydrate: (propertyId: string) => void;
 }
 
-const DEFAULT_BOOKING: PropertyBookingData = {
+export const DEFAULT_BOOKING: PropertyBookingData = {
   step: 1,
   date: {},
   adults: 2,

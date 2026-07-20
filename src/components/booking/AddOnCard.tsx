@@ -4,6 +4,7 @@ import React from "react";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Check, Clock, Sparkles } from "lucide-react";
 import { formatPrice, cn } from "@/lib/utils";
+import { SafeImage as Image } from "@/components/ui/SafeImage";
 
 export interface ExperienceData {
   id: string;
@@ -67,11 +68,12 @@ export function AddOnCard({ experience, isSelected, onToggle }: AddOnCardProps) 
       <div className="flex flex-col sm:flex-row h-full relative z-10">
         {/* Image Section */}
         <div className="relative w-full sm:w-[140px] h-32 sm:h-auto shrink-0 overflow-hidden bg-black/20" aria-hidden="true">
-          <img 
+          <Image 
             src={experience.imageUrl} 
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-cover"
+            alt={experience.name}
+            fill
+            sizes="(max-width: 640px) 100vw, 140px"
+            className="object-cover"
           />
           
           {/* Badge */}

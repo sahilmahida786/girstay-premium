@@ -18,7 +18,8 @@ import {
 import { formatPrice } from "@/lib/utils";
 import { PaymentMethodCard } from "./PaymentMethodCard";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
-import { useBookingStore } from "@/store/useBookingStore";
+import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
+import { useShallow } from "zustand/react/shallow";
 
 type PaymentState = "IDLE" | "PROCESSING" | "ERROR" | "SUCCESS";
 
@@ -44,10 +45,11 @@ const PROCESSING_STEPS = [
 ];
 
 export function PaymentGateway({ propertyId, advanceAmount, totalAmount, onPreviousStep }: PaymentGatewayProps) {
-  const getBooking = useBookingStore(state => state.getBooking);
   const updateBooking = useBookingStore(state => state.updateBooking);
   
-  const { paymentMethod: selectedMethod } = getBooking(propertyId);
+  const { paymentMethod: selectedMethod } = useBookingStore(
+    useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
+  );
   const setSelectedMethod = (method: string) => updateBooking(propertyId, { paymentMethod: method });
 
   const [paymentState, setPaymentState] = useState<PaymentState>("IDLE");

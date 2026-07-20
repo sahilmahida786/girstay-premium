@@ -3,7 +3,8 @@
 import React, { useState, useCallback } from "react";
 import { Users, Plus, Minus } from "lucide-react";
 import { LuxuryBottomSheet } from "@/components/ui/LuxuryBottomSheet";
-import { useBookingStore } from "@/store/useBookingStore";
+import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
+import { useShallow } from "zustand/react/shallow";
 
 interface GuestSelectorProps {
   propertyId: string;
@@ -11,10 +12,10 @@ interface GuestSelectorProps {
 
 export function GuestSelector({ propertyId }: GuestSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const getBooking = useBookingStore(state => state.getBooking);
   const updateBooking = useBookingStore(state => state.updateBooking);
-  
-  const { adults, children } = getBooking(propertyId);
+  const { adults, children } = useBookingStore(
+    useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
+  );
 
   const setAdults = useCallback((val: number) => updateBooking(propertyId, { adults: val }), [propertyId, updateBooking]);
   const setChildren = useCallback((val: number) => updateBooking(propertyId, { children: val }), [propertyId, updateBooking]);
