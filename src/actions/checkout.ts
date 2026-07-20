@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getPropertyById } from "@/data/mockProperties";
 import { EXPERIENCES_DATA } from "@/data/mockAddOns";
 import { differenceInCalendarDays, parseISO, isValid } from "date-fns";
+import { validatePromotion } from "@/lib/promotionEngine";
 
 const checkoutSchema = z.object({
   propertyId: z.string(),
@@ -93,18 +94,27 @@ export async function validateCheckout(payload: unknown): Promise<CheckoutRespon
       }
     }
 
-    // 6. Validate Coupon
+    // 6. Recalculate Subtotal First for Promotion
+    const subtotal = roomCharges + addOnTotal;
+
+    // 7. Validate Coupon via Promotion Engine
     let couponDiscount = 0;
     if (data.couponCode) {
-      if (data.couponCode.toUpperCase() === "LUXURY") {
-        couponDiscount = 2500;
-      } else {
-        return { status: "error", code: "INVALID_COUPON", message: "Invalid or expired coupon code." };
+      const promoResult = validatePromotion(data.couponCode, {
+        propertyId: property.id,
+        checkIn: data.checkIn,
+        subtotal,
+        selectedAddOnIds: data.selectedAddOns
+      });
+
+      if (!promoResult.valid) {
+        return { status: "error", code: "INVALID_COUPON", message: promoResult.message };
       }
+      
+      couponDiscount = promoResult.discountAmount;
     }
 
-    // 7. Recalculate Secure Totals
-    const subtotal = roomCharges + addOnTotal;
+    // 8. Secure Totals
     const discountAmount = couponDiscount + bundleSavings;
     const taxableAmount = Math.max(0, subtotal - discountAmount);
     const gst = Math.round(taxableAmount * 0.18);
