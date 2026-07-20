@@ -10,7 +10,11 @@ export const LuxuryButton = React.forwardRef<HTMLButtonElement, LuxuryButtonProp
     return (
       <button
         ref={ref}
-        className={cn("luxury-button px-8 py-3", className)}
+        className={cn(
+          "luxury-button px-6 sm:px-8 py-3.5 sm:py-3 min-h-[52px]", 
+          "active:scale-[0.97] transition-transform touch-manipulation", // Deep press feedback for mobile
+          className
+        )}
         {...props}
       >
         {children}

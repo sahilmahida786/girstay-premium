@@ -59,7 +59,7 @@ export function MobilePriceSummary({
 
         <LuxuryButton 
           onClick={onNextStep}
-          className="h-12 px-8 min-w-[140px]"
+          className="h-[52px] px-8 min-w-[140px]"
         >
           {isLastStep ? "Pay Now" : nextStepLabel}
         </LuxuryButton>

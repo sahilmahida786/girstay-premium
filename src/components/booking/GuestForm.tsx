@@ -172,7 +172,7 @@ export function GuestForm({ onNextStep, onPreviousStep }: GuestFormProps) {
                 key={suggestion}
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-white/70 hover:text-white transition-colors flex items-center gap-1.5 active:scale-95"
+                className="px-4 py-2 min-h-[48px] rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs sm:text-sm text-white/70 hover:text-white transition-colors flex items-center gap-1.5 active:scale-95 touch-manipulation"
               >
                 <Sparkles className="w-3 h-3 text-[#D9A94D]" />
                 {suggestion}
@@ -206,7 +206,7 @@ export function GuestForm({ onNextStep, onPreviousStep }: GuestFormProps) {
           <button
             type="button"
             onClick={onPreviousStep}
-            className="px-4 py-3 border border-white/20 rounded-xl text-white/80 active:bg-white/10"
+            className="px-4 py-3 min-h-[52px] border border-white/20 rounded-xl text-white/80 active:bg-white/10 active:scale-[0.98] transition-transform touch-manipulation"
           >
             Back
           </button>
