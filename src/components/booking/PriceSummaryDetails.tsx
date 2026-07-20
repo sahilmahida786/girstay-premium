@@ -16,6 +16,7 @@ interface PriceSummaryDetailsProps {
   gst: number;
   total: number;
   advance: number;
+  isCalculating?: boolean;
 }
 
 export function PriceSummaryDetails({
@@ -27,13 +28,31 @@ export function PriceSummaryDetails({
   gst,
   total,
   advance,
+  isCalculating = false,
 }: PriceSummaryDetailsProps) {
   // Memoize values to prevent unnecessary re-renders during animations
   const subtotal = useMemo(() => roomCharges + addOnTotal, [roomCharges, addOnTotal]);
   const remaining = useMemo(() => total - advance, [total, advance]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Loading Overlay */}
+      <AnimatePresence>
+        {isCalculating && (
+          <m.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-20 flex items-center justify-center rounded-xl border border-white/5"
+          >
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-2 border-white/20 border-t-[#D9A94D] rounded-full animate-spin" />
+              <span className="text-sm text-white/70 font-medium">Verifying Booking...</span>
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. Core Breakdown */}
       <div className="space-y-3 text-sm">
         <div className="flex justify-between items-center group">

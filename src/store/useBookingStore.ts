@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { differenceInCalendarDays, parseISO, isValid } from 'date-fns';
+import { CheckoutPricing } from '@/actions/checkout';
 
 export interface GuestInfo {
   firstName: string;
@@ -20,6 +21,9 @@ export interface PropertyBookingData {
   guestInfo: GuestInfo | null;
   paymentMethod: string;
   updatedAt: number;
+  verifiedPricing: CheckoutPricing | null;
+  isCalculating: boolean;
+  pricingError: string | null;
 }
 
 interface BookingState {
@@ -42,6 +46,9 @@ const DEFAULT_BOOKING: PropertyBookingData = {
   guestInfo: null,
   paymentMethod: "upi",
   updatedAt: Date.now(),
+  verifiedPricing: null,
+  isCalculating: false,
+  pricingError: null,
 };
 
 const EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
@@ -112,7 +119,12 @@ export const useBookingStore = create<BookingState>()(
           return { bookings: newBookings };
         }
 
-        return state;
+        const newBookings = { ...state.bookings };
+        newBookings[propertyId] = {
+           ...currentBooking,
+           isCalculating: false
+        };
+        return { bookings: newBookings };
       }),
     }),
     {

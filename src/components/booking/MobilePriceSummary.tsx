@@ -21,6 +21,7 @@ interface MobilePriceSummaryProps {
   nextStepLabel: string;
   isLastStep?: boolean;
   disabled?: boolean;
+  isCalculating?: boolean;
 }
 
 export function MobilePriceSummary({
@@ -35,7 +36,8 @@ export function MobilePriceSummary({
   onNextStep,
   nextStepLabel,
   isLastStep,
-  disabled
+  disabled,
+  isCalculating = false
 }: MobilePriceSummaryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -55,7 +57,11 @@ export function MobilePriceSummary({
             Total Price <ChevronUp className="w-3 h-3" />
           </span>
           <span className="luxury-price text-xl">
-            ₹<AnimatedNumber value={total} />
+            {isCalculating ? (
+              <span className="text-sm text-white/50 animate-pulse">Calculating...</span>
+            ) : (
+              <>₹<AnimatedNumber value={total} /></>
+            )}
           </span>
         </button>
 
@@ -84,6 +90,7 @@ export function MobilePriceSummary({
             gst={gst}
             total={total}
             advance={advance}
+            isCalculating={isCalculating}
           />
         </div>
       </LuxuryBottomSheet>

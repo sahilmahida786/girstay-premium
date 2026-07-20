@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { useBookingStore } from "@/store/useBookingStore";
+import { validateCheckout } from "@/actions/checkout";
 import { MobilePriceSummary } from "@/components/booking/MobilePriceSummary";
 import { GuestSelector } from "@/components/booking/GuestSelector";
 import { DateSelector } from "@/components/booking/DateSelector";
@@ -56,12 +57,61 @@ export default function BookingPage() {
   const validateAndHydrate = useBookingStore(state => state.validateAndHydrate);
 
   const bookingData = getBooking(propertyId);
-  const { step: currentStep, date, selectedAddOns, couponCode } = bookingData;
+  const { step: currentStep, date, selectedAddOns, couponCode, adults, children, verifiedPricing, isCalculating, pricingError } = bookingData;
   const [direction, setDirection] = useState(1);
 
   useEffect(() => {
     validateAndHydrate(propertyId);
   }, [propertyId, validateAndHydrate]);
+
+  // Server-Side Pricing Validation Engine
+  useEffect(() => {
+    if (!date?.from || !date?.to) return;
+    
+    let isMounted = true;
+    const timeoutId = setTimeout(async () => {
+      if (isMounted) {
+        updateBooking(propertyId, { isCalculating: true, pricingError: null });
+        try {
+          const res = await validateCheckout({
+            propertyId,
+            checkIn: date.from,
+            checkOut: date.to,
+            adults,
+            children,
+            selectedAddOns,
+            couponCode
+          });
+
+          if (!isMounted) return;
+
+          if (res.status === "success") {
+            updateBooking(propertyId, { 
+               verifiedPricing: res.pricing,
+               isCalculating: false 
+            });
+          } else {
+            updateBooking(propertyId, { 
+               pricingError: res.message,
+               isCalculating: false 
+            });
+          }
+        } catch (e) {
+           if (isMounted) {
+             updateBooking(propertyId, { 
+                pricingError: "Failed to connect to server.",
+                isCalculating: false 
+             });
+           }
+        }
+      }
+    }, 500); // 500ms debounce to prevent spamming server
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [propertyId, date?.from, date?.to, adults, children, selectedAddOns, couponCode, updateBooking]);
 
   const setCurrentStep = (newStep: number) => {
     updateBooking(propertyId, { step: newStep });
@@ -92,33 +142,16 @@ export default function BookingPage() {
     } as DateRange;
   }, [date]);
 
-  const nights = useMemo(() => {
-    if (date?.from && date?.to) {
-      return Math.max(0, differenceInCalendarDays(parseISO(date.to), parseISO(date.from)));
-    }
-    return 0;
-  }, [date]);
+  // Use verified pricing directly from server
+  const nights = verifiedPricing?.nights ?? 0;
+  const roomCharges = verifiedPricing?.roomCharges ?? 0;
+  const addOnTotal = verifiedPricing?.addOnTotal ?? 0;
+  const discountAmount = verifiedPricing?.discountAmount ?? 0;
+  const gst = verifiedPricing?.gst ?? 0;
+  const total = verifiedPricing?.total ?? 0;
+  const advance = verifiedPricing?.advance ?? 0;
 
   const isValidDate = nights > 0;
-  
-  const roomCharges = room.basePrice * nights;
-  
-  const addOnTotal = selectedAddOns.reduce((sum, id) => {
-    const exp = EXPERIENCES_DATA.find(e => e.id === id);
-    return sum + (exp?.price || 0);
-  }, 0);
-  
-  const bundleSavings = selectedAddOns.reduce((sum, id) => {
-    const exp = EXPERIENCES_DATA.find(e => e.id === id);
-    return sum + (exp?.savings || 0);
-  }, 0);
-
-  const subtotal = roomCharges + addOnTotal;
-  const discountAmount = (couponCode === "LUXURY" ? 2500 : 0) + bundleSavings;
-  const taxableAmount = Math.max(0, subtotal - discountAmount);
-  const gst = Math.round(taxableAmount * 0.18);
-  const total = taxableAmount + gst;
-  const advance = Math.round(total * 0.5);
 
   const toggleAddOn = (id: string) => {
     setSelectedAddOns((prev) =>
@@ -439,12 +472,12 @@ export default function BookingPage() {
         <MobilePriceSummary
           roomName={room.name}
           nights={nights}
-          roomCharges={roomCharges}
-          addOnTotal={addOnTotal}
-          discountAmount={discountAmount}
-          gst={gst}
-          total={total}
-          advance={advance}
+          roomCharges={verifiedPricing?.roomCharges || roomCharges}
+          addOnTotal={verifiedPricing?.addOnTotal || addOnTotal}
+          discountAmount={verifiedPricing?.discountAmount || discountAmount}
+          gst={verifiedPricing?.gst || gst}
+          total={verifiedPricing?.total || total}
+          advance={verifiedPricing?.advance || advance}
           onNextStep={() => {
             if (currentStep === 1 && !isValidDate) return;
             if (currentStep < 4) {
