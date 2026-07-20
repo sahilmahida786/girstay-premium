@@ -57,10 +57,10 @@ export function BookingTimeline() {
         
         {/* Animated Progress Line (Only covering the first step for now) */}
         <m.div 
-          initial={{ height: 0 }}
-          animate={{ height: "30%" }} // Just to the second step
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 0.3 }} // Just to the second step
           transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-          className="absolute top-0 left-[15px] sm:left-[27px] w-[2px] bg-gradient-to-b from-[#D9A94D] to-transparent origin-top"
+          className="absolute top-0 bottom-0 left-[15px] sm:left-[27px] w-[2px] bg-gradient-to-b from-[#D9A94D] to-transparent origin-top"
         />
 
         <div className="space-y-8 relative">

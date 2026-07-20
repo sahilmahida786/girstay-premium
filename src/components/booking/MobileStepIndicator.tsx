@@ -27,9 +27,9 @@ export function MobileStepIndicator({ currentStep, totalSteps, stepLabel }: Mobi
       <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
         {/* Animated Progress Fill */}
         <m.div 
-          className="h-full luxury-gold-gradient rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
+          className="h-full w-full luxury-gold-gradient rounded-full origin-left"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: progress / 100 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         />
       </div>

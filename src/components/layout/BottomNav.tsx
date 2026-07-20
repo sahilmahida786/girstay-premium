@@ -19,22 +19,14 @@ export function BottomNav() {
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [shadowLevel, setShadowLevel] = useState("high");
 
   // Scroll driven physics
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
+    const isScrollingDown = latest > previous && latest > 100;
     
-    // Allow hiding on scroll down past 100px
-    if (latest > previous && latest > 100) {
-      setHidden(true);
-      setOpacity(0.92);
-      setShadowLevel("low");
-    } else {
-      setHidden(false);
-      setOpacity(1);
-      setShadowLevel("high");
+    if (hidden !== isScrollingDown) {
+      setHidden(isScrollingDown);
     }
   });
 
@@ -47,50 +39,23 @@ export function BottomNav() {
       initial={{ y: 0, opacity: 1 }}
       animate={{ 
         y: hidden ? 15 : 0, // Moves down slightly, but not fully off-screen
-        opacity: opacity 
+        opacity: hidden ? 0.92 : 1 
       }}
       transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
     >
       <nav
         className={cn(
           "pointer-events-auto relative flex items-center justify-between w-[92%] max-w-[420px] h-[80px] rounded-full overflow-hidden transition-shadow duration-500",
-          shadowLevel === "high" ? "shadow-[0_20px_50px_rgba(0,0,0,0.6)]" : "shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+          !hidden ? "shadow-[0_20px_50px_rgba(0,0,0,0.6)]" : "shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
         )}
         aria-label="Mobile Navigation"
       >
-        {/* === 9-Layer Cinematic Background Engine === */}
-        {/* Layer 1: Deep charcoal gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#18181B] to-[#09090B] -z-20" />
+        {/* === Optimized 3-Layer Background Engine === */}
+        {/* Layer 1: Deep charcoal solid gradient (Replaces blur for performance) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#18181B] to-[#09090B] -z-20 opacity-95" />
         {/* Layer 2: Warm espresso gradient */}
         <div className="absolute inset-0 bg-gradient-to-tr from-[#1A140D]/80 via-transparent to-[#0a0a0a]/50 -z-20" />
-        {/* Layer 3: Soft golden radial glow behind center */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.15)_0%,transparent_50%)] -z-20 animate-breathe" />
-        {/* Layer 4: Very subtle glass blur */}
-        <div className="absolute inset-0 backdrop-blur-2xl bg-white/[0.01] -z-10" />
-        {/* Layer 5: Luxury vignette */}
-        <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] -z-10" />
-        {/* Layer 6: Floating golden dust particles */}
-        <div className="absolute inset-0 -z-10 opacity-30 mix-blend-screen pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={`nav-dust-${i}`}
-              className="absolute rounded-full bg-[#FFD27A] blur-[0.5px] animate-dust-float"
-              style={{
-                top: `${(i * 20) % 100}%`,
-                left: `${(i * 30) % 100}%`,
-                width: `${(i % 2) + 1}px`,
-                height: `${(i % 2) + 1}px`,
-                animationDelay: `-${i * 1.5}s`,
-                animationDuration: `${10 + i * 2}s`,
-              }}
-            />
-          ))}
-        </div>
-        {/* Layer 7: Moving ambient light */}
-        <div className="absolute -inset-[100%] bg-[linear-gradient(to_right,transparent,rgba(212,175,55,0.03),transparent)] animate-light-ray-sweep -z-10" />
-        {/* Layer 8: Noise texture */}
-        <div className="absolute inset-0 bg-noise opacity-30 mix-blend-overlay -z-10" />
-        {/* Layer 9: Soft reflection on top edge */}
+        {/* Layer 3: Soft reflection on top edge */}
         <div className="absolute inset-0 border border-white/5 border-t-white/20 rounded-full -z-10 pointer-events-none" />
 
         {/* === Navigation Items === */}
