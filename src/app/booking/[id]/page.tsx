@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { differenceInCalendarDays, addDays } from "date-fns";
+import { DateRange } from "react-day-picker";
 import { motion, AnimatePresence } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
@@ -52,7 +54,20 @@ export default function BookingPage() {
   // Use first property as demo
   const property = mockProperties[0];
   const room = property.rooms[0];
-  const nights = 3;
+  
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 3),
+  });
+
+  const nights = useMemo(() => {
+    if (date?.from && date?.to) {
+      return Math.max(0, differenceInCalendarDays(date.to, date.from));
+    }
+    return 0;
+  }, [date]);
+
+  const isValidDate = nights > 0;
   
   const roomCharges = room.basePrice * nights;
   
@@ -203,7 +218,7 @@ export default function BookingPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="lg:col-span-2 space-y-4">
                         <label className="text-sm font-medium mb-1.5 block">Dates</label>
-                        <DateSelector />
+                        <DateSelector date={date} onDateChange={setDate} />
                       </div>
                       
                       <div className="lg:col-span-2 space-y-4">
@@ -337,12 +352,16 @@ export default function BookingPage() {
                 {currentStep < 4 && (
                   <Button
                     onClick={() => {
+                      if (currentStep === 1 && !isValidDate) return;
                       setDirection(1);
                       setCurrentStep(currentStep + 1);
                     }}
-                    className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold"
+                    disabled={currentStep === 1 && !isValidDate}
+                    className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Next Step <ArrowRight className="w-4 h-4" />
+                    {currentStep === 1 && !isValidDate ? "Select valid dates" : (
+                      <>Next Step <ArrowRight className="w-4 h-4" /></>
+                    )}
                   </Button>
                 )}
               </div>
@@ -393,13 +412,15 @@ export default function BookingPage() {
           total={total}
           advance={advance}
           onNextStep={() => {
+            if (currentStep === 1 && !isValidDate) return;
             if (currentStep < 4) {
               setDirection(1);
               setCurrentStep(currentStep + 1);
             }
           }}
-          nextStepLabel="Next Step"
+          nextStepLabel={currentStep === 1 && !isValidDate ? "Select valid dates" : "Next Step"}
           isLastStep={false}
+          disabled={currentStep === 1 && !isValidDate}
         />
       )}
     </div>

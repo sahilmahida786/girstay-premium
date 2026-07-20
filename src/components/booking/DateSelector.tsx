@@ -10,16 +10,27 @@ import { LuxuryBottomSheet } from "@/components/ui/LuxuryBottomSheet";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
 import { AnimatedNumber } from "@/components/ui/motion/AnimatedNumber";
 
-export function DateSelector() {
+interface DateSelectorProps {
+  date?: DateRange;
+  onDateChange?: (date: DateRange | undefined) => void;
+}
+
+export function DateSelector({ date, onDateChange }: DateSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   
-  // Use a default range for demonstration
-  const [date, setDate] = useState<DateRange | undefined>({
+  // Local state fallback if not controlled (for backward compatibility if used elsewhere)
+  const [localDate, setLocalDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(new Date().setDate(new Date().getDate() + 3)),
   });
 
-  const nights = date?.from && date?.to ? differenceInDays(date.to, date.from) : 0;
+  const activeDate = date !== undefined ? date : localDate;
+  const handleDateChange = (newDate: DateRange | undefined) => {
+    if (onDateChange) onDateChange(newDate);
+    setLocalDate(newDate);
+  };
+
+  const nights = activeDate?.from && activeDate?.to ? differenceInDays(activeDate.to, activeDate.from) : 0;
   
   // Mock total calculation (assume avg 4500/night for demo)
   const estimatedTotal = nights * 4500;
@@ -41,7 +52,7 @@ export function DateSelector() {
           <div className="flex items-center gap-2 overflow-hidden">
             <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" />
             <span className="text-white/90 truncate text-sm sm:text-base">
-              {date?.from ? format(date.from, "MMM dd, yyyy") : "Check-in"}
+              {activeDate?.from ? format(activeDate.from, "MMM dd, yyyy") : "Check-in"}
             </span>
           </div>
         </button>
@@ -49,7 +60,7 @@ export function DateSelector() {
           <div className="flex items-center gap-2 overflow-hidden">
             <CalendarDays className="w-4 h-4 text-white/40 group-hover:text-[#D9A94D] shrink-0 transition-colors" />
             <span className="text-white/90 truncate text-sm sm:text-base">
-              {date?.to ? format(date.to, "MMM dd, yyyy") : "Check-out"}
+              {activeDate?.to ? format(activeDate.to, "MMM dd, yyyy") : "Check-out"}
             </span>
           </div>
         </button>
@@ -83,8 +94,8 @@ export function DateSelector() {
               </div>
               
               <LuxuryCalendar 
-                selected={date}
-                onSelect={setDate}
+                selected={activeDate}
+                onSelect={handleDateChange}
                 numberOfMonths={2}
               />
               
@@ -116,8 +127,8 @@ export function DateSelector() {
       >
         <div className="flex-1 overflow-y-auto px-1 pb-[120px] scrollbar-hide">
           <LuxuryCalendar 
-            selected={date}
-            onSelect={setDate}
+            selected={activeDate}
+            onSelect={handleDateChange}
             numberOfMonths={6} // Render 6 months on mobile for vertical scrolling
             isMobile={true}
           />
@@ -128,7 +139,7 @@ export function DateSelector() {
           <div className="flex justify-between items-center mb-3 px-2">
             <div>
               <p className="text-xs text-white/60 uppercase tracking-widest">
-                {date?.from ? format(date.from, "MMM d") : "Check-in"} - {date?.to ? format(date.to, "MMM d") : "Check-out"}
+                {activeDate?.from ? format(activeDate.from, "MMM d") : "Check-in"} - {activeDate?.to ? format(activeDate.to, "MMM d") : "Check-out"}
               </p>
               {nights > 0 ? (
                 <p className="text-[#D9A94D] text-sm font-medium mt-0.5">{nights} Nights</p>
@@ -147,7 +158,7 @@ export function DateSelector() {
           <LuxuryButton 
             onClick={() => setIsOpen(false)}
             className="w-full h-12 gap-2"
-            disabled={!date?.from || !date?.to}
+            disabled={!activeDate?.from || !activeDate?.to}
           >
             Confirm Dates
           </LuxuryButton>

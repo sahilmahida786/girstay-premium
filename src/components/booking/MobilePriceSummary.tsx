@@ -20,6 +20,7 @@ interface MobilePriceSummaryProps {
   onNextStep: () => void;
   nextStepLabel: string;
   isLastStep?: boolean;
+  disabled?: boolean;
 }
 
 export function MobilePriceSummary({
@@ -33,7 +34,8 @@ export function MobilePriceSummary({
   advance,
   onNextStep,
   nextStepLabel,
-  isLastStep
+  isLastStep,
+  disabled
 }: MobilePriceSummaryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -60,6 +62,7 @@ export function MobilePriceSummary({
         <LuxuryButton 
           onClick={onNextStep}
           className="h-[52px] px-8 min-w-[140px]"
+          disabled={disabled}
         >
           {isLastStep ? "Pay Now" : nextStepLabel}
         </LuxuryButton>
