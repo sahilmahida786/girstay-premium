@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/shared/Logo";
-import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME } from "@/lib/constants";
+import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import {
   Phone,
   Mail,
@@ -133,8 +133,37 @@ const SOCIAL = [
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    name: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    telephone: CONTACT_INFO.phone,
+    email: CONTACT_INFO.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Sasan Gir",
+      addressLocality: "Junagadh District",
+      addressRegion: "Gujarat",
+      postalCode: "362135",
+      addressCountry: "IN"
+    },
+    sameAs: [
+      SOCIAL_LINKS.instagram,
+      SOCIAL_LINKS.facebook,
+      SOCIAL_LINKS.youtube,
+      "https://www.linkedin.com/in/sahil-mahida-115835317"
+    ]
+  };
+
   return (
     <LazyMotionProvider>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <footer
         className="relative overflow-hidden"
         aria-label="Site footer"
@@ -216,7 +245,7 @@ export function Footer() {
                 <p className="text-white/90 text-[17px] font-light tracking-wide leading-relaxed font-serif italic">
                   Where the last Asiatic Lion roams free.
                 </p>
-                <p className="text-white/55 text-[15px] font-light leading-relaxed tracking-wide">
+                <p className="text-white/70 text-[15px] font-light leading-relaxed tracking-wide">
                   We connect discerning travelers with Sasan Gir's finest
                   handpicked resorts — so your only focus is the wilderness.
                 </p>
@@ -234,10 +263,10 @@ export function Footer() {
                       <Icon className="w-3.5 h-3.5" strokeWidth={1.8} />
                     </span>
                     <span>
-                      <span className="block text-[14px] text-white/85 font-medium tracking-wide leading-snug">
+                      <span className="block text-[14px] text-white/90 font-medium tracking-wide leading-snug">
                         {title}
                       </span>
-                      <span className="block text-[13px] text-white/40 font-light leading-relaxed mt-0.5">
+                      <span className="block text-[13px] text-white/70 font-light leading-relaxed mt-0.5">
                         {desc}
                       </span>
                     </span>
@@ -277,10 +306,10 @@ export function Footer() {
                   ].map(({ icon: Icon, text }) => (
                     <li
                       key={text}
-                      className="flex items-center gap-1.5 text-[11px] text-white/30 uppercase tracking-[0.08em]"
+                      className="flex items-center gap-1.5 text-[11px] text-white/60 uppercase tracking-[0.08em]"
                     >
                       <Icon
-                        className="w-3 h-3 text-[#D9A94D]/60 shrink-0"
+                        className="w-3 h-3 text-[#D9A94D] shrink-0"
                         strokeWidth={1.8}
                         aria-hidden="true"
                       />
@@ -438,7 +467,7 @@ export function Footer() {
                   <li key={link.href} className="shrink-0">
                     <Link
                       href={link.href}
-                      className="text-[12.5px] text-white/30 hover:text-white/60 tracking-wide transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] min-h-[44px] flex items-center touch-manipulation"
+                      className="text-[12.5px] text-white/60 hover:text-white/90 tracking-wide transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] min-h-[48px] rounded-md px-2 py-1 flex items-center touch-manipulation"
                     >
                       {link.label}
                     </Link>
@@ -448,11 +477,11 @@ export function Footer() {
             </nav>
 
             <div className="flex flex-col gap-1 lg:text-right">
-              <p className="text-[12.5px] text-white/25 tracking-wide">
+              <p className="text-[12.5px] text-white/60 tracking-wide">
                 © {currentYear}{" "}
-                <span className="text-white/40">{SITE_NAME}</span>. All rights reserved.
+                <span className="text-white/80">{SITE_NAME}</span>. All rights reserved.
               </p>
-              <p className="text-[11px] text-white/18 tracking-[0.1em] uppercase">
+              <p className="text-[11px] text-white/60 tracking-[0.1em] uppercase">
                 Made with care in Gujarat, India
               </p>
             </div>

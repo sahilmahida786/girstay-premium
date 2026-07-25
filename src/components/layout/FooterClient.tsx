@@ -80,10 +80,10 @@ export function MotionTrustBadge({ children }: { children: React.ReactNode }) {
     <m.div
       whileHover={reduced ? {} : { y: -2, scale: 1.02 }}
       transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
-      className="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-white/50 text-[11.5px] tracking-[0.06em] uppercase whitespace-nowrap select-none will-change-transform cursor-default"
+      className="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-white/80 text-[11.5px] tracking-[0.06em] uppercase whitespace-nowrap select-none will-change-transform cursor-default"
       style={{
         background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.07)",
+        border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
       {children}
@@ -159,7 +159,7 @@ export function PrimaryCTAClient({ children, href, ariaLabel }: { children: Reac
     >
       <Link
         href={href}
-        className="group relative inline-flex items-center justify-center gap-3 w-full h-[60px] px-9 rounded-2xl font-semibold text-[14px] uppercase tracking-[0.16em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden touch-manipulation"
+        className="group relative inline-flex items-center justify-center gap-3 w-full h-[60px] px-9 rounded-2xl font-semibold text-[14px] uppercase tracking-[0.16em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] will-change-transform overflow-hidden touch-manipulation"
         style={{
           background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
           boxShadow: "0 10px 32px rgba(217,169,77,0.30), 0 2px 10px rgba(217,169,77,0.15)",
@@ -184,10 +184,10 @@ export function SecondaryCTAClient({ children, href, ariaLabel }: { children: Re
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="group inline-flex items-center justify-center gap-2.5 w-full h-[52px] px-7 rounded-2xl text-[13px] font-medium uppercase tracking-[0.14em] text-white/60 hover:text-white/90 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 will-change-transform touch-manipulation"
+        className="group inline-flex items-center justify-center gap-2.5 w-full h-[52px] px-7 rounded-2xl text-[13px] font-medium uppercase tracking-[0.14em] text-white/70 hover:text-white transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] will-change-transform touch-manipulation"
         style={{
           background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.09)",
+          border: "1px solid rgba(255,255,255,0.15)",
         }}
         aria-label={ariaLabel}
       >
@@ -207,7 +207,7 @@ export function QuickLinkClient({ href, label }: { href: string; label: string }
     >
       <Link
         href={href}
-        className="flex items-center min-h-[48px] text-[15px] text-white/55 hover:text-[#D9A94D] tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] touch-manipulation pb-[3px]"
+        className="flex items-center min-h-[48px] text-[15px] text-white/70 hover:text-[#D9A94D] tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] rounded-md px-2 -ml-2 touch-manipulation pb-[3px]"
       >
         {label}
       </Link>
@@ -247,7 +247,7 @@ export function ContactItemClient({
     ...(external && { target: "_blank", rel: "noopener noreferrer" }),
     "aria-label": label,
     className:
-      "group relative flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-xl touch-manipulation",
+      "group relative flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] focus-visible:rounded-xl touch-manipulation",
   };
 
   return (
@@ -264,10 +264,10 @@ export function ContactItemClient({
       </m.span>
 
       <span className="flex flex-col min-w-0 relative pb-[3px]">
-        <span className="text-[15px] text-white/70 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate">
+        <span className="text-[15px] text-white/80 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate">
           {text}
         </span>
-        <span className="text-[11px] text-white/30 uppercase tracking-[0.15em] mt-0.5">
+        <span className="text-[11px] text-white/60 uppercase tracking-[0.15em] mt-0.5">
           {action}
         </span>
         {!reduced && (
@@ -303,10 +303,10 @@ export function SocialIconClient({ href, label, children }: { href: string; labe
       }
       whileTap={reduced ? {} : { scale: 0.96 }}
       transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
-      className="flex items-center justify-center w-14 h-14 lg:w-[52px] lg:h-[52px] rounded-full text-white/55 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform transition-colors duration-300 touch-manipulation"
+      className="flex items-center justify-center w-14 h-14 lg:w-[52px] lg:h-[52px] rounded-full text-white/70 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] will-change-transform transition-colors duration-300 touch-manipulation"
       style={{
         background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.09)",
+        border: "1px solid rgba(255,255,255,0.15)",
       }}
     >
       {children}
@@ -325,7 +325,7 @@ export function WhatsAppFloatClient({ href, children }: { href: string; children
       whileHover={reduced ? {} : { scale: 1.1 }}
       whileTap={reduced ? {} : { scale: 0.92 }}
       transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-      className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center will-change-transform touch-manipulation"
+      className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] will-change-transform touch-manipulation"
       style={{
         background: "linear-gradient(135deg, #25D366, #128C7E)",
         boxShadow: "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",
@@ -382,11 +382,13 @@ export function NewsletterForm() {
         <div className="h-px w-8 mt-2" style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }} aria-hidden="true" />
       </div>
 
-      <p className="text-[14px] text-white/45 leading-relaxed tracking-wide">
+      <p className="text-[14px] text-white/70 leading-relaxed tracking-wide">
         Receive exclusive offers, seasonal escapes, and wildlife stories — curated for discerning travelers.
       </p>
 
       <form onSubmit={handleSubmit} noValidate aria-describedby={statusId}>
+        {/* Anti-spam honeypot */}
+        <input type="text" name="_gotcha" style={{ display: "none" }} tabIndex={-1} autoComplete="off" aria-hidden="true" />
         <label htmlFor={inputId} className="sr-only">Your email address</label>
 
         <m.div
@@ -395,13 +397,14 @@ export function NewsletterForm() {
           className="flex items-center w-full rounded-2xl overflow-hidden will-change-transform"
           style={{
             background: "rgba(255,255,255,0.04)",
-            border: hasError ? "1px solid rgba(239,68,68,0.5)" : focused ? "1px solid rgba(217,169,77,0.50)" : "1px solid rgba(255,255,255,0.09)",
-            boxShadow: hasError ? "0 0 0 3px rgba(239,68,68,0.08)" : focused ? "0 0 0 3px rgba(217,169,77,0.08), 0 4px 16px rgba(217,169,77,0.06)" : undefined,
+            border: hasError ? "1px solid rgba(239,68,68,0.8)" : focused ? "1px solid rgba(217,169,77,0.80)" : "1px solid rgba(255,255,255,0.15)",
+            boxShadow: hasError ? "0 0 0 2px #070605, 0 0 0 4px rgba(239,68,68,0.8)" : focused ? "0 0 0 2px #070605, 0 0 0 4px #D9A94D, 0 4px 16px rgba(217,169,77,0.06)" : undefined,
             transition: "border-color 0.25s ease, box-shadow 0.25s ease",
           }}
         >
           <input
             id={inputId}
+            name="email"
             ref={inputRef}
             type="email"
             value={email}
@@ -414,7 +417,7 @@ export function NewsletterForm() {
             disabled={isBusy || status === "success"}
             aria-invalid={hasError ? "true" : "false"}
             aria-describedby={hasError ? `${inputId}-error` : undefined}
-            className="flex-1 h-[56px] bg-transparent px-5 text-[15px] text-white/80 placeholder:text-white/25 placeholder:tracking-wide focus:outline-none caret-[#D9A94D] min-w-0 disabled:opacity-50"
+            className="flex-1 h-[56px] bg-transparent px-5 text-[15px] text-white/90 placeholder:text-white/60 placeholder:tracking-wide focus:outline-none caret-[#D9A94D] min-w-0 disabled:opacity-50"
           />
           <m.button
             type="submit"
@@ -422,7 +425,7 @@ export function NewsletterForm() {
             whileHover={reduced || isBusy ? {} : { scale: 1.06 }}
             whileTap={reduced || isBusy ? {} : { scale: 0.94 }}
             transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
-            className="shrink-0 w-12 h-12 mr-2 rounded-xl flex items-center justify-center will-change-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] touch-manipulation disabled:opacity-60"
+            className="shrink-0 w-12 h-12 mr-2 rounded-xl flex items-center justify-center will-change-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] touch-manipulation disabled:opacity-60"
             style={{
               background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 60%, #B8832C 100%)",
               boxShadow: "0 4px 14px rgba(217,169,77,0.2)",
@@ -434,8 +437,8 @@ export function NewsletterForm() {
         </m.div>
 
         {hasError && (
-          <p id={`${inputId}-error`} className="mt-2 flex items-center gap-1.5 text-[12px] text-red-400/80 tracking-wide" role="alert">
-            <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+          <p id={`${inputId}-error`} className="mt-2 flex items-center gap-1.5 text-[12px] text-red-400 tracking-wide font-medium" role="alert">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             Please enter a valid email address.
           </p>
         )}
@@ -458,7 +461,7 @@ export function NewsletterForm() {
               role="status"
             >
               <CheckCircle2 className="w-4 h-4 text-[#D9A94D] shrink-0 mt-0.5" strokeWidth={1.8} aria-hidden="true" />
-              <p className="text-[13px] text-white/60 leading-relaxed tracking-wide">
+              <p className="text-[13px] text-white/80 leading-relaxed tracking-wide">
                 You&apos;re now part of the <span className="text-[#D9A94D] font-medium">GirStay Premium</span> community. Expect only the finest in your inbox.
               </p>
             </m.div>
@@ -471,7 +474,7 @@ export function NewsletterForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.32, ease: EASE_SNAP }}
-              className="mt-3 flex items-center gap-1.5 text-[13px] text-red-400/70 tracking-wide"
+              className="mt-3 flex items-center gap-1.5 text-[13px] text-red-400 tracking-wide font-medium"
               role="alert"
             >
               <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
