@@ -16,7 +16,7 @@ export function PropertySchema({ property }: PropertySchemaProps) {
     telephone: "+91-98765-43210",
     address: {
       "@type": "PostalAddress",
-      streetAddress: property.location.address,
+      streetAddress: (property as any).location?.address || "Sasan Gir",
       addressLocality: "Sasan Gir",
       addressRegion: "Gujarat",
       postalCode: "362135",
@@ -24,8 +24,8 @@ export function PropertySchema({ property }: PropertySchemaProps) {
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: property.location.coordinates.lat,
-      longitude: property.location.coordinates.lng,
+      latitude: (property as any).location?.coordinates?.lat || "21.1352",
+      longitude: (property as any).location?.coordinates?.lng || "70.5283",
     },
     priceRange: "₹₹₹",
     aggregateRating: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion, Variants } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 
 export function OurStory() {
@@ -22,7 +22,7 @@ export function OurStory() {
   const bgOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   // Staggered text reveal
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -33,12 +33,12 @@ export function OurStory() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const }
     }
   };
 

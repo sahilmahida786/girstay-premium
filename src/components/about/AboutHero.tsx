@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion, Variants } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { ShieldCheck, Star, Users, Award, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -71,7 +71,7 @@ export function AboutHero() {
   }, [mouseX, mouseY, prefersReducedMotion]);
 
   // Staggered Animations
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -82,7 +82,7 @@ export function AboutHero() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,

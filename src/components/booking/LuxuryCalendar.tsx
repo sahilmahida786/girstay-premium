@@ -78,15 +78,14 @@ export function LuxuryCalendar({
           day_outside: "text-white/20 opacity-50 aria-selected:bg-white/10 aria-selected:text-white/50 aria-selected:opacity-30",
           day_disabled: "text-white/20 opacity-50 cursor-not-allowed",
           day_range_middle: "aria-selected:bg-[#F7D58B]/10 aria-selected:text-white aria-selected:rounded-none",
-          day_hidden: "invisible",
-        }}
+        } as any}
         components={{
-          DayContent: ({ date, activeModifiers }) => {
+          DayContent: ({ date, activeModifiers }: any) => {
             const details = getDayDetails(date);
-            const isSelected = activeModifiers.selected;
-            const isRangeStart = activeModifiers.range_start;
-            const isRangeEnd = activeModifiers.range_end;
-            const isRangeMiddle = activeModifiers.range_middle;
+            const isSelected = activeModifiers?.selected;
+            const isRangeStart = activeModifiers?.range_start;
+            const isRangeEnd = activeModifiers?.range_end;
+            const isRangeMiddle = activeModifiers?.range_middle;
 
             const isEndpoint = isRangeStart || isRangeEnd;
 
@@ -114,8 +113,8 @@ export function LuxuryCalendar({
                 )}
               </div>
             );
-          },
-        }}
+          }
+        } as any}
       />
     </div>
   );

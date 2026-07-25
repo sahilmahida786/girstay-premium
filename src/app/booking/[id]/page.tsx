@@ -16,7 +16,9 @@ import { AlertCircle, RefreshCw } from "lucide-react";
 import { GuestSelector } from "@/components/booking/GuestSelector";
 import { DateSelector } from "@/components/booking/DateSelector";
 import dynamic from "next/dynamic";
-import { EXPERIENCES_DATA } from "@/components/booking/AddOnsMarketplace";
+import { EXPERIENCES_DATA } from "@/data/mockAddOns";
+import { MobileStepIndicator } from "@/components/booking/MobileStepIndicator";
+import { PriceSummaryDetails } from "@/components/booking/PriceSummaryDetails";
 
 const GuestForm = dynamic(() => import("@/components/booking/GuestForm").then(m => m.GuestForm));
 const AddOnsMarketplace = dynamic(() => import("@/components/booking/AddOnsMarketplace").then(m => m.AddOnsMarketplace));
@@ -171,7 +173,7 @@ export default function BookingPage() {
   const isValidDate = nights > 0;
 
   const toggleAddOn = (id: string) => {
-    setSelectedAddOns((prev) =>
+    setSelectedAddOns((prev: string[]) =>
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
     );
   };

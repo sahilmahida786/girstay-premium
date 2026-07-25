@@ -6,7 +6,7 @@ import { Variants } from "framer-motion";
  */
 
 // Easing
-export const luxuryEase = [0.22, 1, 0.36, 1]; // Smooth, calm, premium out easing
+export const luxuryEase = [0.22, 1, 0.36, 1] as const; // Smooth, calm, premium out easing
 
 // Durations (in seconds)
 export const duration = {

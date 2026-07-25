@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion, Variants } from "framer-motion";
 import { ShieldCheck, Heart, CalendarClock, Zap, CheckCircle2, Star, Sparkles, Quote, Clock, Shield } from "lucide-react";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 
@@ -62,7 +62,7 @@ export function AboutMetrics() {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLElement>(null);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -70,7 +70,7 @@ export function AboutMetrics() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
