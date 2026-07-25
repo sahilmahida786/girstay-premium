@@ -156,6 +156,7 @@ export function PrimaryCTAClient({ children, href, ariaLabel }: { children: Reac
       whileHover={reduced ? {} : { scale: 1.02, y: -2 }}
       whileTap={reduced ? {} : { scale: 0.97 }}
       transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+      className="w-full"
     >
       <Link
         href={href}
@@ -203,24 +204,23 @@ export function QuickLinkClient({ href, label }: { href: string; label: string }
     <m.div
       whileHover={reduced ? {} : { x: 4 }}
       transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
-      className="relative"
+      className="relative block w-fit"
     >
       <Link
         href={href}
-        className="flex items-center min-h-[48px] text-[15px] text-white/70 hover:text-[#D9A94D] tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] rounded-md px-2 -ml-2 touch-manipulation pb-[3px]"
+        className="group relative flex items-center min-h-[48px] text-[15px] text-white/70 hover:text-[#D9A94D] tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] rounded-md px-2 -ml-2 touch-manipulation pb-[3px]"
       >
-        {label}
+        <span className="relative inline-block">
+          {label}
+          {!reduced && (
+            <span
+              className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"
+              style={{ background: "rgba(217,169,77,0.45)" }}
+              aria-hidden="true"
+            />
+          )}
+        </span>
       </Link>
-      {!reduced && (
-        <m.span
-          className="absolute bottom-0 left-0 h-px w-full origin-left"
-          style={{ background: "rgba(217,169,77,0.4)" }}
-          initial={{ scaleX: 0 }}
-          whileHover={{ scaleX: 1 }}
-          transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
-          aria-hidden="true"
-        />
-      )}
     </m.div>
   );
 }
@@ -247,7 +247,7 @@ export function ContactItemClient({
     ...(external && { target: "_blank", rel: "noopener noreferrer" }),
     "aria-label": label,
     className:
-      "group relative flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] focus-visible:rounded-xl touch-manipulation",
+      "group relative flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] focus-visible:rounded-xl touch-manipulation w-fit pr-2",
   };
 
   return (
@@ -264,22 +264,19 @@ export function ContactItemClient({
       </m.span>
 
       <span className="flex flex-col min-w-0 relative pb-[3px]">
-        <span className="text-[15px] text-white/80 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate">
+        <span className="text-[15px] text-white/80 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate relative inline-block w-fit">
           {text}
+          {!reduced && (
+            <span
+              className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"
+              style={{ background: "rgba(217,169,77,0.45)" }}
+              aria-hidden="true"
+            />
+          )}
         </span>
         <span className="text-[11px] text-white/60 uppercase tracking-[0.15em] mt-0.5">
           {action}
         </span>
-        {!reduced && (
-          <m.span
-            className="absolute bottom-0 left-0 h-px w-full origin-left"
-            style={{ background: "rgba(217,169,77,0.45)" }}
-            initial={{ scaleX: 0 }}
-            whileHover={{ scaleX: 1 }}
-            transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
-            aria-hidden="true"
-          />
-        )}
       </span>
     </Tag>
   );
@@ -291,7 +288,7 @@ export function SocialIconClient({ href, label, children }: { href: string; labe
     <m.a
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="me noopener noreferrer"
       aria-label={`Follow GirStay Premium on ${label}`}
       whileHover={
         reduced
@@ -325,7 +322,7 @@ export function WhatsAppFloatClient({ href, children }: { href: string; children
       whileHover={reduced ? {} : { scale: 1.1 }}
       whileTap={reduced ? {} : { scale: 0.92 }}
       transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-      className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070605] will-change-transform touch-manipulation"
+      className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 will-change-transform touch-manipulation"
       style={{
         background: "linear-gradient(135deg, #25D366, #128C7E)",
         boxShadow: "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",

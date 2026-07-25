@@ -278,11 +278,10 @@ export function Footer() {
               <div className="flex flex-col gap-3">
                 <PrimaryCTAClient href="/properties" ariaLabel="Reserve your luxury Gir experience — browse handpicked resorts">
                   <span
-                    className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"
+                    className="absolute inset-0 -translate-x-full group-hover:translate-x-[150%] transition-transform duration-[800ms] ease-out pointer-events-none -skew-x-12"
                     style={{
                       background:
-                        "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
-                      transform: "skewX(-18deg)",
+                        "linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)",
                     }}
                     aria-hidden="true"
                   />
