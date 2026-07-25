@@ -17,6 +17,11 @@ import {
   Leaf,
   Binoculars,
   Send,
+  Lock,
+  BadgeCheck,
+  Smile,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 
@@ -167,27 +172,54 @@ function ContactItem({
 }
 
 // ─────────────────────────────────────────────
-//  NEWSLETTER — Full-width, luxury pill input
+//  NEWSLETTER — Premium conversion form
+//  States: idle → loading → success | error
+//  Fully accessible: live regions, labels, aria
 // ─────────────────────────────────────────────
+
+type NLStatus = "idle" | "loading" | "success" | "error";
 
 function NewsletterForm({ reduced }: { reduced: boolean | null }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [status, setStatus] = useState<NLStatus>("idle");
+  const [touched, setTouched] = useState(false);
   const inputId = useId();
+  const statusId = useId();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Simple RFC-5322 light validation
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const hasError = touched && email.length > 0 && !isValidEmail(email);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    // Placeholder — wire to your email provider (Mailchimp, Klaviyo, etc.)
-    setStatus("success");
-    setEmail("");
-    setTimeout(() => setStatus("idle"), 4000);
+    setTouched(true);
+    if (!email || !isValidEmail(email)) return;
+
+    setStatus("loading");
+    try {
+      // ── Wire to your email provider here ──
+      // e.g. await fetch("/api/newsletter", { method: "POST", body: JSON.stringify({ email }) });
+      await new Promise((r) => setTimeout(r, 900)); // simulated latency
+      setStatus("success");
+      setEmail("");
+      setTouched(false);
+      setTimeout(() => setStatus("idle"), 6000);
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
+
+  const isBusy = status === "loading";
 
   return (
     <section aria-labelledby="newsletter-heading" className="flex flex-col gap-4">
+      {/* Heading + gold rule */}
       <div>
-        <h2 id="newsletter-heading" className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
+        <h2
+          id="newsletter-heading"
+          className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]"
+        >
           Stay Inspired
         </h2>
         <div
@@ -196,57 +228,122 @@ function NewsletterForm({ reduced }: { reduced: boolean | null }) {
           aria-hidden="true"
         />
       </div>
+
+      {/* Premium copy — never generic "subscribe" language */}
       <p className="text-[14px] text-white/45 leading-relaxed tracking-wide">
-        Receive exclusive offers, wildlife stories, and seasonal escapes — curated for discerning travelers.
+        Receive exclusive offers, seasonal escapes, and wildlife stories —
+        curated for discerning travelers.
       </p>
-      <form onSubmit={handleSubmit} noValidate>
+
+      <form onSubmit={handleSubmit} noValidate aria-describedby={statusId}>
         <label htmlFor={inputId} className="sr-only">
           Your email address
         </label>
+
+        {/* Input wrapper — animated border on focus/error */}
         <div
-          className="flex items-center w-full rounded-2xl overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
+          className="flex items-center w-full rounded-2xl overflow-hidden transition-all duration-300"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: hasError
+              ? "1px solid rgba(239,68,68,0.5)"
+              : "1px solid rgba(255,255,255,0.09)",
+            boxShadow: hasError
+              ? "0 0 0 3px rgba(239,68,68,0.08)"
+              : undefined,
+          }}
         >
-          {/* Full-width email input — large, comfortable for mobile keyboards */}
           <input
             id={inputId}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setTouched(true)}
             placeholder="Your email address"
             autoComplete="email"
             inputMode="email"
-            // h-[56px] ensures minimum comfortable mobile tap target
-            className="flex-1 h-[56px] bg-transparent px-5 text-[15px] text-white/80 placeholder:text-white/25 placeholder:tracking-wide focus:outline-none caret-[#D9A94D] min-w-0"
-            aria-label="Email address for exclusive luxury updates"
+            disabled={isBusy || status === "success"}
+            aria-invalid={hasError ? "true" : "false"}
+            aria-describedby={hasError ? `${inputId}-error` : undefined}
+            className="flex-1 h-[56px] bg-transparent px-5 text-[15px] text-white/80 placeholder:text-white/25 placeholder:tracking-wide focus:outline-none caret-[#D9A94D] min-w-0 disabled:opacity-50"
           />
-          {/* Submit — 48×48px minimum tap target */}
+          {/* Submit button — 48×48px, gold gradient */}
           <m.button
             type="submit"
-            whileHover={reduced ? {} : { scale: 1.06 }}
-            whileTap={reduced ? {} : { scale: 0.94 }}
+            disabled={isBusy || status === "success"}
+            whileHover={reduced || isBusy ? {} : { scale: 1.06 }}
+            whileTap={reduced || isBusy ? {} : { scale: 0.94 }}
             transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
-            className="shrink-0 w-12 h-12 mr-2 rounded-xl flex items-center justify-center will-change-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] touch-manipulation"
+            className="shrink-0 w-12 h-12 mr-2 rounded-xl flex items-center justify-center will-change-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] touch-manipulation disabled:opacity-60"
             style={{
               background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 60%, #B8832C 100%)",
               boxShadow: "0 4px 14px rgba(217,169,77,0.2)",
             }}
-            aria-label="Subscribe to GirStay Premium newsletter"
+            aria-label={isBusy ? "Subscribing…" : "Subscribe to GirStay Premium newsletter"}
           >
-            <Send className="w-4 h-4 text-[#070605]" strokeWidth={2} aria-hidden="true" />
+            {isBusy ? (
+              <Loader2
+                className="w-4 h-4 text-[#070605] animate-spin"
+                aria-hidden="true"
+              />
+            ) : (
+              <Send className="w-4 h-4 text-[#070605]" strokeWidth={2} aria-hidden="true" />
+            )}
           </m.button>
         </div>
 
-        {/* Success message */}
+        {/* Inline error message */}
+        {hasError && (
+          <p
+            id={`${inputId}-error`}
+            className="mt-2 flex items-center gap-1.5 text-[12px] text-red-400/80 tracking-wide"
+            role="alert"
+          >
+            <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+            Please enter a valid email address.
+          </p>
+        )}
+
+        {/* ARIA live region — announces state changes to screen readers */}
+        <div id={statusId} aria-live="polite" aria-atomic="true" className="sr-only">
+          {status === "loading" && "Subscribing, please wait…"}
+          {status === "success" && "You're now part of the GirStay Premium community. Welcome."}
+          {status === "error" && "Something went wrong. Please try again."}
+        </div>
+
+        {/* Success confirmation — elegant, not intrusive */}
         {status === "success" && (
+          <m.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
+            className="mt-3 flex items-start gap-2.5"
+            role="status"
+          >
+            <CheckCircle2
+              className="w-4 h-4 text-[#D9A94D] shrink-0 mt-0.5"
+              strokeWidth={1.8}
+              aria-hidden="true"
+            />
+            <p className="text-[13px] text-white/60 leading-relaxed tracking-wide">
+              You&apos;re now part of the{" "}
+              <span className="text-[#D9A94D] font-medium">GirStay Premium</span>{" "}
+              community. Expect only the finest in your inbox.
+            </p>
+          </m.div>
+        )}
+
+        {/* Error state */}
+        {status === "error" && (
           <m.p
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="mt-3 text-[13px] text-[#D9A94D] tracking-wide"
-            role="status"
+            transition={{ duration: 0.35 }}
+            className="mt-3 flex items-center gap-1.5 text-[13px] text-red-400/70 tracking-wide"
+            role="alert"
           >
-            ✦ Welcome — you'll hear from us soon.
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            Something went wrong. Please try again.
           </m.p>
         )}
       </form>
@@ -416,43 +513,100 @@ export function Footer() {
               ))}
             </ul>
 
-            {/* ── PRIMARY CTA ──
-                Full-width on mobile, auto-width on sm+.
-                h-[60px] for comfortable thumb press.
-                Placed immediately after highlights — highest-priority action. */}
-            <m.div
-              whileHover={reduced ? {} : { y: -2 }}
-              whileTap={reduced ? {} : { scale: 0.97 }}
-              transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-            >
-              <Link
-                href="/properties"
-                className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto h-[60px] px-9 rounded-2xl font-semibold text-[14px] uppercase tracking-[0.16em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden touch-manipulation"
-                style={{
-                  background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
-                  boxShadow: "0 10px 30px rgba(217,169,77,0.28), 0 2px 8px rgba(217,169,77,0.15)",
-                }}
-                aria-label="Plan your luxury Gir journey — explore premium resorts"
+            {/* ════════════════════════════════════════
+                PRIMARY CTA — Dominant conversion action
+                Full-width on mobile. 60px height.
+                Gold gradient + shimmer + glow shadow.
+                ════════════════════════════════════════ */}
+            <div className="flex flex-col gap-3">
+              <m.div
+                whileHover={reduced ? {} : { y: -2 }}
+                whileTap={reduced ? {} : { scale: 0.97 }}
+                transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
               >
-                {/* Shimmer sweep */}
-                <span
-                  className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"
+                <Link
+                  href="/properties"
+                  className="group relative inline-flex items-center justify-center gap-3 w-full h-[60px] px-9 rounded-2xl font-semibold text-[14px] uppercase tracking-[0.16em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden touch-manipulation"
                   style={{
-                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
-                    transform: "skewX(-18deg)",
+                    background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
+                    boxShadow:
+                      "0 10px 32px rgba(217,169,77,0.30), 0 2px 10px rgba(217,169,77,0.15)",
                   }}
+                  aria-label="Reserve your luxury Gir experience — browse handpicked resorts"
+                >
+                  {/* Shimmer sweep on hover */}
+                  <span
+                    className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                      transform: "skewX(-18deg)",
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span className="relative z-10">Reserve Your Luxury Stay</span>
+                  <ArrowRight
+                    className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </m.div>
+
+              {/* Trust micro-badges — below CTA, understated reassurance */}
+              <ul
+                className="flex items-center gap-4 flex-wrap"
+                role="list"
+                aria-label="Booking assurances"
+              >
+                {[
+                  { icon: Lock, text: "Secure Booking" },
+                  { icon: BadgeCheck, text: "No Hidden Charges" },
+                  { icon: Smile, text: "Trusted Hospitality" },
+                ].map(({ icon: Icon, text }) => (
+                  <li
+                    key={text}
+                    className="flex items-center gap-1.5 text-[11px] text-white/30 uppercase tracking-[0.08em]"
+                  >
+                    <Icon
+                      className="w-3 h-3 text-[#D9A94D]/60 shrink-0"
+                      strokeWidth={1.8}
+                      aria-hidden="true"
+                    />
+                    <span>{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* SECONDARY CTA — lighter visual weight, ghost style */}
+            <m.div
+              whileHover={reduced ? {} : { y: -1 }}
+              whileTap={reduced ? {} : { scale: 0.97 }}
+              transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+            >
+              <a
+                href={SOCIAL_LINKS.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center gap-2.5 w-full h-[52px] px-7 rounded-2xl text-[13px] font-medium uppercase tracking-[0.14em] text-white/60 hover:text-white/90 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 will-change-transform touch-manipulation"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.09)",
+                }}
+                aria-label="Chat with GirStay Premium on WhatsApp to plan your stay"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-current text-[#25D366] shrink-0"
                   aria-hidden="true"
-                />
-                <span className="relative z-10">Plan Your Gir Journey</span>
-                <ArrowRight
-                  className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
-                  aria-hidden="true"
-                />
-              </Link>
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                <span>Chat With Our Team</span>
+              </a>
             </m.div>
 
-            {/* ── NEWSLETTER — Full-width, mobile-optimized pill input ──
-                Placed after CTA so it's still within easy thumb reach. */}
+            {/* ── NEWSLETTER — Full-width, mobile-optimized ── */}
             <NewsletterForm reduced={reduced} />
           </m.div>
 
