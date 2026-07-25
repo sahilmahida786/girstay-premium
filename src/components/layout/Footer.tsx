@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Logo } from "@/components/shared/Logo";
 import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME } from "@/lib/constants";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
-import { m, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 
 // ─────────────────────────────────────────────
 //  DATA
@@ -98,8 +98,8 @@ function ContactItem({
   };
 
   return (
-    // @ts-expect-error dynamic tag
-    <Tag {...props}>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <Tag {...(props as any)}>
       <m.span
         whileHover={reduced ? {} : { scale: 1.08 }}
         transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
@@ -122,16 +122,16 @@ export function Footer() {
   const reduced = useReducedMotion();
 
   // Stagger container
-  const container = {
+  const container: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
   };
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 16 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] },
+      transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] },
     },
   };
 
