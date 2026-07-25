@@ -423,7 +423,7 @@ export function Footer() {
     visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
   };
   const item: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
@@ -448,8 +448,16 @@ export function Footer() {
       aria-label="Site footer"
       style={{ background: "#070605" }}
     >
-      {/* ── CINEMATIC BACKGROUND LAYERS ── */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* ── CINEMATIC BACKGROUND LAYERS ── 
+          Fades in softly as user reaches the footer (no parallax) */}
+      <m.div
+        initial={reduced ? {} : { opacity: 0 }}
+        whileInView={reduced ? {} : { opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1.2, ease: "easeInOut" }}
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+      >
         <div className="absolute inset-0 bg-[#070605]" />
         <div className="absolute -bottom-32 -left-24 w-[60vw] h-[60vh] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,60,36,0.45)_0%,transparent_70%)] blur-[120px]" />
         <div className="absolute -top-20 -right-20 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(circle_at_center,rgba(217,169,77,0.12)_0%,transparent_65%)] blur-[100px]" />
@@ -462,7 +470,7 @@ export function Footer() {
           }}
         />
         <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#070605] to-transparent" />
-      </div>
+      </m.div>
 
       {/* Gold accent line at top */}
       <div
@@ -833,12 +841,12 @@ export function Footer() {
                       reduced
                         ? {}
                         : {
-                            scale: 1.08,
+                            scale: 1.05,
                             // Max 2° rotation — subtle, never dizzying
                             rotate: 2,
                           }
                     }
-                    whileTap={reduced ? {} : { scale: 0.91 }}
+                    whileTap={reduced ? {} : { scale: 0.96 }}
                     transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
                     className="flex items-center justify-center w-14 h-14 lg:w-[52px] lg:h-[52px] rounded-full text-white/55 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform transition-colors duration-300 touch-manipulation"
                     style={{
