@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useId } from "react";
 import { Logo } from "@/components/shared/Logo";
 import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME } from "@/lib/constants";
 import {
@@ -15,6 +16,7 @@ import {
   CheckCircle2,
   Leaf,
   Binoculars,
+  Send,
 } from "lucide-react";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 
@@ -38,16 +40,14 @@ const POLICY_LINKS = [
   { label: "Cookie Policy", href: "/contact" },
 ] as const;
 
-// Premium trust badges — convey safety, quality, and luxury
 const TRUST_BADGES = [
   { icon: ShieldCheck, label: "Verified Luxury Properties" },
   { icon: Star, label: "Premium Guest Support" },
   { icon: Headphones, label: "Concierge Assistance" },
   { icon: Gem, label: "Carefully Curated Stays" },
-  { icon: CheckCircle2, label: "Secure Booking Experience" },
+  { icon: CheckCircle2, label: "Secure Booking" },
 ] as const;
 
-// Three editorial brand highlights under brand column
 const BRAND_HIGHLIGHTS = [
   {
     icon: Gem,
@@ -72,7 +72,7 @@ const SOCIAL = [
     label: "Instagram",
     href: SOCIAL_LINKS.instagram,
     svg: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-[18px] h-[18px] fill-current">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
       </svg>
     ),
@@ -82,7 +82,7 @@ const SOCIAL = [
     label: "Facebook",
     href: SOCIAL_LINKS.facebook,
     svg: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-[18px] h-[18px] fill-current">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
       </svg>
     ),
@@ -92,7 +92,7 @@ const SOCIAL = [
     label: "YouTube",
     href: SOCIAL_LINKS.youtube,
     svg: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-[18px] h-[18px] fill-current">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
       </svg>
     ),
@@ -102,7 +102,7 @@ const SOCIAL = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/sahil-mahida-115835317",
     svg: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-[18px] h-[18px] fill-current">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5 fill-current">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
       </svg>
     ),
@@ -110,7 +110,7 @@ const SOCIAL = [
 ] as const;
 
 // ─────────────────────────────────────────────
-//  CONTACT ITEM — with action sub-label
+//  CONTACT ITEM — 52px tap target, action label
 // ─────────────────────────────────────────────
 
 function ContactItem({
@@ -135,8 +135,9 @@ function ContactItem({
     ...(href && { href }),
     ...(external && { target: "_blank", rel: "noopener noreferrer" }),
     "aria-label": label,
+    // min-h-[52px] ensures WCAG + Apple HIG touch target compliance
     className:
-      "group flex items-center gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-lg min-h-[52px]",
+      "group flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-xl touch-manipulation",
   };
 
   return (
@@ -144,14 +145,17 @@ function ContactItem({
     <Tag {...(props as any)}>
       <m.span
         whileHover={reduced ? {} : { scale: 1.08 }}
-        transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
-        className="shrink-0 w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#D9A94D] will-change-transform"
+        whileTap={reduced ? {} : { scale: 0.94 }}
+        transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+        // 44px icon badge — minimum Apple HIG size
+        className="shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center text-[#D9A94D] will-change-transform"
+        style={{ background: "rgba(217,169,77,0.07)", border: "1px solid rgba(217,169,77,0.12)" }}
         aria-hidden="true"
       >
         {icon}
       </m.span>
-      <span className="flex flex-col">
-        <span className="text-[15px] text-white/70 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300">
+      <span className="flex flex-col min-w-0">
+        <span className="text-[15px] text-white/70 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate">
           {text}
         </span>
         <span className="text-[11px] text-white/30 uppercase tracking-[0.15em] mt-0.5">
@@ -159,6 +163,94 @@ function ContactItem({
         </span>
       </span>
     </Tag>
+  );
+}
+
+// ─────────────────────────────────────────────
+//  NEWSLETTER — Full-width, luxury pill input
+// ─────────────────────────────────────────────
+
+function NewsletterForm({ reduced }: { reduced: boolean | null }) {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const inputId = useId();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    // Placeholder — wire to your email provider (Mailchimp, Klaviyo, etc.)
+    setStatus("success");
+    setEmail("");
+    setTimeout(() => setStatus("idle"), 4000);
+  };
+
+  return (
+    <section aria-labelledby="newsletter-heading" className="flex flex-col gap-4">
+      <div>
+        <h2 id="newsletter-heading" className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
+          Stay Inspired
+        </h2>
+        <div
+          className="h-px w-8 mt-2"
+          style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
+          aria-hidden="true"
+        />
+      </div>
+      <p className="text-[14px] text-white/45 leading-relaxed tracking-wide">
+        Receive exclusive offers, wildlife stories, and seasonal escapes — curated for discerning travelers.
+      </p>
+      <form onSubmit={handleSubmit} noValidate>
+        <label htmlFor={inputId} className="sr-only">
+          Your email address
+        </label>
+        <div
+          className="flex items-center w-full rounded-2xl overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
+        >
+          {/* Full-width email input — large, comfortable for mobile keyboards */}
+          <input
+            id={inputId}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email address"
+            autoComplete="email"
+            inputMode="email"
+            // h-[56px] ensures minimum comfortable mobile tap target
+            className="flex-1 h-[56px] bg-transparent px-5 text-[15px] text-white/80 placeholder:text-white/25 placeholder:tracking-wide focus:outline-none caret-[#D9A94D] min-w-0"
+            aria-label="Email address for exclusive luxury updates"
+          />
+          {/* Submit — 48×48px minimum tap target */}
+          <m.button
+            type="submit"
+            whileHover={reduced ? {} : { scale: 1.06 }}
+            whileTap={reduced ? {} : { scale: 0.94 }}
+            transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+            className="shrink-0 w-12 h-12 mr-2 rounded-xl flex items-center justify-center will-change-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] touch-manipulation"
+            style={{
+              background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 60%, #B8832C 100%)",
+              boxShadow: "0 4px 14px rgba(217,169,77,0.2)",
+            }}
+            aria-label="Subscribe to GirStay Premium newsletter"
+          >
+            <Send className="w-4 h-4 text-[#070605]" strokeWidth={2} aria-hidden="true" />
+          </m.button>
+        </div>
+
+        {/* Success message */}
+        {status === "success" && (
+          <m.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-3 text-[13px] text-[#D9A94D] tracking-wide"
+            role="status"
+          >
+            ✦ Welcome — you'll hear from us soon.
+          </m.p>
+        )}
+      </form>
+    </section>
   );
 }
 
@@ -172,14 +264,14 @@ export function Footer() {
 
   const container: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+    visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
   };
   const item: Variants = {
-    hidden: { opacity: 0, y: 16 },
+    hidden: { opacity: 0, y: 14 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] },
+      transition: { duration: 0.55, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] },
     },
   };
 
@@ -216,34 +308,30 @@ export function Footer() {
       />
 
       {/* ══════════════════════════════════════════════
-          TRUST BADGES ROW — above the fold on mobile
-          Horizontally scrollable on small screens
+          TRUST BADGES ROW
+          Horizontal scroll on mobile (320–768px)
+          No overflow, no clipping, -webkit-overflow-scrolling for momentum
           ══════════════════════════════════════════════ */}
       <m.div
-        initial={reduced ? {} : { opacity: 0, y: 12 }}
+        initial={reduced ? {} : { opacity: 0, y: 10 }}
         whileInView={reduced ? {} : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+        transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
         className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-20"
         aria-label="Trust indicators"
       >
-        {/* Horizontal scroll on mobile, wrap on desktop */}
         <ul
-          className="flex items-center gap-3 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible scrollbar-none"
+          className="flex items-center gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible"
           role="list"
-          style={{ WebkitOverflowScrolling: "touch" }}
+          style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {TRUST_BADGES.map(({ icon: Icon, label }) => (
             <li key={label} className="shrink-0">
               <div
-                className="flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-white/[0.08] text-white/55 text-[12px] tracking-[0.08em] uppercase"
-                style={{ background: "rgba(255,255,255,0.03)" }}
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-white/50 text-[11.5px] tracking-[0.06em] uppercase whitespace-nowrap select-none"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
               >
-                <Icon
-                  className="w-3.5 h-3.5 text-[#D9A94D] shrink-0"
-                  strokeWidth={1.8}
-                  aria-hidden="true"
-                />
+                <Icon className="w-3.5 h-3.5 text-[#D9A94D] shrink-0" strokeWidth={1.8} aria-hidden="true" />
                 <span>{label}</span>
               </div>
             </li>
@@ -251,31 +339,42 @@ export function Footer() {
         </ul>
       </m.div>
 
-      {/* ── GRADIENT SEPARATOR after trust badges ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 mt-10">
+      {/* Separator */}
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 mt-8">
         <div
           className="h-px w-full"
           style={{
             background:
-              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 30%, rgba(217,169,77,0.12) 50%, rgba(255,255,255,0.05) 70%, transparent 100%)",
+              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 30%, rgba(217,169,77,0.1) 50%, rgba(255,255,255,0.04) 70%, transparent 100%)",
           }}
           aria-hidden="true"
         />
       </div>
 
       {/* ══════════════════════════════════════════════
-          MAIN BODY — 4-column grid (preserved layout)
+          MAIN CONTENT
+
+          MOBILE STACKING ORDER (natural top→bottom):
+          1. Brand + Statement
+          2. Brand Highlights (Why Book)
+          3. Primary CTA (highest priority)
+          4. Newsletter
+          5. Quick Links
+          6. Contact (tap-to-action)
+          7. Social (large circles, even spacing)
+
+          DESKTOP: 12-col grid (preserved, unchanged)
           ══════════════════════════════════════════════ */}
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-14 pb-16 sm:pt-16 sm:pb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-12 pb-16 sm:pt-16 sm:pb-20">
         <m.div
           variants={reduced ? {} : container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-10"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10"
         >
 
-          {/* ══ COL 1 — Brand + Highlights + CTA ══ */}
+          {/* ══ COL 1 — Brand block (desktop spans 4/12) ══ */}
           <m.div
             variants={reduced ? {} : item}
             className="lg:col-span-4 flex flex-col gap-8"
@@ -283,7 +382,7 @@ export function Footer() {
             {/* Logo */}
             <Logo size="lg" />
 
-            {/* Editorial brand statement — 2–3 lines, never generic */}
+            {/* Editorial brand statement */}
             <div className="flex flex-col gap-2">
               <p className="text-white/90 text-[17px] font-light tracking-wide leading-relaxed font-serif italic">
                 Where the last Asiatic Lion roams free.
@@ -294,7 +393,7 @@ export function Footer() {
               </p>
             </div>
 
-            {/* Why Book With GirStay — 3 editorial highlights */}
+            {/* Why Book highlights */}
             <ul className="flex flex-col gap-5" role="list" aria-label="Why book with GirStay Premium">
               {BRAND_HIGHLIGHTS.map(({ icon: Icon, title, desc }) => (
                 <li key={title} className="flex items-start gap-3.5">
@@ -317,26 +416,30 @@ export function Footer() {
               ))}
             </ul>
 
-            {/* Primary CTA — "Plan Your Gir Journey" */}
+            {/* ── PRIMARY CTA ──
+                Full-width on mobile, auto-width on sm+.
+                h-[60px] for comfortable thumb press.
+                Placed immediately after highlights — highest-priority action. */}
             <m.div
               whileHover={reduced ? {} : { y: -2 }}
-              transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+              whileTap={reduced ? {} : { scale: 0.97 }}
+              transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
             >
               <Link
                 href="/properties"
-                className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto h-[56px] px-9 rounded-full font-semibold text-[13px] uppercase tracking-[0.18em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden"
+                className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto h-[60px] px-9 rounded-2xl font-semibold text-[14px] uppercase tracking-[0.16em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden touch-manipulation"
                 style={{
                   background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
-                  boxShadow: "0 8px 28px rgba(217,169,77,0.25), 0 2px 8px rgba(217,169,77,0.15)",
+                  boxShadow: "0 10px 30px rgba(217,169,77,0.28), 0 2px 8px rgba(217,169,77,0.15)",
                 }}
-                aria-label="Plan your luxury Gir journey with GirStay Premium"
+                aria-label="Plan your luxury Gir journey — explore premium resorts"
               >
-                {/* Shimmer sweep on hover */}
+                {/* Shimmer sweep */}
                 <span
-                  className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
+                  className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"
                   style={{
-                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
-                    transform: "skewX(-20deg)",
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                    transform: "skewX(-18deg)",
                   }}
                   aria-hidden="true"
                 />
@@ -347,32 +450,40 @@ export function Footer() {
                 />
               </Link>
             </m.div>
+
+            {/* ── NEWSLETTER — Full-width, mobile-optimized pill input ──
+                Placed after CTA so it's still within easy thumb reach. */}
+            <NewsletterForm reduced={reduced} />
           </m.div>
 
           {/* ══ COL 2 — Quick Navigation ══ */}
           <m.nav
             variants={reduced ? {} : item}
-            className="lg:col-span-3 flex flex-col gap-7"
+            className="lg:col-span-3 flex flex-col gap-6"
             aria-label="Quick navigation"
           >
-            <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
-              Explore
-            </h2>
-            <div
-              className="h-px w-8 -mt-4"
-              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
-              aria-hidden="true"
-            />
-            <ul className="flex flex-col gap-[14px]" role="list">
+            <div>
+              <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
+                Explore
+              </h2>
+              <div
+                className="h-px w-8 mt-2"
+                style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Each link has min-h-[48px] for mobile touch compliance */}
+            <ul className="flex flex-col" role="list">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   <m.div
                     whileHover={reduced ? {} : { x: 4 }}
-                    transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                    transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
                   >
                     <Link
                       href={link.href}
-                      className="text-[15px] text-white/55 hover:text-white tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D]"
+                      className="flex items-center min-h-[48px] text-[15px] text-white/55 hover:text-white tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] touch-manipulation"
                     >
                       {link.label}
                     </Link>
@@ -382,21 +493,23 @@ export function Footer() {
             </ul>
           </m.nav>
 
-          {/* ══ COL 3 — Contact ══ */}
+          {/* ══ COL 3 — Contact: tap-to-action ══ */}
           <m.address
             variants={reduced ? {} : item}
-            className="lg:col-span-3 not-italic flex flex-col gap-7"
+            className="lg:col-span-3 not-italic flex flex-col gap-6"
           >
-            <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
-              Contact
-            </h2>
-            <div
-              className="h-px w-8 -mt-4"
-              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
-              aria-hidden="true"
-            />
+            <div>
+              <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
+                Contact
+              </h2>
+              <div
+                className="h-px w-8 mt-2"
+                style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
+                aria-hidden="true"
+              />
+            </div>
 
-            <ul className="flex flex-col gap-2" role="list">
+            <ul className="flex flex-col gap-1" role="list">
               <li>
                 <ContactItem
                   href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}
@@ -446,23 +559,29 @@ export function Footer() {
             </ul>
           </m.address>
 
-          {/* ══ COL 4 — Social Links ══ */}
+          {/* ══ COL 4 — Social Links ══
+              Mobile: 4 circles evenly spread across full width (justify-between)
+              Desktop: stacked column  */}
           <m.div
             variants={reduced ? {} : item}
-            className="lg:col-span-2 flex flex-col gap-7"
+            className="lg:col-span-2 flex flex-col gap-6"
           >
-            <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
-              Follow Us
-            </h2>
-            <div
-              className="h-px w-8 -mt-4"
-              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
-              aria-hidden="true"
-            />
+            <div>
+              <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
+                Follow Us
+              </h2>
+              <div
+                className="h-px w-8 mt-2"
+                style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
+                aria-hidden="true"
+              />
+            </div>
 
-            <ul className="flex flex-row flex-wrap lg:flex-col gap-3" role="list">
+            {/* Mobile: justify-between fills the row evenly (max 430px = ~90px per icon).
+                Desktop: flex-col stacks them. Each circle is 56px for generous tap zone. */}
+            <ul className="flex flex-row justify-between lg:flex-col lg:justify-start lg:gap-3" role="list">
               {SOCIAL.map(({ key, label, href, svg }) => (
-                <li key={key}>
+                <li key={key} className="flex items-center justify-center lg:justify-start">
                   <m.a
                     href={href}
                     target="_blank"
@@ -472,17 +591,17 @@ export function Footer() {
                       reduced
                         ? {}
                         : {
-                            scale: 1.08,
-                            boxShadow:
-                              "0 0 20px rgba(217,169,77,0.3), 0 4px 16px rgba(0,0,0,0.5)",
+                            scale: 1.1,
+                            boxShadow: "0 0 22px rgba(217,169,77,0.35), 0 4px 16px rgba(0,0,0,0.5)",
                           }
                     }
-                    whileTap={reduced ? {} : { scale: 0.94 }}
-                    transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
-                    className="flex items-center justify-center w-[52px] h-[52px] rounded-full text-white/55 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform transition-colors duration-300"
+                    whileTap={reduced ? {} : { scale: 0.91 }}
+                    transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                    // 56px on mobile — well above 48px minimum, comfortable for all thumb sizes
+                    className="flex items-center justify-center w-14 h-14 lg:w-[52px] lg:h-[52px] rounded-full text-white/55 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform transition-colors duration-300 touch-manipulation"
                     style={{
                       background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.09)",
                     }}
                   >
                     {svg}
@@ -496,35 +615,40 @@ export function Footer() {
         </m.div>
       </div>
 
-      {/* ── ELEGANT GRADIENT DIVIDER ── */}
+      {/* ── GRADIENT DIVIDER before bottom bar ── */}
       <div className="relative z-10 px-5 sm:px-8">
         <div
           className="h-px w-full"
           style={{
             background:
-              "linear-gradient(90deg, transparent 0%, rgba(217,169,77,0.2) 20%, rgba(255,255,255,0.06) 50%, rgba(217,169,77,0.2) 80%, transparent 100%)",
+              "linear-gradient(90deg, transparent 0%, rgba(217,169,77,0.18) 20%, rgba(255,255,255,0.05) 50%, rgba(217,169,77,0.18) 80%, transparent 100%)",
           }}
           aria-hidden="true"
         />
       </div>
 
       {/* ══════════════════════════════════════════════
-          BOTTOM BAR — Copyright + Policies + Gujarat note
+          BOTTOM BAR — Copyright + Policies
+          pb-safe: respects iPhone Home Indicator and
+          Android navigation gesture bar so nothing is
+          obscured by system chrome.
+          On devices without safe-area (Android non-notch),
+          env() falls back to 0 naturally.
           ══════════════════════════════════════════════ */}
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 py-8">
+      <div
+        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-6"
+        style={{ paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.5rem))" }}
+      >
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
 
-          {/* Policy Links */}
+          {/* Policy links — flex-wrap so they break cleanly at 320px */}
           <nav aria-label="Legal and policy links">
-            <ul
-              className="flex flex-wrap items-center gap-x-5 gap-y-3"
-              role="list"
-            >
+            <ul className="flex flex-wrap items-center gap-x-4 gap-y-3" role="list">
               {POLICY_LINKS.map((link) => (
                 <li key={link.href} className="shrink-0">
                   <Link
                     href={link.href}
-                    className="text-[13px] text-white/30 hover:text-white/60 tracking-wide transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D]"
+                    className="text-[12.5px] text-white/30 hover:text-white/60 tracking-wide transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] min-h-[44px] flex items-center touch-manipulation"
                   >
                     {link.label}
                   </Link>
@@ -533,9 +657,9 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Copyright + Gujarat note */}
+          {/* Copyright + Made in Gujarat */}
           <div className="flex flex-col gap-1 lg:text-right">
-            <p className="text-[13px] text-white/25 tracking-wide">
+            <p className="text-[12.5px] text-white/25 tracking-wide">
               © {currentYear}{" "}
               <span className="text-white/40">{SITE_NAME}</span>. All rights reserved.
             </p>
@@ -547,26 +671,26 @@ export function Footer() {
         </div>
       </div>
 
-      {/* ── WHATSAPP FLOATING BUTTON ── */}
+      {/* ── WHATSAPP FLOATING BUTTON ──
+          bottom-[104px] on mobile clears the BottomNav (80px pill + 24px offset).
+          Safe-area inset added so it also clears the iPhone home indicator on
+          devices without a BottomNav overlap. */}
       <m.a
         href={SOCIAL_LINKS.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
         whileHover={reduced ? {} : { scale: 1.1 }}
-        whileTap={reduced ? {} : { scale: 0.93 }}
-        transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
-        className="fixed bottom-[104px] lg:bottom-6 right-3 sm:right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center will-change-transform"
+        whileTap={reduced ? {} : { scale: 0.92 }}
+        transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+        // 56px on mobile — exceeds 48px minimum; large for one-handed tap
+        className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center will-change-transform touch-manipulation"
         style={{
           background: "linear-gradient(135deg, #25D366, #128C7E)",
           boxShadow: "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",
         }}
         aria-label="Open WhatsApp chat with GirStay Premium"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="w-6 h-6 sm:w-7 sm:h-7 fill-white"
-          aria-hidden="true"
-        >
+        <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white" aria-hidden="true">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
       </m.a>
