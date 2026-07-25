@@ -3,7 +3,19 @@
 import Link from "next/link";
 import { Logo } from "@/components/shared/Logo";
 import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME } from "@/lib/constants";
-import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  ArrowRight,
+  ShieldCheck,
+  Star,
+  Headphones,
+  Gem,
+  CheckCircle2,
+  Leaf,
+  Binoculars,
+} from "lucide-react";
 import { m, useReducedMotion, type Variants } from "framer-motion";
 
 // ─────────────────────────────────────────────
@@ -24,6 +36,34 @@ const POLICY_LINKS = [
   { label: "Cancellation", href: "/contact" },
   { label: "Refund Policy", href: "/contact" },
   { label: "Cookie Policy", href: "/contact" },
+] as const;
+
+// Premium trust badges — convey safety, quality, and luxury
+const TRUST_BADGES = [
+  { icon: ShieldCheck, label: "Verified Luxury Properties" },
+  { icon: Star, label: "Premium Guest Support" },
+  { icon: Headphones, label: "Concierge Assistance" },
+  { icon: Gem, label: "Carefully Curated Stays" },
+  { icon: CheckCircle2, label: "Secure Booking Experience" },
+] as const;
+
+// Three editorial brand highlights under brand column
+const BRAND_HIGHLIGHTS = [
+  {
+    icon: Gem,
+    title: "Handpicked Luxury Resorts",
+    desc: "Every property is personally vetted to meet our exacting standards.",
+  },
+  {
+    icon: Leaf,
+    title: "Trusted Local Hospitality",
+    desc: "Rooted in Sasan Gir, trusted by thousands of discerning travelers.",
+  },
+  {
+    icon: Binoculars,
+    title: "Curated Wildlife Experiences",
+    desc: "Exclusive safaris and nature encounters, reserved for our guests.",
+  },
 ] as const;
 
 const SOCIAL = [
@@ -70,7 +110,7 @@ const SOCIAL = [
 ] as const;
 
 // ─────────────────────────────────────────────
-//  CONTACT ITEM (reusable micro-component)
+//  CONTACT ITEM — with action sub-label
 // ─────────────────────────────────────────────
 
 function ContactItem({
@@ -79,6 +119,7 @@ function ContactItem({
   icon,
   label,
   text,
+  action,
   reduced,
 }: {
   href: string;
@@ -86,6 +127,7 @@ function ContactItem({
   icon: React.ReactNode;
   label: string;
   text: string;
+  action: string;
   reduced: boolean | null;
 }) {
   const Tag = href ? "a" : "span";
@@ -94,7 +136,7 @@ function ContactItem({
     ...(external && { target: "_blank", rel: "noopener noreferrer" }),
     "aria-label": label,
     className:
-      "group flex items-center gap-4 text-[15px] text-white/60 hover:text-[#D9A94D] transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-lg min-h-[52px]",
+      "group flex items-center gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-lg min-h-[52px]",
   };
 
   return (
@@ -108,7 +150,14 @@ function ContactItem({
       >
         {icon}
       </m.span>
-      <span className="leading-relaxed tracking-wide">{text}</span>
+      <span className="flex flex-col">
+        <span className="text-[15px] text-white/70 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300">
+          {text}
+        </span>
+        <span className="text-[11px] text-white/30 uppercase tracking-[0.15em] mt-0.5">
+          {action}
+        </span>
+      </span>
     </Tag>
   );
 }
@@ -121,7 +170,6 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const reduced = useReducedMotion();
 
-  // Stagger container
   const container: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
@@ -143,19 +191,10 @@ export function Footer() {
     >
       {/* ── CINEMATIC BACKGROUND LAYERS ── */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        {/* Layer 1: Deep charcoal base */}
         <div className="absolute inset-0 bg-[#070605]" />
-
-        {/* Layer 2: Forest green radial – anchored bottom-left */}
         <div className="absolute -bottom-32 -left-24 w-[60vw] h-[60vh] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,60,36,0.45)_0%,transparent_70%)] blur-[120px]" />
-
-        {/* Layer 3: Warm gold ambient – anchored top-right */}
         <div className="absolute -top-20 -right-20 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(circle_at_center,rgba(217,169,77,0.12)_0%,transparent_65%)] blur-[100px]" />
-
-        {/* Layer 4: Subtle vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
-
-        {/* Layer 5: Luxury noise texture <2% opacity */}
         <div
           className="absolute inset-0 opacity-[0.018] mix-blend-overlay"
           style={{
@@ -163,8 +202,6 @@ export function Footer() {
               "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
           }}
         />
-
-        {/* Seamless blend from previous section */}
         <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#070605] to-transparent" />
       </div>
 
@@ -178,8 +215,58 @@ export function Footer() {
         aria-hidden="true"
       />
 
-      {/* ── MAIN BODY ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* ══════════════════════════════════════════════
+          TRUST BADGES ROW — above the fold on mobile
+          Horizontally scrollable on small screens
+          ══════════════════════════════════════════════ */}
+      <m.div
+        initial={reduced ? {} : { opacity: 0, y: 12 }}
+        whileInView={reduced ? {} : { opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-20"
+        aria-label="Trust indicators"
+      >
+        {/* Horizontal scroll on mobile, wrap on desktop */}
+        <ul
+          className="flex items-center gap-3 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible scrollbar-none"
+          role="list"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {TRUST_BADGES.map(({ icon: Icon, label }) => (
+            <li key={label} className="shrink-0">
+              <div
+                className="flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-white/[0.08] text-white/55 text-[12px] tracking-[0.08em] uppercase"
+                style={{ background: "rgba(255,255,255,0.03)" }}
+              >
+                <Icon
+                  className="w-3.5 h-3.5 text-[#D9A94D] shrink-0"
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
+                <span>{label}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </m.div>
+
+      {/* ── GRADIENT SEPARATOR after trust badges ── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 mt-10">
+        <div
+          className="h-px w-full"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 30%, rgba(217,169,77,0.12) 50%, rgba(255,255,255,0.05) 70%, transparent 100%)",
+          }}
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* ══════════════════════════════════════════════
+          MAIN BODY — 4-column grid (preserved layout)
+          ══════════════════════════════════════════════ */}
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-14 pb-16 sm:pt-16 sm:pb-20">
         <m.div
           variants={reduced ? {} : container}
           initial="hidden"
@@ -188,7 +275,7 @@ export function Footer() {
           className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-10"
         >
 
-          {/* ── COL 1 — Brand + CTA ── */}
+          {/* ══ COL 1 — Brand + Highlights + CTA ══ */}
           <m.div
             variants={reduced ? {} : item}
             className="lg:col-span-4 flex flex-col gap-8"
@@ -196,40 +283,64 @@ export function Footer() {
             {/* Logo */}
             <Logo size="lg" />
 
-            {/* Luxury tagline */}
-            <div className="flex flex-col gap-1">
+            {/* Editorial brand statement — 2–3 lines, never generic */}
+            <div className="flex flex-col gap-2">
               <p className="text-white/90 text-[17px] font-light tracking-wide leading-relaxed font-serif italic">
-                Luxury wildlife experiences in Sasan Gir.
+                Where the last Asiatic Lion roams free.
               </p>
-              <p className="text-white/40 text-[14px] tracking-[0.06em] uppercase leading-relaxed">
-                Handpicked resorts · Uncompromising standards
+              <p className="text-white/55 text-[15px] font-light leading-relaxed tracking-wide">
+                We connect discerning travelers with Sasan Gir's finest
+                handpicked resorts — so your only focus is the wilderness.
               </p>
             </div>
 
-            {/* Primary CTA */}
-            <m.div whileHover={reduced ? {} : { y: -2 }} transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}>
+            {/* Why Book With GirStay — 3 editorial highlights */}
+            <ul className="flex flex-col gap-5" role="list" aria-label="Why book with GirStay Premium">
+              {BRAND_HIGHLIGHTS.map(({ icon: Icon, title, desc }) => (
+                <li key={title} className="flex items-start gap-3.5">
+                  <span
+                    className="shrink-0 mt-0.5 w-8 h-8 rounded-xl flex items-center justify-center text-[#D9A94D]"
+                    style={{ background: "rgba(217,169,77,0.08)", border: "1px solid rgba(217,169,77,0.12)" }}
+                    aria-hidden="true"
+                  >
+                    <Icon className="w-3.5 h-3.5" strokeWidth={1.8} />
+                  </span>
+                  <span>
+                    <span className="block text-[14px] text-white/85 font-medium tracking-wide leading-snug">
+                      {title}
+                    </span>
+                    <span className="block text-[13px] text-white/40 font-light leading-relaxed mt-0.5">
+                      {desc}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Primary CTA — "Plan Your Gir Journey" */}
+            <m.div
+              whileHover={reduced ? {} : { y: -2 }}
+              transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
+            >
               <Link
                 href="/properties"
                 className="group relative inline-flex items-center justify-center gap-3 w-full sm:w-auto h-[56px] px-9 rounded-full font-semibold text-[13px] uppercase tracking-[0.18em] text-[#070605] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform overflow-hidden"
                 style={{
-                  background:
-                    "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
-                  boxShadow:
-                    "0 8px 28px rgba(217,169,77,0.25), 0 2px 8px rgba(217,169,77,0.15)",
+                  background: "linear-gradient(135deg, #F7D58B 0%, #D9A94D 50%, #B8832C 100%)",
+                  boxShadow: "0 8px 28px rgba(217,169,77,0.25), 0 2px 8px rgba(217,169,77,0.15)",
                 }}
-                aria-label="Book your stay at GirStay Premium"
+                aria-label="Plan your luxury Gir journey with GirStay Premium"
               >
                 {/* Shimmer sweep on hover */}
                 <span
                   className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
                   style={{
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
                     transform: "skewX(-20deg)",
                   }}
                   aria-hidden="true"
                 />
-                <span className="relative z-10">Book Your Stay</span>
+                <span className="relative z-10">Plan Your Gir Journey</span>
                 <ArrowRight
                   className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
                   aria-hidden="true"
@@ -238,7 +349,7 @@ export function Footer() {
             </m.div>
           </m.div>
 
-          {/* ── COL 2 — Quick Navigation ── */}
+          {/* ══ COL 2 — Quick Navigation ══ */}
           <m.nav
             variants={reduced ? {} : item}
             className="lg:col-span-3 flex flex-col gap-7"
@@ -247,17 +358,11 @@ export function Footer() {
             <h2 className="text-[#D9A94D] text-[11px] font-semibold uppercase tracking-[0.25em]">
               Explore
             </h2>
-
-            {/* Subtle gold rule under heading */}
             <div
               className="h-px w-8 -mt-4"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)",
-              }}
+              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
               aria-hidden="true"
             />
-
             <ul className="flex flex-col gap-[14px]" role="list">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
@@ -277,7 +382,7 @@ export function Footer() {
             </ul>
           </m.nav>
 
-          {/* ── COL 3 — Contact ── */}
+          {/* ══ COL 3 — Contact ══ */}
           <m.address
             variants={reduced ? {} : item}
             className="lg:col-span-3 not-italic flex flex-col gap-7"
@@ -287,10 +392,7 @@ export function Footer() {
             </h2>
             <div
               className="h-px w-8 -mt-4"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)",
-              }}
+              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
               aria-hidden="true"
             />
 
@@ -299,8 +401,9 @@ export function Footer() {
                 <ContactItem
                   href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}
                   icon={<Phone className="w-4 h-4" strokeWidth={1.5} />}
-                  label={`Call us at ${CONTACT_INFO.phone}`}
+                  label={`Tap to call GirStay Premium at ${CONTACT_INFO.phone}`}
                   text={CONTACT_INFO.phone}
+                  action="Tap to Call"
                   reduced={reduced}
                 />
               </li>
@@ -308,17 +411,20 @@ export function Footer() {
                 <ContactItem
                   href={`mailto:${CONTACT_INFO.email}`}
                   icon={<Mail className="w-4 h-4" strokeWidth={1.5} />}
-                  label={`Email us at ${CONTACT_INFO.email}`}
+                  label={`Send an email to GirStay Premium at ${CONTACT_INFO.email}`}
                   text={CONTACT_INFO.email}
+                  action="Tap to Email"
                   reduced={reduced}
                 />
               </li>
               <li>
                 <ContactItem
-                  href=""
+                  href="https://maps.google.com/?q=Sasan+Gir+Gujarat+India"
+                  external
                   icon={<MapPin className="w-4 h-4" strokeWidth={1.5} />}
-                  label="Our location"
-                  text="Sasan Gir, Gujarat, India"
+                  label="Open Sasan Gir location in Google Maps"
+                  text="Sasan Gir, Gujarat"
+                  action="Open Maps"
                   reduced={reduced}
                 />
               </li>
@@ -327,23 +433,20 @@ export function Footer() {
                   href={SOCIAL_LINKS.whatsapp}
                   external
                   icon={
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="w-4 h-4 fill-current"
-                      aria-hidden="true"
-                    >
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden="true">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                     </svg>
                   }
-                  label="Chat with us on WhatsApp"
+                  label="Open WhatsApp chat with GirStay Premium"
                   text="WhatsApp Us"
+                  action="Open Chat"
                   reduced={reduced}
                 />
               </li>
             </ul>
           </m.address>
 
-          {/* ── COL 4 — Social Links ── */}
+          {/* ══ COL 4 — Social Links ══ */}
           <m.div
             variants={reduced ? {} : item}
             className="lg:col-span-2 flex flex-col gap-7"
@@ -353,14 +456,10 @@ export function Footer() {
             </h2>
             <div
               className="h-px w-8 -mt-4"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)",
-              }}
+              style={{ background: "linear-gradient(90deg, rgba(217,169,77,0.6), transparent)" }}
               aria-hidden="true"
             />
 
-            {/* 4 circles — large tap targets, circular glass surface */}
             <ul className="flex flex-row flex-wrap lg:flex-col gap-3" role="list">
               {SOCIAL.map(({ key, label, href, svg }) => (
                 <li key={key}>
@@ -409,7 +508,9 @@ export function Footer() {
         />
       </div>
 
-      {/* ── BOTTOM BAR — Policies + Copyright ── */}
+      {/* ══════════════════════════════════════════════
+          BOTTOM BAR — Copyright + Policies + Gujarat note
+          ══════════════════════════════════════════════ */}
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 py-8">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
 
@@ -432,11 +533,16 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Copyright */}
-          <p className="text-[13px] text-white/25 tracking-wide">
-            © {currentYear}{" "}
-            <span className="text-white/40">{SITE_NAME}</span>. All rights reserved.
-          </p>
+          {/* Copyright + Gujarat note */}
+          <div className="flex flex-col gap-1 lg:text-right">
+            <p className="text-[13px] text-white/25 tracking-wide">
+              © {currentYear}{" "}
+              <span className="text-white/40">{SITE_NAME}</span>. All rights reserved.
+            </p>
+            <p className="text-[11px] text-white/18 tracking-[0.1em] uppercase">
+              Made with care in Gujarat, India
+            </p>
+          </div>
 
         </div>
       </div>
@@ -452,10 +558,9 @@ export function Footer() {
         className="fixed bottom-[104px] lg:bottom-6 right-3 sm:right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center will-change-transform"
         style={{
           background: "linear-gradient(135deg, #25D366, #128C7E)",
-          boxShadow:
-            "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",
+          boxShadow: "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",
         }}
-        aria-label="Chat with GirStay Premium on WhatsApp"
+        aria-label="Open WhatsApp chat with GirStay Premium"
       >
         <svg
           viewBox="0 0 24 24"
