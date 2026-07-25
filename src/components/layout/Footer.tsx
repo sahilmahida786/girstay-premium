@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useId } from "react";
+import { useState, useId, useRef } from "react";
 import { Logo } from "@/components/shared/Logo";
 import { SOCIAL_LINKS, CONTACT_INFO, SITE_NAME } from "@/lib/constants";
 import {
@@ -23,7 +23,22 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
-import { m, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, AnimatePresence, type Variants } from "framer-motion";
+
+// ─────────────────────────────────────────────
+//  LUXURY MOTION CONSTANTS
+//  Single source of truth for all easing curves.
+//  GPU-only: only transform + opacity are animated.
+// ─────────────────────────────────────────────
+
+// Primary luxury ease — slow-in, crisp-out (Apple-esque)
+const EASE_LUXURY = [0.22, 1, 0.36, 1] as const;
+// Snappy micro-interaction ease — for press/hover responses
+const EASE_SNAP = [0.25, 1, 0.5, 1] as const;
+// Duration constants (ms converted to seconds for framer-motion)
+const DUR_ENTER = 0.72;     // Page-entry stagger children
+const DUR_MICRO = 0.26;     // Hover / press response
+const DUR_CONFIRM = 0.48;   // Success / confirmation fade
 
 // ─────────────────────────────────────────────
 //  DATA
@@ -115,7 +130,10 @@ const SOCIAL = [
 ] as const;
 
 // ─────────────────────────────────────────────
-//  CONTACT ITEM — 52px tap target, action label
+//  CONTACT ITEM
+//  ─ 52px tap target (WCAG + Apple HIG)
+//  ─ Gold underline grows L→R on hover (scaleX, GPU-only)
+//  ─ Icon badge lifts on hover
 // ─────────────────────────────────────────────
 
 function ContactItem({
@@ -140,32 +158,44 @@ function ContactItem({
     ...(href && { href }),
     ...(external && { target: "_blank", rel: "noopener noreferrer" }),
     "aria-label": label,
-    // min-h-[52px] ensures WCAG + Apple HIG touch target compliance
     className:
-      "group flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-xl touch-manipulation",
+      "group relative flex items-center gap-4 min-h-[52px] py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 focus-visible:rounded-xl touch-manipulation",
   };
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Tag {...(props as any)}>
+      {/* Icon badge — lifts 2px, scales 1.08 on hover */}
       <m.span
-        whileHover={reduced ? {} : { scale: 1.08 }}
+        whileHover={reduced ? {} : { scale: 1.08, y: -2 }}
         whileTap={reduced ? {} : { scale: 0.94 }}
-        transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-        // 44px icon badge — minimum Apple HIG size
+        transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
         className="shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center text-[#D9A94D] will-change-transform"
         style={{ background: "rgba(217,169,77,0.07)", border: "1px solid rgba(217,169,77,0.12)" }}
         aria-hidden="true"
       >
         {icon}
       </m.span>
-      <span className="flex flex-col min-w-0">
+
+      {/* Text + action label + gold underline grow */}
+      <span className="flex flex-col min-w-0 relative pb-[3px]">
         <span className="text-[15px] text-white/70 group-hover:text-[#D9A94D] tracking-wide leading-snug transition-colors duration-300 truncate">
           {text}
         </span>
         <span className="text-[11px] text-white/30 uppercase tracking-[0.15em] mt-0.5">
           {action}
         </span>
+        {/* Underline grows L→R on hover — GPU transform only */}
+        {!reduced && (
+          <m.span
+            className="absolute bottom-0 left-0 h-px w-full origin-left"
+            style={{ background: "rgba(217,169,77,0.45)" }}
+            initial={{ scaleX: 0 }}
+            whileHover={{ scaleX: 1 }}
+            transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+            aria-hidden="true"
+          />
+        )}
       </span>
     </Tag>
   );
@@ -212,6 +242,11 @@ function NewsletterForm({ reduced }: { reduced: boolean | null }) {
 
   const isBusy = status === "loading";
 
+  // Newsletter input focus tracking — drives gold ring via JS
+  // (CSS :focus-within is unreliable across some mobile browsers)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [focused, setFocused] = useState(false);
+
   return (
     <section aria-labelledby="newsletter-heading" className="flex flex-col gap-4">
       {/* Heading + gold rule */}
@@ -240,25 +275,38 @@ function NewsletterForm({ reduced }: { reduced: boolean | null }) {
           Your email address
         </label>
 
-        {/* Input wrapper — animated border on focus/error */}
-        <div
-          className="flex items-center w-full rounded-2xl overflow-hidden transition-all duration-300"
+        {/* Input wrapper — animated gold border on focus, red on error. GPU: opacity via CSS transition */}
+        <m.div
+          animate={reduced ? {} : {
+            // Subtle lift when focused — transform only
+            y: focused ? -1 : 0,
+          }}
+          transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+          className="flex items-center w-full rounded-2xl overflow-hidden will-change-transform"
           style={{
             background: "rgba(255,255,255,0.04)",
             border: hasError
               ? "1px solid rgba(239,68,68,0.5)"
+              : focused
+              ? "1px solid rgba(217,169,77,0.50)"
               : "1px solid rgba(255,255,255,0.09)",
+            // Subtle glow on focus — kept very faint so it feels premium not aggressive
             boxShadow: hasError
               ? "0 0 0 3px rgba(239,68,68,0.08)"
+              : focused
+              ? "0 0 0 3px rgba(217,169,77,0.08), 0 4px 16px rgba(217,169,77,0.06)"
               : undefined,
+            transition: "border-color 0.25s ease, box-shadow 0.25s ease",
           }}
         >
           <input
             id={inputId}
+            ref={inputRef}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            onBlur={() => setTouched(true)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => { setFocused(false); setTouched(true); }}
             placeholder="Your email address"
             autoComplete="email"
             inputMode="email"
@@ -290,7 +338,7 @@ function NewsletterForm({ reduced }: { reduced: boolean | null }) {
               <Send className="w-4 h-4 text-[#070605]" strokeWidth={2} aria-hidden="true" />
             )}
           </m.button>
-        </div>
+        </m.div>
 
         {/* Inline error message */}
         {hasError && (
@@ -311,41 +359,46 @@ function NewsletterForm({ reduced }: { reduced: boolean | null }) {
           {status === "error" && "Something went wrong. Please try again."}
         </div>
 
-        {/* Success confirmation — elegant, not intrusive */}
-        {status === "success" && (
-          <m.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
-            className="mt-3 flex items-start gap-2.5"
-            role="status"
-          >
-            <CheckCircle2
-              className="w-4 h-4 text-[#D9A94D] shrink-0 mt-0.5"
-              strokeWidth={1.8}
-              aria-hidden="true"
-            />
-            <p className="text-[13px] text-white/60 leading-relaxed tracking-wide">
-              You&apos;re now part of the{" "}
-              <span className="text-[#D9A94D] font-medium">GirStay Premium</span>{" "}
-              community. Expect only the finest in your inbox.
-            </p>
-          </m.div>
-        )}
+        {/* Success confirmation — elegant fade-up, not intrusive */}
+        <AnimatePresence mode="wait">
+          {status === "success" && (
+            <m.div
+              key="success"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: DUR_CONFIRM, ease: EASE_LUXURY }}
+              className="mt-3 flex items-start gap-2.5"
+              role="status"
+            >
+              <CheckCircle2
+                className="w-4 h-4 text-[#D9A94D] shrink-0 mt-0.5"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              />
+              <p className="text-[13px] text-white/60 leading-relaxed tracking-wide">
+                You&apos;re now part of the{" "}
+                <span className="text-[#D9A94D] font-medium">GirStay Premium</span>{" "}
+                community. Expect only the finest in your inbox.
+              </p>
+            </m.div>
+          )}
 
-        {/* Error state */}
-        {status === "error" && (
-          <m.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="mt-3 flex items-center gap-1.5 text-[13px] text-red-400/70 tracking-wide"
-            role="alert"
-          >
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-            Something went wrong. Please try again.
-          </m.p>
-        )}
+          {status === "error" && (
+            <m.p
+              key="error"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.32, ease: EASE_SNAP }}
+              className="mt-3 flex items-center gap-1.5 text-[13px] text-red-400/70 tracking-wide"
+              role="alert"
+            >
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              Something went wrong. Please try again.
+            </m.p>
+          )}
+        </AnimatePresence>
       </form>
     </section>
   );
@@ -359,16 +412,33 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const reduced = useReducedMotion();
 
+  // ─────────────────────────────────────────────
+  //  LUXURY MOTION VARIANTS
+  //  container: stagger 80ms between children, 50ms initial delay
+  //  item: y:20→0, opacity:0→1, 720ms with luxury ease
+  //  bottomBar: own fade-up with 160ms delay after grid
+  // ─────────────────────────────────────────────
   const container: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
   };
   const item: Variants = {
-    hidden: { opacity: 0, y: 14 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.55, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] },
+      transition: {
+        duration: DUR_ENTER,
+        ease: EASE_LUXURY as [number, number, number, number],
+      },
+    },
+  };
+  const bottomBar: Variants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: EASE_LUXURY as [number, number, number, number], delay: 0.16 },
     },
   };
 
@@ -424,13 +494,19 @@ export function Footer() {
         >
           {TRUST_BADGES.map(({ icon: Icon, label }) => (
             <li key={label} className="shrink-0">
-              <div
-                className="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-white/50 text-[11.5px] tracking-[0.06em] uppercase whitespace-nowrap select-none"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+              {/* Soft lift + background highlight on hover — GPU transform only */}
+              <m.div
+                whileHover={reduced ? {} : { y: -2, scale: 1.02 }}
+                transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-full text-white/50 text-[11.5px] tracking-[0.06em] uppercase whitespace-nowrap select-none will-change-transform cursor-default"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                }}
               >
                 <Icon className="w-3.5 h-3.5 text-[#D9A94D] shrink-0" strokeWidth={1.8} aria-hidden="true" />
                 <span>{label}</span>
-              </div>
+              </m.div>
             </li>
           ))}
         </ul>
@@ -520,9 +596,9 @@ export function Footer() {
                 ════════════════════════════════════════ */}
             <div className="flex flex-col gap-3">
               <m.div
-                whileHover={reduced ? {} : { y: -2 }}
+                whileHover={reduced ? {} : { scale: 1.02, y: -2 }}
                 whileTap={reduced ? {} : { scale: 0.97 }}
-                transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
               >
                 <Link
                   href="/properties"
@@ -630,17 +706,29 @@ export function Footer() {
             {/* Each link has min-h-[48px] for mobile touch compliance */}
             <ul className="flex flex-col" role="list">
               {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
+                <li key={link.href} className="group relative">
                   <m.div
                     whileHover={reduced ? {} : { x: 4 }}
-                    transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                    transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+                    className="relative"
                   >
                     <Link
                       href={link.href}
-                      className="flex items-center min-h-[48px] text-[15px] text-white/55 hover:text-white tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] touch-manipulation"
+                      className="flex items-center min-h-[48px] text-[15px] text-white/55 hover:text-[#D9A94D] tracking-wide leading-relaxed transition-colors duration-300 focus:outline-none focus-visible:underline focus-visible:text-[#D9A94D] touch-manipulation pb-[3px]"
                     >
                       {link.label}
                     </Link>
+                    {/* Underline grows L→R on hover — GPU scaleX only */}
+                    {!reduced && (
+                      <m.span
+                        className="absolute bottom-0 left-0 h-px w-full origin-left"
+                        style={{ background: "rgba(217,169,77,0.4)" }}
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
+                        aria-hidden="true"
+                      />
+                    )}
                   </m.div>
                 </li>
               ))}
@@ -745,13 +833,13 @@ export function Footer() {
                       reduced
                         ? {}
                         : {
-                            scale: 1.1,
-                            boxShadow: "0 0 22px rgba(217,169,77,0.35), 0 4px 16px rgba(0,0,0,0.5)",
+                            scale: 1.08,
+                            // Max 2° rotation — subtle, never dizzying
+                            rotate: 2,
                           }
                     }
                     whileTap={reduced ? {} : { scale: 0.91 }}
-                    transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-                    // 56px on mobile — well above 48px minimum, comfortable for all thumb sizes
+                    transition={{ duration: DUR_MICRO, ease: EASE_SNAP }}
                     className="flex items-center justify-center w-14 h-14 lg:w-[52px] lg:h-[52px] rounded-full text-white/55 hover:text-[#D9A94D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9A94D] focus-visible:ring-offset-2 will-change-transform transition-colors duration-300 touch-manipulation"
                     style={{
                       background: "rgba(255,255,255,0.04)",
@@ -770,7 +858,13 @@ export function Footer() {
       </div>
 
       {/* ── GRADIENT DIVIDER before bottom bar ── */}
-      <div className="relative z-10 px-5 sm:px-8">
+      <m.div
+        variants={reduced ? {} : bottomBar}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-20px" }}
+        className="relative z-10 px-5 sm:px-8"
+      >
         <div
           className="h-px w-full"
           style={{
@@ -779,17 +873,14 @@ export function Footer() {
           }}
           aria-hidden="true"
         />
-      </div>
+      </m.div>
 
-      {/* ══════════════════════════════════════════════
-          BOTTOM BAR — Copyright + Policies
-          pb-safe: respects iPhone Home Indicator and
-          Android navigation gesture bar so nothing is
-          obscured by system chrome.
-          On devices without safe-area (Android non-notch),
-          env() falls back to 0 naturally.
-          ══════════════════════════════════════════════ */}
-      <div
+      {/* Bottom bar fades up after the grid settles */}
+      <m.div
+        variants={reduced ? {} : bottomBar}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-20px" }}
         className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-6"
         style={{ paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.5rem))" }}
       >
@@ -823,7 +914,7 @@ export function Footer() {
           </div>
 
         </div>
-      </div>
+      </m.div>
 
       {/* ── WHATSAPP FLOATING BUTTON ──
           bottom-[104px] on mobile clears the BottomNav (80px pill + 24px offset).
