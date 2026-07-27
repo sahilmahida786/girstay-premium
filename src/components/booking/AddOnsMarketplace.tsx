@@ -27,10 +27,10 @@ export function AddOnsMarketplace({ selectedIds, onToggle }: AddOnsMarketplacePr
       {bundles.length > 0 && (
         <section>
           <h3 className="luxury-heading text-lg sm:text-xl mb-4 text-[#D9A94D]">Curated Packages</h3>
-          {/* Desktop Grid / Mobile Horizontal Scroll */}
-          <div className="flex sm:grid sm:grid-cols-2 gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 -mx-6 sm:mx-0 px-6 sm:px-0 snap-x snap-mandatory hide-scrollbar">
+          {/* Desktop Grid / Mobile Stack */}
+          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-4 pb-4 sm:pb-0">
             {bundles.map((bundle) => (
-              <div key={bundle.id} className="min-w-[85vw] sm:min-w-0 snap-center shrink-0">
+              <div key={bundle.id}>
                 <AddOnCard
                   experience={bundle}
                   isSelected={selectedIds.includes(bundle.id)}
@@ -45,9 +45,9 @@ export function AddOnsMarketplace({ selectedIds, onToggle }: AddOnsMarketplacePr
       {/* Individual Experiences Section */}
       <section>
         <h3 className="font-heading font-medium text-lg sm:text-xl mb-4 text-white/90">Individual Experiences</h3>
-        <div className="flex sm:grid sm:grid-cols-2 gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 -mx-6 sm:mx-0 px-6 sm:px-0 snap-x snap-mandatory hide-scrollbar">
+        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-4 pb-4 sm:pb-0">
           {individual.map((exp) => (
-            <div key={exp.id} className="min-w-[85vw] sm:min-w-0 snap-center shrink-0">
+            <div key={exp.id}>
               <AddOnCard
                 experience={exp}
                 isSelected={selectedIds.includes(exp.id)}

@@ -331,21 +331,40 @@ export default function BookingPage() {
                     <Separator className="my-8 opacity-50" />
 
                     {/* Coupon */}
-                    <div>
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 mt-8">
                       <h3 className="text-sm font-medium mb-3 flex items-center gap-2 text-[#D9A94D]">
                         <Tag className="w-4 h-4" />
                         Have a coupon code?
                       </h3>
-                      <div className="flex gap-2 max-w-sm">
+                      <div className="flex gap-2">
                         <Input
                           value={couponCode}
                           onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                          placeholder="Try 'LUXURY'"
-                          className="h-12 rounded-xl uppercase bg-white/5 border-white/10"
+                          placeholder="Enter code"
+                          className="h-12 rounded-xl uppercase bg-white/5 border-white/10 text-base flex-1"
                         />
-                        <Button variant="outline" className="h-12 px-6 rounded-xl shrink-0 border-[#D9A94D]/30 text-[#D9A94D] hover:bg-[#D9A94D]/10">
+                        <Button 
+                          variant="outline" 
+                          className="h-12 px-5 sm:px-6 rounded-xl shrink-0 border-[#D9A94D]/30 text-[#D9A94D] hover:bg-[#D9A94D]/10 font-medium min-w-[80px]"
+                        >
                           Apply
                         </Button>
+                      </div>
+                      
+                      <div className="mt-4 pt-4 border-t border-white/10">
+                        <p className="text-xs text-white/50 mb-2">Available Demo Coupons (Tap to apply)</p>
+                        <div className="flex flex-wrap gap-2">
+                          {["LUXURY", "SAVE10", "WELCOME"].map((code) => (
+                            <button
+                              key={code}
+                              type="button"
+                              onClick={() => setCouponCode(code)}
+                              className="px-3 py-1.5 rounded-lg border border-white/10 bg-black/20 text-xs font-medium text-white/80 hover:bg-white/10 hover:border-white/20 transition-all touch-manipulation focus-visible:ring-2 focus-visible:ring-[#D9A94D]"
+                            >
+                              {code}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>

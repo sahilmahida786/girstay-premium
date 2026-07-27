@@ -322,7 +322,7 @@ export function WhatsAppFloatClient({ href, children }: { href: string; children
       whileHover={reduced ? {} : { scale: 1.1 }}
       whileTap={reduced ? {} : { scale: 0.92 }}
       transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-      className="fixed bottom-[104px] lg:bottom-6 right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 will-change-transform touch-manipulation"
+      className="fixed right-4 sm:right-6 z-40 w-14 h-14 sm:w-14 sm:h-14 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 will-change-transform touch-manipulation bottom-[calc(var(--mobile-sticky-footer-height,88px)+16px)] lg:!bottom-6"
       style={{
         background: "linear-gradient(135deg, #25D366, #128C7E)",
         boxShadow: "0 8px 24px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.4)",

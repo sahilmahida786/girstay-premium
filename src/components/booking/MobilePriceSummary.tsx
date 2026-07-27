@@ -42,6 +42,15 @@ export function MobilePriceSummary({
 }: MobilePriceSummaryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  React.useEffect(() => {
+    // Set a CSS variable to inform other components (like WhatsApp button) of the sticky footer height
+    document.documentElement.style.setProperty('--mobile-sticky-footer-height', 'calc(84px + env(safe-area-inset-bottom))');
+    
+    return () => {
+      document.documentElement.style.removeProperty('--mobile-sticky-footer-height');
+    };
+  }, []);
+
   return (
     <>
       {/* Sticky Bottom Bar (Always visible on mobile) */}
@@ -71,11 +80,12 @@ export function MobilePriceSummary({
 
         <LuxuryButton 
           onClick={onNextStep}
-          className="h-[52px] px-8 min-w-[140px] touch-manipulation"
+          className="h-[52px] px-6 min-w-[140px] touch-manipulation flex items-center gap-2"
           disabled={disabled || isCalculating}
           aria-label={isLastStep ? "Pay Now" : nextStepLabel}
         >
-          {isLastStep ? "Pay Now" : nextStepLabel}
+          <span>{isLastStep ? "Pay Now" : nextStepLabel}</span>
+          {!isLastStep && <span aria-hidden="true">→</span>}
         </LuxuryButton>
       </m.div>
 
