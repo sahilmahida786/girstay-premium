@@ -77,54 +77,7 @@ export default function BookingPage() {
     validateAndHydrate(propertyId);
   }, [propertyId, validateAndHydrate]);
 
-  // Server-Side Pricing Validation Engine
-  useEffect(() => {
-    if (!date?.from || !date?.to || !isOnline) return;
-    
-    let isMounted = true;
-    const timeoutId = setTimeout(async () => {
-      if (isMounted) {
-        updateBooking(propertyId, { isCalculating: true, pricingError: null });
-        try {
-          const res = await withRetry('validateCheckout', () => validateCheckout({
-            propertyId,
-            checkIn: date.from!,
-            checkOut: date.to!,
-            adults,
-            children,
-            selectedAddOns,
-            couponCode
-          }));
-
-          if (!isMounted) return;
-
-          if (res.status === "success") {
-            updateBooking(propertyId, { 
-               verifiedPricing: res.pricing,
-               isCalculating: false 
-            });
-          } else {
-            updateBooking(propertyId, { 
-               pricingError: res.message,
-               isCalculating: false 
-            });
-          }
-        } catch (e) {
-           if (isMounted) {
-             updateBooking(propertyId, { 
-                pricingError: "Failed to connect to server.",
-                isCalculating: false 
-             });
-           }
-        }
-      }
-    }, 500); // 500ms debounce to prevent spamming server
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
-  }, [propertyId, date?.from, date?.to, adults, children, selectedAddOns, couponCode, updateBooking, isOnline, retryTrigger]);
+  // Server-Side Pricing Validation Engine removed for Demo Mode
 
   const prefersReducedMotion = useReducedMotion();
   const stepContainerRef = useRef<HTMLDivElement>(null);
@@ -161,16 +114,23 @@ export default function BookingPage() {
     } as DateRange;
   }, [date]);
 
-  // Use verified pricing directly from server
-  const nights = verifiedPricing?.nights ?? 0;
-  const roomCharges = verifiedPricing?.roomCharges ?? 0;
-  const addOnTotal = verifiedPricing?.addOnTotal ?? 0;
-  const discountAmount = verifiedPricing?.discountAmount ?? 0;
-  const gst = verifiedPricing?.gst ?? 0;
-  const total = verifiedPricing?.total ?? 0;
-  const advance = verifiedPricing?.advance ?? 0;
+  // Local frontend price calculation for Demo Mode
+  const nights = dateRange.from && dateRange.to ? Math.max(1, differenceInCalendarDays(dateRange.to, dateRange.from)) : 1;
+  const roomCharges = room.basePrice * nights;
+  
+  const addOnTotal = selectedAddOns.reduce((total, id) => {
+    const addOn = EXPERIENCES_DATA.find(e => e.id === id);
+    return total + (addOn ? addOn.price : 0);
+  }, 0);
 
-  const isValidDate = nights > 0;
+  const discountAmount = couponCode.toUpperCase() === "LUXURY" ? (roomCharges * 0.1) : 0;
+  
+  const subtotal = roomCharges + addOnTotal - discountAmount;
+  const gst = subtotal * 0.18;
+  const total = subtotal + gst;
+  const advance = total * 0.5;
+
+  const isValidDate = true; // Always allow in demo mode
 
   const toggleAddOn = (id: string) => {
     setSelectedAddOns((prev: string[]) =>
@@ -441,16 +401,13 @@ export default function BookingPage() {
                 {currentStep < 4 && (
                   <Button
                     onClick={() => {
-                      if (currentStep === 1 && !isValidDate) return;
                       setDirection(1);
                       setCurrentStep(currentStep + 1);
                     }}
-                    disabled={currentStep === 1 && !isValidDate}
+                    disabled={false}
                     className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {currentStep === 1 && !isValidDate ? "Select valid dates" : (
-                      <>Next Step <ArrowRight className="w-4 h-4" /></>
-                    )}
+                    <>Next Step <ArrowRight className="w-4 h-4" /></>
                   </Button>
                 )}
               </div>
@@ -462,23 +419,7 @@ export default function BookingPage() {
             <div className="sticky top-24 p-6 rounded-2xl bg-card border border-border/50 shadow-luxury">
               <h3 className="font-heading font-semibold mb-4">Price Summary</h3>
               
-              {pricingError && (
-                <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/20 flex flex-col gap-3" role="alert" aria-live="assertive">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                    <div className="text-red-200 text-sm leading-relaxed">
-                      {pricingError}
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => setRetryTrigger(prev => prev + 1)}
-                    disabled={!isOnline}
-                    className="w-full py-2.5 mt-1 rounded-lg bg-red-500/10 text-red-400 font-medium hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <RefreshCw className="w-4 h-4" /> Retry Calculation
-                  </button>
-                </div>
-              )}
+              {/* Error removed for demo */}
 
               <div className="flex gap-3 mb-4">
                 <div className="relative w-16 h-14 rounded-lg overflow-hidden shrink-0">
@@ -513,23 +454,22 @@ export default function BookingPage() {
         <MobilePriceSummary
           roomName={room.name}
           nights={nights}
-          roomCharges={verifiedPricing?.roomCharges || roomCharges}
-          addOnTotal={verifiedPricing?.addOnTotal || addOnTotal}
-          discountAmount={verifiedPricing?.discountAmount || discountAmount}
-          gst={verifiedPricing?.gst || gst}
-          total={verifiedPricing?.total || total}
-          advance={verifiedPricing?.advance || advance}
+          roomCharges={roomCharges}
+          addOnTotal={addOnTotal}
+          discountAmount={discountAmount}
+          gst={gst}
+          total={total}
+          advance={advance}
           onNextStep={() => {
-            if (currentStep === 1 && !isValidDate) return;
             if (currentStep < 4) {
               setDirection(1);
               setCurrentStep(currentStep + 1);
             }
           }}
-          nextStepLabel={currentStep === 1 && !isValidDate ? "Select valid dates" : "Next Step"}
+          nextStepLabel={"Next Step"}
           isLastStep={false}
-          disabled={currentStep === 1 && (!isValidDate || isCalculating || !!pricingError)}
-          isCalculating={isCalculating}
+          disabled={false}
+          isCalculating={false}
         />
       )}
     </div>

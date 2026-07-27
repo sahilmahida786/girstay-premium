@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { differenceInCalendarDays, parseISO, isValid } from 'date-fns';
+import { differenceInCalendarDays, parseISO, isValid, startOfTomorrow, addDays } from 'date-fns';
 import { CheckoutPricing } from '@/actions/checkout';
+
+const tomorrow = startOfTomorrow();
+const dayAfter = addDays(tomorrow, 1);
 
 export interface GuestInfo {
   firstName: string;
@@ -38,7 +41,10 @@ interface BookingState {
 
 export const DEFAULT_BOOKING: PropertyBookingData = {
   step: 1,
-  date: {},
+  date: {
+    from: tomorrow.toISOString(),
+    to: dayAfter.toISOString(),
+  },
   adults: 2,
   children: 0,
   selectedAddOns: [],
@@ -122,7 +128,9 @@ export const useBookingStore = create<BookingState>()(
         const newBookings = { ...state.bookings };
         newBookings[propertyId] = {
            ...currentBooking,
-           isCalculating: false
+           isCalculating: false,
+           pricingError: null, // Clear any stuck errors from old versions
+           verifiedPricing: null // Clear old verified pricing
         };
         return { bookings: newBookings };
       }),

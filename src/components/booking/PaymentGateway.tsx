@@ -20,6 +20,8 @@ import { PaymentMethodCard } from "./PaymentMethodCard";
 import { LuxuryButton } from "@/components/ui/LuxuryButton";
 import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
 import { useShallow } from "zustand/react/shallow";
+import { mockProperties } from "@/data/mockProperties";
+import { format, parseISO } from "date-fns";
 
 type PaymentState = "IDLE" | "PROCESSING" | "ERROR" | "SUCCESS";
 
@@ -47,10 +49,14 @@ const PROCESSING_STEPS = [
 export function PaymentGateway({ propertyId, advanceAmount, totalAmount, onPreviousStep }: PaymentGatewayProps) {
   const updateBooking = useBookingStore(state => state.updateBooking);
   
-  const { paymentMethod: selectedMethod } = useBookingStore(
+  const booking = useBookingStore(
     useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
   );
+  const { paymentMethod: selectedMethod, date, adults, children } = booking;
   const setSelectedMethod = (method: string) => updateBooking(propertyId, { paymentMethod: method });
+
+  const property = mockProperties.find(p => p.id === propertyId) || mockProperties[0];
+  const room = property.rooms[0];
 
   const [paymentState, setPaymentState] = useState<PaymentState>("IDLE");
   const [processingStepIndex, setProcessingStepIndex] = useState(0);
@@ -71,18 +77,13 @@ export function PaymentGateway({ propertyId, advanceAmount, totalAmount, onPrevi
       // Simulate a network outcome after 3.5 seconds
       finishTimeout = setTimeout(() => {
         clearInterval(stepInterval);
-        // Randomly simulate an error 10% of the time for demonstration, otherwise success.
-        // (In a real app, this would be Razorpay's callback)
-        const isError = Math.random() < 0.1;
-        setPaymentState(isError ? "ERROR" : "SUCCESS");
+        // Force success in demo mode
+        setPaymentState("SUCCESS");
       }, 3500);
     }
 
     if (paymentState === "SUCCESS") {
-      // Route to confirmation after 2 seconds
-      setTimeout(() => {
-        window.location.href = "/booking/confirmation";
-      }, 2000);
+      // Demo Mode: Do not redirect to confirmation page
     }
 
     return () => {
@@ -245,26 +246,54 @@ export function PaymentGateway({ propertyId, advanceAmount, totalAmount, onPrevi
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="flex flex-col items-center justify-center py-20 px-4 min-h-[400px]"
+            className="flex flex-col items-center justify-center py-10 px-4"
           >
             <m.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
-              className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 border border-emerald-500/30 relative"
+              className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4 border border-emerald-500/30 relative"
             >
               <div className="absolute inset-0 bg-emerald-500/20 rounded-full animate-ping opacity-50" />
-              <Check className="w-12 h-12 text-emerald-400" />
+              <Check className="w-10 h-10 text-emerald-400" />
             </m.div>
             
-            <h3 className="luxury-heading text-3xl text-center mb-3">Payment Successful</h3>
-            <p className="text-white/60 text-center mb-8">
-              Your booking at GirStay Premium has been confirmed.
+            <h3 className="luxury-heading text-2xl text-center mb-1">🎉 Demo Booking Successful</h3>
+            <p className="text-white/60 text-center mb-6 text-sm">
+              Booking ID: <span className="font-mono font-bold text-white">GST-2026-{Math.floor(100000 + Math.random() * 900000)}</span>
             </p>
+
+            <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-xl p-5 mb-6 shadow-luxury">
+              <h4 className="font-heading font-semibold text-[#D9A94D] mb-4 text-center border-b border-white/10 pb-3">Booking Summary</h4>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-white/60">Resort</span>
+                  <span className="text-right text-white font-medium">{property.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Room</span>
+                  <span className="text-right text-white font-medium">{room.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Dates</span>
+                  <span className="text-right text-white font-medium">
+                    {date.from ? format(parseISO(date.from), "MMM d") : ""} - {date.to ? format(parseISO(date.to), "MMM d, yyyy") : ""}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Guests</span>
+                  <span className="text-right text-white font-medium">{adults} Adults {children > 0 ? `, ${children} Children` : ""}</span>
+                </div>
+                <div className="flex justify-between border-t border-white/10 pt-3 mt-3">
+                  <span className="text-white/80 font-medium">Total Price</span>
+                  <span className="text-right font-bold text-[#D9A94D]">{formatPrice(totalAmount)}</span>
+                </div>
+              </div>
+            </div>
             
-            <div className="flex items-center gap-2 text-sm text-[#D9A94D]">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Redirecting to your itinerary...
+            <div className="bg-[#D9A94D]/10 border border-[#D9A94D]/30 text-[#D9A94D] px-4 py-2 rounded-full text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Demo Mode – No real reservation is created.
             </div>
           </m.div>
         )}

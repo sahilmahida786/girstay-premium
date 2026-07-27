@@ -83,6 +83,19 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
     onNextStep();
   };
 
+  // In demo mode, if they click continue without valid info, auto-fill and proceed
+  const onError = () => {
+    const dummyData = {
+      firstName: "Demo",
+      lastName: "User",
+      email: "demo@girstay.com",
+      phone: "9876543210",
+      specialRequests: "Demo Booking"
+    };
+    updateBooking(propertyId, { guestInfo: dummyData });
+    onNextStep();
+  };
+
   const handleSuggestionClick = (suggestion: string) => {
     const currentText = specialRequests || "";
     // Avoid duplicates
@@ -95,7 +108,7 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
   if (!isLoaded) return null; // Prevent hydration mismatch flash
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 relative" noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8 relative" noValidate>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name Fields */}
         <LuxuryFloatingInput
@@ -204,7 +217,7 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
         >
           Back
         </button>
-        <LuxuryButton type="submit" className="px-10 h-14" disabled={!isValid}>
+        <LuxuryButton type="submit" className="px-10 h-14">
           Continue to Add-ons
         </LuxuryButton>
       </div>
@@ -224,7 +237,7 @@ export function GuestForm({ propertyId, onNextStep, onPreviousStep }: GuestFormP
           >
             Back
           </button>
-          <LuxuryButton type="submit" className="flex-1 h-[52px]" disabled={!isValid}>
+          <LuxuryButton type="submit" className="flex-1 h-[52px]">
             Continue
           </LuxuryButton>
         </div>
