@@ -67,15 +67,14 @@ export const FOOTER_LINKS = {
 } as const;
 
 export const SOCIAL_LINKS = {
-  instagram: "https://instagram.com/girstay",
-  facebook: "https://facebook.com/girstay",
-  twitter: "https://twitter.com/girstay",
-  youtube: "https://youtube.com/@girstay",
-  whatsapp: "https://wa.me/919876543210",
+  instagram: "https://www.instagram.com/nexvora.dev?igsh=MWlvenhmbW54M3Zubg==",
+  github: "https://github.com/sahilmahida786/PYTHON_ALL_PROGRAM",
+  linkedin: "https://www.linkedin.com/in/sahil-mahida-115835317?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+  whatsapp: "https://wa.me/917984592173",
 } as const;
 
 export const CONTACT_INFO = {
-  phone: "+91 98765 43210",
-  email: "booking@girstay.com",
+  phone: "+91 7984592173",
+  email: "sahilmahida.dev@gmail.com",
   address: "Sasan Gir, Junagadh District, Gujarat 362135, India",
 } as const;

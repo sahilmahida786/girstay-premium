@@ -124,7 +124,7 @@ export default function RootLayout({
                     "Premium luxury resort booking platform for Sasan Gir, Gujarat. Handpicked resorts, farm stays, villas, and jungle lodges.",
                   contactPoint: {
                     "@type": "ContactPoint",
-                    telephone: "+91-98765-43210",
+                    telephone: "+91-79845-92173",
                     contactType: "reservations",
                     availableLanguage: ["English", "Hindi", "Gujarati"],
                   },

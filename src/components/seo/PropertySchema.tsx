@@ -13,7 +13,7 @@ export function PropertySchema({ property }: PropertySchemaProps) {
     image: property.images[0]?.url || "https://girstay-premium.vercel.app/og-image.jpg",
     "@id": `https://girstay-premium.vercel.app/properties/${property.id}`,
     url: `https://girstay-premium.vercel.app/properties/${property.id}`,
-    telephone: "+91-98765-43210",
+    telephone: "+91-79845-92173",
     address: {
       "@type": "PostalAddress",
       streetAddress: (property as any).location?.address || "Sasan Gir",
