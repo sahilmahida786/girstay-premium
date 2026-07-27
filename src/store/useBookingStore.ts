@@ -23,6 +23,7 @@ export interface PropertyBookingData {
   couponCode: string;
   guestInfo: GuestInfo | null;
   paymentMethod: string;
+  sessionId: string;
   updatedAt: number;
   verifiedPricing: CheckoutPricing | null;
   isCalculating: boolean;
@@ -36,6 +37,7 @@ interface BookingState {
   // Updaters
   updateBooking: (propertyId: string, data: Partial<PropertyBookingData>) => void;
   resetBooking: (propertyId: string) => void;
+  startNewSession: (propertyId: string) => void;
   validateAndHydrate: (propertyId: string) => void;
 }
 
@@ -51,6 +53,7 @@ export const DEFAULT_BOOKING: PropertyBookingData = {
   couponCode: "",
   guestInfo: null,
   paymentMethod: "upi",
+  sessionId: "",
   updatedAt: Date.now(),
   verifiedPricing: null,
   isCalculating: false,
@@ -87,6 +90,20 @@ export const useBookingStore = create<BookingState>()(
         const newBookings = { ...state.bookings };
         delete newBookings[propertyId];
         return { bookings: newBookings };
+      }),
+
+      startNewSession: (propertyId) => set((state) => {
+        const sessionId = Math.random().toString(36).substring(2, 15);
+        return {
+          bookings: {
+            ...state.bookings,
+            [propertyId]: {
+              ...DEFAULT_BOOKING,
+              sessionId,
+              updatedAt: Date.now(),
+            },
+          },
+        };
       }),
 
       validateAndHydrate: (propertyId) => set((state) => {

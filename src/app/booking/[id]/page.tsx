@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { Suspense, useState, useMemo, useEffect, useRef } from "react";
 import { differenceInCalendarDays, addDays, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useBookingStore, DEFAULT_BOOKING } from "@/store/useBookingStore";
 import { useShallow } from "zustand/react/shallow";
 import { validateCheckout } from "@/actions/checkout";
@@ -57,33 +58,75 @@ const steps = [
 
 // Removed old mock addOns array
 
-export default function BookingPage() {
+function BookingWizard() {
   const property = mockProperties[0];
   const room = property.rooms[0];
   const propertyId = property.id;
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const updateBooking = useBookingStore(state => state.updateBooking);
   const validateAndHydrate = useBookingStore(state => state.validateAndHydrate);
+  const startNewSession = useBookingStore(state => state.startNewSession);
 
   const bookingData = useBookingStore(
     useShallow(state => state.bookings[propertyId] || DEFAULT_BOOKING)
   );
-  const { step: currentStep, date, selectedAddOns, couponCode, adults, children, verifiedPricing, isCalculating, pricingError } = bookingData;
+  
+  const { date, selectedAddOns, couponCode, adults, children, verifiedPricing, isCalculating, pricingError } = bookingData;
+  
+  const stepParam = searchParams.get("step");
+  const initParam = searchParams.get("init");
+  const urlStep = stepParam ? parseInt(stepParam, 10) : 1;
+  const currentStep = isNaN(urlStep) || urlStep < 1 || urlStep > 4 ? 1 : urlStep;
+
   const [direction, setDirection] = useState(1);
   const [retryTrigger, setRetryTrigger] = useState(0);
   const { isOnline } = useNetworkState();
 
   useEffect(() => {
-    validateAndHydrate(propertyId);
-  }, [propertyId, validateAndHydrate]);
+    if (initParam === 'true') {
+      startNewSession(propertyId);
+      router.replace(`${pathname}?step=1`);
+    } else {
+      validateAndHydrate(propertyId);
+    }
+  }, [initParam, propertyId, startNewSession, validateAndHydrate, router, pathname]);
 
-  // Server-Side Pricing Validation Engine removed for Demo Mode
+  // Route Guards
+  useEffect(() => {
+    if (initParam === 'true') return;
+
+    const { date: bDate, guestInfo, sessionId } = bookingData;
+    
+    if (!sessionId && currentStep > 1) {
+      router.replace(`${pathname}?step=1`);
+      return;
+    }
+
+    if (currentStep >= 3 && (!bDate?.from || !bDate?.to)) {
+      router.replace(`${pathname}?step=1`);
+      return;
+    }
+
+    if (currentStep >= 4 && (!guestInfo || !guestInfo.firstName || !guestInfo.email)) {
+      router.replace(`${pathname}?step=2`);
+      return;
+    }
+    
+    if (bookingData.step !== currentStep) {
+      updateBooking(propertyId, { step: currentStep });
+    }
+  }, [currentStep, bookingData, initParam, pathname, propertyId, router, updateBooking]);
 
   const prefersReducedMotion = useReducedMotion();
   const stepContainerRef = useRef<HTMLDivElement>(null);
 
-  const setCurrentStep = (newStep: number) => {
-    updateBooking(propertyId, { step: newStep });
+  const navigateToStep = (newStep: number) => {
+    setDirection(newStep > currentStep ? 1 : -1);
+    router.push(`${pathname}?step=${newStep}`);
     setTimeout(() => {
       stepContainerRef.current?.focus();
     }, 150);
@@ -294,12 +337,10 @@ export default function BookingPage() {
                     <GuestForm 
                       propertyId={propertyId}
                       onNextStep={() => {
-                        setDirection(1);
-                        setCurrentStep(currentStep + 1);
+                        navigateToStep(currentStep + 1);
                       }}
                       onPreviousStep={() => {
-                        setDirection(-1);
-                        setCurrentStep(currentStep - 1);
+                        navigateToStep(currentStep - 1);
                       }}
                     />
                   </div>
@@ -390,8 +431,7 @@ export default function BookingPage() {
                       advanceAmount={advance}
                       totalAmount={total}
                       onPreviousStep={() => {
-                        setDirection(-1);
-                        setCurrentStep(currentStep - 1);
+                        navigateToStep(currentStep - 1);
                       }}
                     />
                   </div>
@@ -407,8 +447,7 @@ export default function BookingPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setDirection(-1);
-                      setCurrentStep(currentStep - 1);
+                      navigateToStep(currentStep - 1);
                     }}
                     className="gap-2 h-12 px-6 rounded-xl"
                   >
@@ -420,8 +459,7 @@ export default function BookingPage() {
                 {currentStep < 4 && (
                   <Button
                     onClick={() => {
-                      setDirection(1);
-                      setCurrentStep(currentStep + 1);
+                      navigateToStep(currentStep + 1);
                     }}
                     disabled={false}
                     className="gradient-gold text-black font-semibold gap-2 h-12 px-8 rounded-xl shadow-gold disabled:opacity-50 disabled:cursor-not-allowed"
@@ -481,8 +519,7 @@ export default function BookingPage() {
           advance={advance}
           onNextStep={() => {
             if (currentStep < 4) {
-              setDirection(1);
-              setCurrentStep(currentStep + 1);
+              navigateToStep(currentStep + 1);
             }
           }}
           nextStepLabel={"Next Step"}
@@ -492,5 +529,19 @@ export default function BookingPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-screen py-12 flex justify-center items-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <BookingWizard />
+    </Suspense>
   );
 }

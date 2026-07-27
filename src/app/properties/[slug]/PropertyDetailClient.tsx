@@ -731,7 +731,7 @@ export function PropertyDetailClient({ property }: Props) {
                 )}
 
                 {/* Book Now */}
-                <Link href={`/booking/${property.id}`}>
+                <Link href={`/booking/${property.id}?init=true`}>
                   <Button className="w-full h-14 text-base font-bold gradient-gold text-black shadow-gold hover:shadow-gold-lg transition-all duration-300 hover:scale-[1.02] gap-2">
                     Book Now
                     <ArrowRight className="w-5 h-5" />
@@ -779,7 +779,7 @@ export function PropertyDetailClient({ property }: Props) {
             </span>
             <span className="text-xs text-muted-foreground ml-1">/night</span>
           </div>
-          <Link href={`/booking/${property.id}`}>
+          <Link href={`/booking/${property.id}?init=true`}>
             <Button className="gradient-gold text-black font-bold px-8 h-12 shadow-gold gap-2 rounded-xl">
               Book Now
               <ArrowRight className="w-4 h-4" />
