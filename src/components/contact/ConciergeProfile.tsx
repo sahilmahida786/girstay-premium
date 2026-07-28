@@ -96,7 +96,7 @@ export function ConciergeProfile() {
               <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full p-[2px] bg-gradient-to-br from-[#D4AF37] via-[#8B7355] to-transparent">
                 <div className="w-full h-full rounded-full overflow-hidden relative bg-[#0B0B0B] border-[4px] border-[#0B0B0B]">
                   <Image
-                    src="/developer-profile.png"
+                    src="/sahil-photo.jpg"
                     alt="Sahil Mahida - Premium Website Developer"
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
