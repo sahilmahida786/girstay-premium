@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
   { label: "Discover", href: "/properties", icon: Compass },
-  { label: "Book", href: "/properties", icon: Sparkles, isCenter: true },
   { label: "Safari", href: "/activities", icon: Map },
   { label: "Account", href: "/dashboard", icon: User },
 ];
@@ -63,41 +62,8 @@ export function BottomNav() {
           {NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href ||
-              (item.href !== "/" && !item.isCenter && pathname.startsWith(item.href));
+              (item.href !== "/" && pathname.startsWith(item.href));
             const Icon = item.icon;
-
-            if (item.isCenter) {
-              return (
-                <div key="center-cta" className="relative z-20 flex-shrink-0 mx-2">
-                  <Link href={item.href} aria-label="Book a stay" className="block focus-ring rounded-full">
-                    {/* Magnetic hover physics via framer-motion */}
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.9, transition: { duration: 0.15 } }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      className="w-[60px] h-[60px] rounded-full flex items-center justify-center relative overflow-hidden group shadow-[0_0_30px_rgba(212,175,55,0.3)]"
-                    >
-                      {/* Base Gold Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] via-[#F8E7B5] to-[#8B7355]" />
-                      
-                      {/* Inner highlight */}
-                      <div className="absolute inset-0 rounded-full border border-white/20" />
-                      
-                      {/* Glass reflection */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-50" />
-                      
-                      {/* Animated shimmer sweep */}
-                      <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.2)_50%,transparent_80%)] bg-[length:200%_100%] animate-shimmer-slow" />
-                      
-                      {/* Soft pulse behind button */}
-                      <div className="absolute inset-0 rounded-full bg-[#D4AF37] blur-xl opacity-0 animate-soft-pulse -z-10" />
-
-                      <Icon className="w-7 h-7 text-black relative z-10 drop-shadow-sm" strokeWidth={2} />
-                    </motion.div>
-                  </Link>
-                </div>
-              );
-            }
 
             return (
               <Link
