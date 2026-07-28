@@ -107,24 +107,35 @@ export function BottomNav() {
                 aria-label={item.label}
                 aria-current={isActive ? "page" : undefined}
               >
-                <motion.div
-                  whileTap={{ scale: 0.88 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative z-10 flex flex-col items-center justify-center w-full h-full"
-                >
-                  <AnimatePresence mode="wait">
-                    {isActive && (
+                {/* ACTIVE BACKGROUND & INDICATOR (OUTSIDE SCALE) */}
+                <AnimatePresence>
+                  {isActive && (
+                    <>
                       <motion.div
                         layoutId="active-nav-bg"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        className="absolute inset-0 m-auto w-12 h-12 bg-gradient-to-b from-[#D4AF37]/20 to-transparent rounded-full border border-[#D4AF37]/30 shadow-[inset_0_2px_10px_rgba(212,175,55,0.2)] -z-10"
+                        className="absolute inset-0 m-auto w-12 h-12 bg-gradient-to-b from-[#D4AF37]/20 to-transparent rounded-full border border-[#D4AF37]/30 shadow-[inset_0_2px_10px_rgba(212,175,55,0.2)] z-0"
                       />
-                    )}
-                  </AnimatePresence>
+                      <motion.div
+                        layoutId="active-nav-indicator"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-t-full bg-gradient-to-r from-transparent via-[#FFD27A] to-transparent opacity-80 z-10"
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        exit={{ opacity: 0, scaleX: 0 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    </>
+                  )}
+                </AnimatePresence>
 
+                <motion.div
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative z-10 flex flex-col items-center justify-center w-full h-full"
+                >
                   <motion.div 
                     initial={false}
                     animate={{ y: isActive ? -4 : 0 }}
@@ -152,9 +163,9 @@ export function BottomNav() {
                     </AnimatePresence>
                   </motion.div>
 
-                  {/* Label - fades smoothly */}
-                  <div className="h-[12px] mt-1 relative flex items-center justify-center overflow-hidden">
-                    <AnimatePresence mode="wait">
+                  {/* Label - crossfades smoothly */}
+                  <div className="h-[12px] mt-1 relative flex items-center justify-center">
+                    <AnimatePresence>
                       {isActive ? (
                         <motion.span
                           key="active-label"
@@ -180,21 +191,6 @@ export function BottomNav() {
                       )}
                     </AnimatePresence>
                   </div>
-                  
-                  {/* Luxury Gold Underline for active state */}
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-nav-indicator"
-                        className="absolute bottom-0 w-4 h-[2px] rounded-t-full bg-gradient-to-r from-transparent via-[#FFD27A] to-transparent opacity-80"
-                        initial={{ opacity: 0, scaleX: 0 }}
-                        animate={{ opacity: 1, scaleX: 1 }}
-                        exit={{ opacity: 0, scaleX: 0 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                  </AnimatePresence>
-
                 </motion.div>
               </Link>
             );
