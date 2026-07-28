@@ -59,7 +59,7 @@ export function PopularStays() {
       </div>
 
       {/* Layer: Glass Shadow Overlay for Text Contrast */}
-      <div className="absolute inset-0 bg-[#080808]/75 backdrop-blur-[2px] pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-[#080808]/95 sm:bg-[#080808]/75 backdrop-blur-none sm:backdrop-blur-[2px] pointer-events-none z-[2]" />
 
       {/* Layer: Warm Light Bloom (Sunset feeling) */}
       <div className="absolute top-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
@@ -109,7 +109,7 @@ export function PopularStays() {
         >
           {/* Small Badge */}
           <motion.div variants={fadeUpStagger} className="mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-none sm:backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
               <Trophy className="w-4 h-4 text-[#FFD27A]" />
               <span className="text-xs font-bold tracking-[0.2em] text-[#FFD27A] uppercase">
                 Discover Gir
@@ -143,7 +143,7 @@ export function PopularStays() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px" }}
             transition={{ delay: 0.2, duration: 0.6, ease: luxuryEasing }}
             className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-4 sm:flex-wrap sm:justify-center"
             ref={scrollRef}
@@ -158,7 +158,7 @@ export function PopularStays() {
                   onClick={() => setActiveCategory(cat.id)}
                   className={cn(
                     "relative group flex items-center gap-2.5 px-6 py-3.5 rounded-full text-[13px] font-semibold transition-all duration-300 whitespace-nowrap shrink-0",
-                    "border backdrop-blur-md overflow-hidden active:scale-95",
+                    "border backdrop-blur-none sm:backdrop-blur-md overflow-hidden active:scale-95 transform-gpu",
                     isActive
                       ? "text-black border-transparent shadow-gold"
                       : "bg-white/[0.03] text-white/80 border-white/10 hover:bg-white/[0.08] hover:border-white/20 hover:text-white shadow-sm"
@@ -222,7 +222,7 @@ export function PopularStays() {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20 rounded-3xl mx-auto max-w-2xl mt-8 border border-white/10 border-dashed bg-white/[0.02] backdrop-blur-md"
+            className="text-center py-20 rounded-3xl mx-auto max-w-2xl mt-8 border border-white/10 border-dashed bg-[#0a0a0a]/90 sm:bg-white/[0.02] backdrop-blur-none sm:backdrop-blur-md transform-gpu"
           >
             <Trees className="w-12 h-12 text-[#FFD27A]/30 mx-auto mb-4" />
             <h3 className="text-xl font-heading font-semibold text-white mb-2">No retreats available</h3>
@@ -246,7 +246,7 @@ export function PopularStays() {
             {/* Animated Gradient Border */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/20 via-[#D4AF37]/60 to-[#D4AF37]/20 opacity-50 group-hover:opacity-100 animate-gradient transition-opacity duration-700" />
             
-            <div className="relative bg-[#0a0a0a]/80 backdrop-blur-2xl rounded-[31px] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left overflow-hidden border border-white/[0.03]">
+            <div className="relative bg-[#0a0a0a]/95 sm:bg-[#0a0a0a]/80 backdrop-blur-none sm:backdrop-blur-2xl rounded-[31px] p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left overflow-hidden border border-white/[0.03] transform-gpu">
               
               {/* Decorative Background Elements */}
               <div className="absolute -top-24 -right-24 w-64 h-64 glow-gold-strong rounded-full blur-[60px] group-hover:opacity-100 opacity-60 transition-opacity duration-700" />

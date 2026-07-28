@@ -17,7 +17,7 @@ export function ConciergeProfile() {
         <motion.span 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-[#D4AF37] text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] mb-4 block"
         >
           Website Designed & Developed
@@ -25,7 +25,7 @@ export function ConciergeProfile() {
         <motion.h2 
           initial={{ filter: "blur(10px)", opacity: 0, y: 20 }}
           whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8 }}
           className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6"
         >
@@ -34,7 +34,7 @@ export function ConciergeProfile() {
         <motion.p 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-white/60 text-sm sm:text-base max-w-xl mx-auto font-light"
         >
@@ -46,7 +46,7 @@ export function ConciergeProfile() {
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "50px" }}
         transition={{ duration: 0.8 }}
         className="relative w-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
       >

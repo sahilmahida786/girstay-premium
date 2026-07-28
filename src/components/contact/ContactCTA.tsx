@@ -23,7 +23,7 @@ export function ContactCTA() {
       <motion.div 
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "50px" }}
         className="relative z-10 max-w-4xl mx-auto px-6 text-center"
       >
         <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-[1.1]">

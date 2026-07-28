@@ -102,9 +102,9 @@ export function Header() {
         <div 
           ref={navContainerRef}
           className={cn(
-            "w-full max-w-7xl mx-auto rounded-full transition-all duration-500 ease-out pointer-events-auto will-change-transform flex items-center justify-between",
+            "w-full max-w-7xl mx-auto rounded-full transition-all duration-500 ease-out pointer-events-auto flex items-center justify-between transform-gpu",
             isScrolled
-              ? "bg-[#060606]/70 backdrop-blur-2xl border border-white/10 px-4 py-2.5 sm:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] scale-100"
+              ? "bg-[#0a0a0a]/95 backdrop-blur-none lg:bg-[#060606]/70 lg:backdrop-blur-2xl border border-white/10 px-4 py-2.5 sm:px-6 shadow-lg lg:shadow-[0_8px_32px_rgba(0,0,0,0.4)] scale-100"
               : "bg-transparent border-transparent px-2 py-4 sm:px-4 scale-100"
           )}
         >
@@ -167,8 +167,8 @@ export function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                "lg:hidden w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 relative overflow-hidden group border",
-                isScrolled ? "bg-white/10 border-white/20 backdrop-blur-md" : "bg-black/20 border-white/10 backdrop-blur-sm"
+                "lg:hidden w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 relative overflow-hidden group border transform-gpu",
+                isScrolled ? "bg-[#111] lg:bg-white/10 border-white/20 backdrop-blur-none lg:backdrop-blur-md" : "bg-black/80 lg:bg-black/20 border-white/10 backdrop-blur-none lg:backdrop-blur-sm"
               )}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -202,9 +202,9 @@ export function Header() {
             transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             role="dialog"
           >
-            {/* Deep Glass Backdrop */}
+            {/* Deep Solid/Glass Backdrop */}
             <motion.div 
-              className="absolute inset-0 bg-[#060606]/80 backdrop-blur-3xl"
+              className="absolute inset-0 bg-[#0a0a0a]/98 backdrop-blur-none lg:bg-[#060606]/80 lg:backdrop-blur-3xl transform-gpu"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

@@ -38,7 +38,7 @@ export function ExperiencePackages() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
@@ -67,7 +67,7 @@ export function ExperiencePackages() {
                 key={pkg.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "50px" }}
                 transition={{ delay: index * 0.15 }}
                 className={cn(
                   "relative flex flex-col rounded-2xl border bg-card overflow-hidden transition-all duration-500 hover:shadow-luxury-lg",

@@ -56,7 +56,7 @@ export function WhyChooseUs() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-center mb-12 sm:mb-16"
         >
           <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
@@ -81,7 +81,7 @@ export function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="group relative p-6 sm:p-8 rounded-2xl glass-card hover:gradient-card-hover transition-all duration-300 hover:-translate-y-0.5"
+              className="group relative p-6 sm:p-8 rounded-2xl glass-card max-sm:backdrop-blur-none max-sm:bg-[#111]/95 hover:gradient-card-hover transition-all duration-300 hover:-translate-y-0.5 transform-gpu"
             >
               {/* Icon */}
               <div

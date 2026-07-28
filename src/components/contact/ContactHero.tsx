@@ -13,7 +13,7 @@ export function ContactHero() {
     <motion.div 
       initial="hidden" 
       whileInView="visible" 
-      viewport={{ once: true }} 
+      viewport={{ once: true, margin: "50px" }} 
       variants={fadeInUp}
       className="max-w-4xl mx-auto text-center mb-20 sm:mb-28 pt-10 sm:pt-16"
     >

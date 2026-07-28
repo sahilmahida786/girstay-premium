@@ -154,7 +154,7 @@ export function Footer() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <footer
-        className="relative overflow-hidden"
+        className="relative overflow-hidden pb-[90px] lg:pb-0"
         aria-label="Site footer"
         style={{ background: "#070605" }}
       >
@@ -165,7 +165,7 @@ export function Footer() {
           <div className="absolute -top-20 -right-20 w-[50vw] h-[50vh] rounded-full bg-[radial-gradient(circle_at_center,rgba(217,169,77,0.12)_0%,transparent_65%)] blur-[100px]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
           <div
-            className="absolute inset-0 opacity-[0.018] mix-blend-overlay"
+            className="absolute inset-0 opacity-[0.018] max-sm:hidden mix-blend-overlay"
             style={{
               backgroundImage:
                 "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",

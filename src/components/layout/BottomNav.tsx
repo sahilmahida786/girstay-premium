@@ -81,13 +81,13 @@ export function BottomNav() {
                       <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] via-[#F8E7B5] to-[#8B7355]" />
                       
                       {/* Inner highlight */}
-                      <div className="absolute inset-0 rounded-full border border-white/40 mix-blend-overlay" />
+                      <div className="absolute inset-0 rounded-full border border-white/20" />
                       
                       {/* Glass reflection */}
                       <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-50" />
                       
                       {/* Animated shimmer sweep */}
-                      <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.4)_50%,transparent_80%)] bg-[length:200%_100%] animate-shimmer-slow mix-blend-overlay" />
+                      <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.2)_50%,transparent_80%)] bg-[length:200%_100%] animate-shimmer-slow" />
                       
                       {/* Soft pulse behind button */}
                       <div className="absolute inset-0 rounded-full bg-[#D4AF37] blur-xl opacity-0 animate-soft-pulse -z-10" />

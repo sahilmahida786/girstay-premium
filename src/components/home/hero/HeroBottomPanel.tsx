@@ -38,7 +38,7 @@ export function HeroBottomPanel() {
   return (
     <div className="relative w-full max-w-4xl mx-auto flex justify-center">
       {/* Floating Glass Pill */}
-      <div className="relative flex items-center overflow-hidden rounded-full bg-[#060606]/40 backdrop-blur-3xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+      <div className="relative flex items-center overflow-hidden rounded-full bg-[#111] lg:bg-[#060606]/40 backdrop-blur-none lg:backdrop-blur-3xl border border-white/10 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transform-gpu">
         
         {/* Ambient Inner Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent pointer-events-none" />

@@ -104,7 +104,7 @@ export function TimelineBackground({ activeTab }: TimelineBackgroundProps) {
       />
 
       {/* 7. Noise Texture */}
-      <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
+      <div className="absolute inset-0 bg-noise opacity-[0.015] max-sm:hidden mix-blend-overlay" />
 
       {/* 8. Soft Vignette & Dynamic Darkening */}
       <motion.div 

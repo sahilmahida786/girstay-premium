@@ -19,7 +19,7 @@ export function OfficeLocation() {
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="flex-1 rounded-[2.5rem] overflow-hidden border border-white/10 h-[400px] lg:h-auto relative shadow-2xl group"
         >
           <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-[2.5rem] z-10" />
@@ -40,7 +40,7 @@ export function OfficeLocation() {
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="lg:w-[450px] shrink-0 p-8 sm:p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col justify-between"
         >
           <div>

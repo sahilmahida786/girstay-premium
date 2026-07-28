@@ -35,7 +35,7 @@ export function AdvancedForm() {
       <motion.form
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "50px" }}
         onSubmit={handleSubmit}
         className="relative p-6 sm:p-12 rounded-[2.5rem] bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl"
       >

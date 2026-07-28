@@ -32,7 +32,7 @@ export function ConciergeServices() {
             key={idx}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px" }}
             transition={{ delay: idx * 0.05 }}
             className="group relative p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/20 transition-all cursor-default overflow-hidden hover:-translate-y-1"
           >

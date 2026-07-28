@@ -49,7 +49,7 @@ export function ContactTestimonials() {
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "50px" }}
         className="px-0 sm:px-12"
       >
         <Carousel

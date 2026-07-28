@@ -95,7 +95,7 @@ export function LuxuryBottomSheet({ isOpen, onClose, title, children, className,
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-50 bg-[#0a0a0a]/95 lg:hidden"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -118,7 +118,7 @@ export function LuxuryBottomSheet({ isOpen, onClose, title, children, className,
               if (info.offset.y > 100 || info.velocity.y > 500) onClose();
             }}
             className={cn(
-              "fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl luxury-bg border-t border-white/10 lg:hidden overflow-hidden",
+              "fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl luxury-bg border-t border-white/10 lg:hidden overflow-hidden transform-gpu",
               "pb-[env(safe-area-inset-bottom)]",
               className
             )}

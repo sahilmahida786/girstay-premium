@@ -64,7 +64,7 @@ export function SafariInfo() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
@@ -86,9 +86,9 @@ export function SafariInfo() {
               key={info.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "50px" }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card rounded-2xl p-6 hover:shadow-luxury transition-all duration-300"
+              className="glass-card max-sm:backdrop-blur-none max-sm:bg-[#111]/95 rounded-2xl p-6 hover:shadow-luxury transition-all duration-300 transform-gpu"
             >
               <div className="w-12 h-12 rounded-xl gradient-gold flex items-center justify-center mb-4">
                 <info.icon className="w-6 h-6 text-black" />
@@ -115,7 +115,7 @@ export function SafariInfo() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="max-w-md mx-auto"
         >
           <SafariQuickBook />

@@ -92,7 +92,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${playfair.variable} ${inter.variable}`}
+      className={`${playfair.variable} ${inter.variable} bg-[#070605] text-white dark`}
     >
       <head>
         {/* Preconnect to image CDN for faster LCP */}
@@ -106,7 +106,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         {/* Web App Manifest */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#1a1a1a" />
+        <meta name="theme-color" content="#070605" />
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
@@ -183,7 +183,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="min-h-screen flex flex-col antialiased bg-[#070605] text-white selection:bg-[#D9A94D]/30 selection:text-white">
         <WebVitals />
         <OfflineBanner />
         <LazyMotionProvider>
@@ -195,7 +195,7 @@ export default function RootLayout({
               Skip to main content
             </a>
             <Header />
-            <main id="main-content" className="flex-1 pb-nav lg:pb-0">{children}</main>
+            <main id="main-content" className="flex-1">{children}</main>
             <Footer />
             <BottomNav />
           </ThemeProvider>

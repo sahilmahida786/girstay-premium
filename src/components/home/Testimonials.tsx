@@ -53,7 +53,7 @@ export function Testimonials() {
       </div>
 
       {/* Layer: Glass Shadow Overlay for Text Contrast */}
-      <div className="absolute inset-0 bg-[#080808]/85 backdrop-blur-[2px] pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-[#080808]/95 sm:bg-[#080808]/85 backdrop-blur-none sm:backdrop-blur-[2px] pointer-events-none z-[2]" />
 
       {/* Layer: Warm Light Bloom (Sunrise feeling) */}
       <div className="absolute top-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
@@ -95,7 +95,7 @@ export function Testimonials() {
           transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-none sm:backdrop-blur-md mb-6">
             <Star className="w-3.5 h-3.5 text-[#FFD27A] fill-[#FFD27A]" />
             <span className="text-[11px] font-bold tracking-[0.2em] text-[#FFD27A] uppercase">
               Guest Experiences
@@ -119,7 +119,7 @@ export function Testimonials() {
             }}
           >
             <div
-              className="relative rounded-[31px] bg-[#0a0a0a]/80 backdrop-blur-3xl px-6 py-12 sm:p-16 lg:p-20 min-h-[400px] flex flex-col justify-center touch-pan-y"
+              className="relative rounded-[31px] bg-[#0a0a0a]/95 sm:bg-[#0a0a0a]/80 backdrop-blur-none sm:backdrop-blur-3xl px-6 py-12 sm:p-16 lg:p-20 min-h-[400px] flex flex-col justify-center touch-pan-y transform-gpu"
               onPointerEnter={() => setIsPaused(true)}
               onPointerLeave={() => setIsPaused(false)}
               style={{ cursor: "grab" }}
@@ -235,14 +235,14 @@ export function Testimonials() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(-1)}
-              className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] active:scale-90 transition-all duration-300"
+              className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-none sm:backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] active:scale-90 transition-all duration-300"
               aria-label="Previous testimonial"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => navigate(1)}
-              className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] active:scale-90 transition-all duration-300"
+              className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-none sm:backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] active:scale-90 transition-all duration-300"
               aria-label="Next testimonial"
             >
               <ChevronRight className="w-5 h-5" />

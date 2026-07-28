@@ -87,13 +87,15 @@ function BookingWizard() {
   const { isOnline } = useNetworkState();
 
   useEffect(() => {
-    if (initParam === 'true') {
+    // If there is no step parameter in the URL, this is a fresh entry to the booking flow
+    // or from a "Book Now" button. We must ALWAYS start at Step 1.
+    if (initParam === 'true' || !stepParam) {
       startNewSession(propertyId);
       router.replace(`${pathname}?step=1`);
     } else {
       validateAndHydrate(propertyId);
     }
-  }, [initParam, propertyId, startNewSession, validateAndHydrate, router, pathname]);
+  }, [initParam, stepParam, propertyId, startNewSession, validateAndHydrate, router, pathname]);
 
   // Route Guards
   useEffect(() => {

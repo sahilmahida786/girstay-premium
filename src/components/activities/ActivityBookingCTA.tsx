@@ -36,7 +36,7 @@ export function ActivityBookingCTA() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-center"
         >
           <div className="inline-flex items-center gap-2 glass-dark rounded-full px-5 py-2 mb-6">
@@ -58,7 +58,7 @@ export function ActivityBookingCTA() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ delay: 0.2 }}
           className="flex flex-wrap justify-center gap-3 mb-10"
         >
@@ -122,7 +122,7 @@ export function ActivityBookingCTA() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ delay: 0.3 }}
           className="text-center"
         >

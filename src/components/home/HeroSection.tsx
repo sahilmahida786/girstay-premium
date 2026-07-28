@@ -105,7 +105,7 @@ export function HeroSection() {
         />
 
         {/* Layer 4: Noise texture */}
-        <div className="absolute inset-0 bg-noise opacity-[0.08] pointer-events-none mix-blend-overlay" />
+        <div className="absolute inset-0 bg-noise opacity-[0.08] pointer-events-none mix-blend-overlay max-sm:hidden" />
       </div>
 
       {/* ══════════════════════════════════════════════════════
@@ -119,7 +119,7 @@ export function HeroSection() {
       >
         {/* ── Badge ──────────────────────────────────────── */}
         <motion.div variants={fadeBlurUp} className="flex">
-          <div className="inline-flex items-center gap-2 px-3.5 py-[7px] rounded-full bg-black/30 border border-white/15 backdrop-blur-lg shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-[7px] rounded-full bg-black/60 sm:bg-black/30 border border-white/15 backdrop-blur-none sm:backdrop-blur-lg shadow-none sm:shadow-[0_0_30px_rgba(212,175,55,0.1)]">
             <Trophy className="w-3.5 h-3.5 text-[#FFD27A]" />
             <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.18em] text-[#FFD27A] uppercase">
               #1 Luxury Resort Platform
@@ -166,7 +166,7 @@ export function HeroSection() {
             {CHIPS.map(({ label, icon: Icon }) => (
               <button
                 key={label}
-                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.08] border border-white/[0.1] backdrop-blur-md text-[12px] sm:text-[13px] text-white/85 font-medium whitespace-nowrap active:scale-[0.96] transition-all duration-200 hover:bg-white/[0.14] hover:border-white/[0.18] hover:text-white"
+                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.08] border border-white/[0.1] backdrop-blur-none sm:backdrop-blur-md text-[12px] sm:text-[13px] text-white/85 font-medium whitespace-nowrap active:scale-[0.96] transition-all duration-200 hover:bg-white/[0.14] hover:border-white/[0.18] hover:text-white transform-gpu"
               >
                 <Icon className="w-3.5 h-3.5 text-[#FFD27A]/80" />
                 {label}

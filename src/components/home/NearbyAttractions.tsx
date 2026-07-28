@@ -43,7 +43,7 @@ export function NearbyAttractions() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
@@ -65,7 +65,7 @@ export function NearbyAttractions() {
               key={attraction.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "50px" }}
               transition={{ delay: index * 0.1 }}
               className="group relative rounded-2xl overflow-hidden bg-card border border-border/50 hover:border-primary/30 hover:shadow-luxury transition-all duration-500 hover:-translate-y-1"
             >
@@ -87,7 +87,7 @@ export function NearbyAttractions() {
 
                 {/* Distance badge */}
                 <div className="absolute bottom-3 left-3">
-                  <div className="glass-dark rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+                  <div className="glass-dark max-sm:backdrop-blur-none max-sm:bg-black/70 rounded-lg px-3 py-1.5 flex items-center gap-1.5 transform-gpu">
                     <MapPin className="w-3.5 h-3.5 text-gold" />
                     <span className="text-xs text-white font-medium">
                       {attraction.distance}

@@ -19,7 +19,7 @@ export function FeaturedProperties() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px" }}
             transition={{ duration: 0.6 }}
           >
             <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-3 block">
@@ -38,7 +38,7 @@ export function FeaturedProperties() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px" }}
             transition={{ delay: 0.3 }}
           >
             <Link href="/properties">

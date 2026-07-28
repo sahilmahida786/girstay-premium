@@ -28,7 +28,7 @@ export function CTASection() {
       </div>
 
       {/* Layer: Glass Shadow Overlay for Text Contrast */}
-      <div className="absolute inset-0 bg-[#080808]/75 backdrop-blur-[2px] pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-[#080808]/95 sm:bg-[#080808]/75 backdrop-blur-none sm:backdrop-blur-[2px] pointer-events-none z-[2]" />
 
       {/* Layer: Emerald Glow */}
       <div className="absolute top-0 left-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] -translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
@@ -70,9 +70,9 @@ export function CTASection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-8"
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-none sm:backdrop-blur-md mb-8 transform-gpu"
         >
           <Sparkles className="w-4 h-4 text-[#FFD27A]" />
           <span className="text-[12px] font-bold tracking-[0.2em] text-white/80 uppercase">
@@ -84,7 +84,7 @@ export function CTASection() {
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.32, 0.72, 0, 1] }}
           className="font-heading text-5xl sm:text-6xl lg:text-8xl font-bold text-white tracking-tight leading-[1.1] mb-6 drop-shadow-lg"
         >
@@ -98,7 +98,7 @@ export function CTASection() {
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
           className="text-lg sm:text-xl text-white/60 font-light max-w-2xl leading-relaxed mb-12 sm:mb-16"
         >
@@ -109,7 +109,7 @@ export function CTASection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "50px" }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.32, 0.72, 0, 1] }}
           className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto"
         >
@@ -126,7 +126,7 @@ export function CTASection() {
 
           {/* Secondary CTA - Elegant Ghost Button */}
           <Link href="/properties" className="w-full sm:w-auto">
-            <button className="group w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-5 rounded-full border border-white/20 bg-white/[0.02] backdrop-blur-md text-white font-bold text-base sm:text-lg tracking-wide hover:bg-white/[0.08] hover:border-white/40 active:scale-95 transition-all duration-300">
+            <button className="group w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-5 rounded-full border border-white/20 bg-[#222]/90 sm:bg-white/[0.02] backdrop-blur-none sm:backdrop-blur-md text-white font-bold text-base sm:text-lg tracking-wide hover:bg-white/[0.08] hover:border-white/40 active:scale-95 transition-all duration-300 transform-gpu">
               Browse Collection
               <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
             </button>
