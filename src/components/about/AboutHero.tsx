@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedM
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { ShieldCheck, Star, Users, Award, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const trustPills = [
   { icon: ShieldCheck, label: "Verified Luxury Properties" },
@@ -17,6 +18,7 @@ const trustPills = [
 export function AboutHero() {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
   
   const { scrollY, scrollYProgress } = useScroll({
     target: containerRef,
@@ -132,33 +134,35 @@ export function AboutHero() {
           {/* Layer 4: Forest green ambient glow */}
           <div className="absolute bottom-0 inset-x-0 h-[60vh] bg-gradient-to-t from-[#0A120A]/80 to-transparent" />
 
-          {/* Refined Particles (Moving with parallax) */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={`dust-${i}`}
-                className="absolute rounded-full bg-[#FFD27A] blur-[1px] will-change-transform [transform:translateZ(0)]"
-                style={{
-                  top: `${(i * 37) % 100}%`,
-                  left: `${(i * 41) % 100}%`,
-                  width: `${(i % 2) + 2}px`,
-                  height: `${(i % 2) + 2}px`,
-                  opacity: 0.15
-                }}
-                animate={prefersReducedMotion ? {} : { 
-                  y: [0, -30, 0], 
-                  x: [0, 15, 0],
-                  opacity: [0.1, 0.3, 0.1]
-                }}
-                transition={{ 
-                  duration: 20 + i * 5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut",
-                  delay: i * 2
-                }}
-              />
-            ))}
-          </div>
+          {/* Refined Particles (Moving with parallax) — skipped on mobile */}
+          {!isMobile && (
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={`dust-${i}`}
+                  className="absolute rounded-full bg-[#FFD27A] blur-[1px] will-change-transform [transform:translateZ(0)]"
+                  style={{
+                    top: `${(i * 37) % 100}%`,
+                    left: `${(i * 41) % 100}%`,
+                    width: `${(i % 2) + 2}px`,
+                    height: `${(i % 2) + 2}px`,
+                    opacity: 0.15
+                  }}
+                  animate={prefersReducedMotion ? {} : { 
+                    y: [0, -30, 0], 
+                    x: [0, 15, 0],
+                    opacity: [0.1, 0.3, 0.1]
+                  }}
+                  transition={{ 
+                    duration: 20 + i * 5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut",
+                    delay: i * 2
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Layer 5: Very subtle vignette (Static, does not move with parallax) */}

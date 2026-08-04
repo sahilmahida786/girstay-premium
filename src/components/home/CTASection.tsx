@@ -5,8 +5,11 @@ import { motion } from "framer-motion";
 import { Phone, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { CONTACT_INFO } from "@/lib/constants";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export function CTASection() {
+  const isMobile = useIsMobile();
+
   return (
     <section className="relative py-32 sm:py-48 overflow-hidden bg-[#050505] flex flex-col items-center justify-center min-h-[80vh]">
       
@@ -38,24 +41,26 @@ export function CTASection() {
       <div className="absolute bottom-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 translate-y-1/4 pointer-events-none z-[3]"
            style={{ background: "radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%)" }} />
 
-      {/* LAYER: Animated Light Dust (Bokeh) */}
-      <div className="absolute inset-0 pointer-events-none z-[4]">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={`dust-${i}`}
-            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
-            style={{
-              top: `${(i * 19) % 100}%`,
-              left: `${(i * 37) % 100}%`,
-              width: `${(i % 3) + 2}px`,
-              height: `${(i % 3) + 2}px`,
-              opacity: ((i * 7) % 30) / 100 + 0.05,
-              animationDelay: `-${(i * 3) % 15}s`,
-              animationDuration: `${(i % 10) + 20}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* LAYER: Animated Light Dust (Bokeh) — skipped on mobile */}
+      {!isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-[4]">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={`dust-${i}`}
+              className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+              style={{
+                top: `${(i * 19) % 100}%`,
+                left: `${(i * 37) % 100}%`,
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+                opacity: ((i * 7) % 30) / 100 + 0.05,
+                animationDelay: `-${(i * 3) % 15}s`,
+                animationDuration: `${(i % 10) + 20}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Layer: Vignette (Heavy edges) */}
       <div className="absolute inset-0 vignette-heavy z-[5]" />

@@ -37,7 +37,7 @@ export function AdvancedForm() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "50px" }}
         onSubmit={handleSubmit}
-        className="relative p-6 sm:p-12 rounded-[2.5rem] bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl"
+        className="relative p-6 sm:p-12 rounded-[2.5rem] max-sm:bg-[#0a0a0a]/80 sm:bg-black/40 max-sm:backdrop-blur-none sm:backdrop-blur-xl border border-white/10 shadow-2xl"
       >
         <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/5 pointer-events-none" />
         

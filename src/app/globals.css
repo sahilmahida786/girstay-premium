@@ -912,6 +912,42 @@
   }
 }
 
+/* ═══ MOBILE PERFORMANCE MODE ═══
+   Disable infinite decorative animations on touch devices (phones/tablets).
+   Desktop (pointer: fine, hover: hover) retains the full luxury experience. */
+@media (pointer: coarse) and (hover: none) {
+  /* Kill all infinite decorative CSS animations */
+  .animate-dust-float,
+  .animate-cinematic-pan,
+  .animate-ken-burns,
+  .animate-breathe,
+  .animate-breathe-slow,
+  .animate-gradient-drift,
+  .animate-light-ray-sweep,
+  .animate-soft-pulse,
+  .animate-hero-shimmer,
+  .animate-shimmer-slow,
+  .animate-float,
+  .animate-shimmer,
+  .animate-gradient,
+  .animate-pulse-slow {
+    animation: none !important;
+  }
+
+  /* Reduce expensive backdrop-blur on large elements */
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Prevent hover-only transforms from creating GPU layers on touch */
+  .group:hover .group-hover\:scale-110 {
+    transform: none !important;
+  }
+}
+
 /* ═══ Accessibility ═══ */
 @media (prefers-reduced-motion: reduce) {
   *,

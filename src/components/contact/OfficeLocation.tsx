@@ -41,7 +41,7 @@ export function OfficeLocation() {
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "50px" }}
-          className="lg:w-[450px] shrink-0 p-8 sm:p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col justify-between"
+          className="lg:w-[450px] shrink-0 p-8 sm:p-10 rounded-[2.5rem] max-sm:bg-[#0a0a0a]/80 sm:bg-white/5 max-sm:backdrop-blur-none sm:backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col justify-between"
         >
           <div>
             <h3 className="font-heading text-2xl font-bold mb-6 text-white">GirStay Headquarters</h3>

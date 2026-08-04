@@ -21,7 +21,7 @@ export function ContactFAQ() {
         <p className="text-white/60">Quick answers to common luxury safari and booking queries.</p>
       </div>
       
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative">
+      <div className="max-sm:bg-[#0a0a0a]/80 sm:bg-white/5 max-sm:backdrop-blur-none sm:backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative">
         <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/5 pointer-events-none" />
         
         <Accordion className="w-full space-y-4">

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { mockProperties } from "@/data/mockProperties";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import {
   Sparkles,
   Trees,
@@ -32,6 +33,7 @@ const categories = [
 export function PopularStays() {
   const [activeCategory, setActiveCategory] = useState("all");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const filtered =
     activeCategory === "all"
@@ -69,24 +71,26 @@ export function PopularStays() {
       <div className="absolute bottom-0 left-0 w-[120vw] h-[120vw] sm:w-[800px] sm:h-[800px] -translate-x-1/4 translate-y-1/4 pointer-events-none z-[3]"
            style={{ background: "radial-gradient(circle at center, rgba(16, 96, 72, 0.2) 0%, transparent 70%)" }} />
 
-      {/* LAYER: Animated Light Dust (Bokeh) */}
-      <div className="absolute inset-0 pointer-events-none z-[4]">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={`dust-${i}`}
-            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
-            style={{
-              top: `${(i * 13) % 100}%`,
-              left: `${(i * 27) % 100}%`,
-              width: `${(i % 3) + 2.5}px`,
-              height: `${(i % 3) + 2.5}px`,
-              opacity: ((i * 7) % 30) / 100 + 0.05,
-              animationDelay: `-${(i * 3) % 15}s`,
-              animationDuration: `${(i % 10) + 20}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* LAYER: Animated Light Dust (Bokeh) — skipped on mobile for performance */}
+      {!isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-[4]">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={`dust-${i}`}
+              className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+              style={{
+                top: `${(i * 13) % 100}%`,
+                left: `${(i * 27) % 100}%`,
+                width: `${(i % 3) + 2.5}px`,
+                height: `${(i % 3) + 2.5}px`,
+                opacity: ((i * 7) % 30) / 100 + 0.05,
+                animationDelay: `-${(i * 3) % 15}s`,
+                animationDuration: `${(i % 10) + 20}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Layer: Vignette (Heavy edges) */}
       <div className="absolute inset-0 vignette-heavy z-[5]" />
@@ -202,10 +206,10 @@ export function PopularStays() {
         <AnimatePresence mode="popLayout">
           <motion.div
             key={activeCategory}
-            initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            exit={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
-            transition={{ duration: 0.5, ease: luxuryEasing }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: luxuryEasing }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
           >
             {filtered.map((property, index) => (

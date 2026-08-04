@@ -1,4 +1,4 @@
-"use client";
+// Server Component — child sections are dynamically imported as client components
 
 import { HeroSection } from "@/components/home/HeroSection";
 import dynamic from "next/dynamic";

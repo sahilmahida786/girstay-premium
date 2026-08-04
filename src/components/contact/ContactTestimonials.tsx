@@ -62,7 +62,7 @@ export function ContactTestimonials() {
           <CarouselContent className="-ml-4 sm:-ml-6">
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/2">
-                <div className="p-8 sm:p-10 rounded-[2.5rem] bg-white/[0.03] backdrop-blur-xl border border-white/10 h-full flex flex-col justify-between group hover:bg-white/[0.05] transition-colors">
+                <div className="p-8 sm:p-10 rounded-[2.5rem] max-sm:bg-[#0a0a0a]/80 sm:bg-white/[0.03] max-sm:backdrop-blur-none sm:backdrop-blur-xl border border-white/10 h-full flex flex-col justify-between group hover:bg-white/[0.05] transition-colors">
                   
                   {/* Top Section */}
                   <div>

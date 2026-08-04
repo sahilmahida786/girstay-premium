@@ -27,27 +27,30 @@ export function Header() {
   const navContainerRef = useRef<HTMLDivElement>(null);
 
   // ────────────────────────────────────────────────────────
-  // OPTIMIZED SCROLL LISTENER (60FPS)
+  // OPTIMIZED SCROLL LISTENER (60FPS - minimal re-renders)
   // ────────────────────────────────────────────────────────
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let ticking = false;
+    // Track previous values to avoid re-renders when nothing changed
+    let prevScrolled = window.scrollY > 50;
+    let prevHidden = false;
 
     const updateHeader = () => {
       const currentScrollY = window.scrollY;
       
-      // Update state for major structural changes (triggers re-render)
       const scrolled = currentScrollY > 50;
-      if (scrolled !== isScrolled) {
+      if (scrolled !== prevScrolled) {
+        prevScrolled = scrolled;
         setIsScrolled(scrolled);
       }
 
       // Hide/Show logic (Desktop only)
       if (window.innerWidth >= 1024) {
-        if (currentScrollY > lastScrollY && currentScrollY > 200) {
-          setIsHidden(true);
-        } else {
-          setIsHidden(false);
+        const hidden = currentScrollY > lastScrollY && currentScrollY > 200;
+        if (hidden !== prevHidden) {
+          prevHidden = hidden;
+          setIsHidden(hidden);
         }
       }
       
@@ -67,7 +70,8 @@ export function Header() {
     updateHeader();
     
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isScrolled]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Route change handler
   useEffect(() => {

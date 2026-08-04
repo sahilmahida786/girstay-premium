@@ -3,11 +3,13 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, CheckCircle2, Phone } from "lucide-react";
 import Image from "next/image";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export function ConciergeProfile() {
   const WHATSAPP_LINK = "https://wa.me/917984592173";
   const LINKEDIN_LINK = "https://www.linkedin.com/in/sahil-mahida-115835317";
   const INSTAGRAM_LINK = "https://www.instagram.com/nexvora.dev";
+  const isMobile = useIsMobile();
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 mb-24 sm:mb-32">
@@ -59,27 +61,31 @@ export function ConciergeProfile() {
         <div className="absolute inset-0 glow-gold-strong -z-20 opacity-40 animate-breathe" />
         {/* Layer 4: Soft Vignette */}
         <div className="absolute inset-0 vignette-luxury -z-20" />
-        {/* Layer 5: Moving Spotlight */}
-        <div className="absolute -inset-[100%] bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.08),transparent_50%)] -z-20 animate-ken-burns" />
-        {/* Layer 6 & 7: Floating Particles & Gold Dust */}
-        <div className="absolute inset-0 -z-10 opacity-30">
-          {[...Array(10)].map((_, i) => (
-            <div
-              key={`dust-${i}`}
-              className="absolute rounded-full bg-[#FFD27A] blur-[1px] animate-dust-float"
-              style={{
-                top: `${(i * 17) % 100}%`,
-                left: `${(i * 23) % 100}%`,
-                width: `${(i % 3) + 1}px`,
-                height: `${(i % 3) + 1}px`,
-                animationDelay: `-${(i * 2) % 10}s`,
-                animationDuration: `${(i % 10) + 15}s`,
-              }}
-            />
-          ))}
-        </div>
-        {/* Layer 8: Glass Blur Overlay */}
-        <div className="absolute inset-0 backdrop-blur-xl bg-white/[0.02] -z-10" />
+        {/* Layer 5: Moving Spotlight — skipped on mobile */}
+        {!isMobile && (
+          <div className="absolute -inset-[100%] bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.08),transparent_50%)] -z-20 animate-ken-burns" />
+        )}
+        {/* Layer 6 & 7: Floating Particles & Gold Dust — skipped on mobile */}
+        {!isMobile && (
+          <div className="absolute inset-0 -z-10 opacity-30">
+            {[...Array(10)].map((_, i) => (
+              <div
+                key={`dust-${i}`}
+                className="absolute rounded-full bg-[#FFD27A] blur-[1px] animate-dust-float"
+                style={{
+                  top: `${(i * 17) % 100}%`,
+                  left: `${(i * 23) % 100}%`,
+                  width: `${(i % 3) + 1}px`,
+                  height: `${(i % 3) + 1}px`,
+                  animationDelay: `-${(i * 2) % 10}s`,
+                  animationDuration: `${(i % 10) + 15}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+        {/* Layer 8: Glass Blur Overlay — reduced on mobile */}
+        <div className="absolute inset-0 max-sm:bg-[#0a0a0a]/60 sm:backdrop-blur-xl sm:bg-white/[0.02] -z-10" />
         {/* Layer 9: Subtle animated border/gradient inside */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#D4AF37]/5 to-transparent opacity-50 -z-10 mix-blend-overlay" />
         

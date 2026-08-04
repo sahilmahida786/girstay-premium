@@ -6,12 +6,14 @@ import { Star, Quote, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-rea
 import { testimonials } from "@/data/mockReviews";
 import { SafeImage as Image } from "@/components/ui/SafeImage";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export function Testimonials() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isMobile = useIsMobile();
 
   // Auto-advance with pause support (6 seconds)
   useEffect(() => {
@@ -59,24 +61,26 @@ export function Testimonials() {
       <div className="absolute top-0 right-0 w-[150vw] h-[150vw] sm:w-[1000px] sm:h-[1000px] translate-x-1/4 -translate-y-1/4 pointer-events-none z-[3]"
            style={{ background: "radial-gradient(circle at center, rgba(255, 180, 100, 0.15) 0%, transparent 70%)" }} />
 
-      {/* LAYER: Animated Light Dust (Bokeh) */}
-      <div className="absolute inset-0 pointer-events-none z-[4]">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={`dust-${i}`}
-            className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
-            style={{
-              top: `${(i * 17) % 100}%`,
-              left: `${(i * 31) % 100}%`,
-              width: `${(i % 3) + 2}px`,
-              height: `${(i % 3) + 2}px`,
-              opacity: ((i * 7) % 30) / 100 + 0.05,
-              animationDelay: `-${(i * 3) % 15}s`,
-              animationDuration: `${(i % 10) + 20}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* LAYER: Animated Light Dust (Bokeh) — skipped on mobile */}
+      {!isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-[4]">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={`dust-${i}`}
+              className="absolute rounded-full bg-[#FFD27A] blur-[2px] animate-dust-float"
+              style={{
+                top: `${(i * 17) % 100}%`,
+                left: `${(i * 31) % 100}%`,
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+                opacity: ((i * 7) % 30) / 100 + 0.05,
+                animationDelay: `-${(i * 3) % 15}s`,
+                animationDuration: `${(i % 10) + 20}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Layer: Vignette (Heavy edges) */}
       <div className="absolute inset-0 vignette-heavy z-[5]" />
@@ -138,10 +142,10 @@ export function Testimonials() {
                 <motion.div
                   key={current}
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 40 : -40, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, x: direction > 0 ? -40 : 40, filter: "blur(4px)" }}
-                  transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+                  initial={{ opacity: 0, x: direction > 0 ? 40 : -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: direction > 0 ? -40 : 40 }}
+                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
                   className="relative z-10 flex flex-col items-center text-center"
                   drag="x"
                   dragConstraints={{ left: 0, right: 0 }}
